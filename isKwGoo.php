@@ -1,7 +1,6 @@
-<?php // Kwynn 2020/05/27 7:19pm - see history below
+<?php 
 
 require_once('/opt/kwynn/kwutils.php');
-require_once('sessions.php');
 
 function isGoo2($rin) {
     if (!$rin) return false;
@@ -19,7 +18,7 @@ function isGoo2($rin) {
 
 function isKwGoo() {
 try {
-    $sid = kw_session::getOrDie();
+    $sid = startSSLSession(); // Kwynn 2020/06/06 10:42pm
     $hsid = hash('sha256', $sid);
     $dao = new kwmoncli();
     $scoll = $dao->selectCollection('qemail', 'sessions');
@@ -40,6 +39,7 @@ return false;
 }
 
 /* HISTORY
+ * // Kwynn 2020/06/06 10:42pm - don't require sessions.php and use newer startSSLSession()
  *  // 09/07 9:19pm - getting rid of open hash
 // 09/03 12:33AM added file_put 
 // 08/30 3:23pm - safer hash of hash
