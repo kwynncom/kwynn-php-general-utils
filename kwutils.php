@@ -1,12 +1,9 @@
-<?php // Kwynn Buess 
-// 2020/06/04 4:06pm - short u
-// 2020/05/30 8:44pm - modifying sequence process
-
+<?php 
 
 /* This is a collection of code that is general enough that I use it in a number of projects. */
 
 /* DATABASE USAGE EXAMPLE - the database stuff currently begins on line 36
- * 
+
   class radar_dao extends dao_generic {
     const db = 'radar';
 	function __construct() {
@@ -14,6 +11,7 @@
 	    $this->icoll    = $this->client->selectCollection(self::db, 'img');
       }
   } 
+
  */
 
 require_once('kwshortu.php');
@@ -230,34 +228,23 @@ function kwjae($o) { // JSON encode, echo, and exit
     exit(0);
 }
 
-// ID whether you are in the Amazon Web Services cloud
-// There are potential problems to the following, but it works for me for now.  
-// see https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/identify_ec2_instances.html
-// also search Google for how to tell whether you're in a virtual machine
-function isAWS() { return file_exists('/sys/hypervisor/uuid'); }
+// ID whether you are in the Amazon Web Services cloud - See README.md 2020/06/22
+// As of 2020/06/22, I consider this temporary, but it works well enough.
+// For Apache, do this:
+// /etc/apache2/sites-enabled$ head -n 3 000-default.conf
+// <VirtualHost *:80>
+//    SetEnv KWYNN_ID_201701 aws-nano-1
+// 
+// For cli/bash/shell, do this:
+// $ tail -n 2 /etc/environment
+// KWYNN_ID_201701=aws-nano-1
 
-/* For the record, the "old" version as of Jan 16, 2020:
-// The following needs to be set up in 2 environments to work:
-// The commands below only show that it is set up.  It's not precisely how to do so.
-function isKwDev() {
-    return getenv('KWYNN_201704_LOCAL') === 'yes';
-    // for command line / CLI PHP: $ grep -i kwynn /etc/environment 
-    // KWYNN_201704_LOCAL=yes
-    // for blah.conf in Apache: 
-    // /etc/apache2/sites-enabled$ cat sntp.conf
-    // <VirtualHost *:80 sntp>
-    // SetEnv KWYNN_201704_LOCAL yes
-} */
+function isAWS() { 
+    if (function_exists('apache_getenv') &&  apache_getenv('KWYNN_ID_201701') === 'aws-nano-1') return true;
+    return getenv('KWYNN_ID_201701') === 'aws-nano-1'  ;
+}
 
-/* HISTORY
- *  2020/02/17 7:41pm EST, America/New_York
-// updated user agent in kwua()
+function iscli() { return PHP_SAPI === 'cli'; } 
 
- * 
- * 2020/02/15 8:06pm EST, America/New_York
-// added usage example on how to use database stuff
- * 
- * 2020/01/30 10:59pm
-// latest change is to allow a "force" on sslOnly and start session
- * 
- */
+// testing isAWS()
+if (PHP_SAPI === 'cli' && $argc >= 2 && $argv[0] === __FILE__ && $argv[1] == 'isaws') echo (isAWS() ? 'Y' : 'N') . "\n";
