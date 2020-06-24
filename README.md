@@ -1,6 +1,19 @@
 # kwynn-php-general-utils
 PHP code I wrote and use repeatedly in different types of projects, including a growing number here on GitHub.
 
+isAWS() running at http://kwynn.com/t/20/06/machineID.php?testisAWS
+
+****
+2020/06/24 7:45pm 
+
+I thumped on isAWS() some more.  I read further in the below-linked Amazon doc page, and I found some answers that still work.
+
+I've also decided that, for now, isKwDev() is identical to !isAWS()
+
+The purposes of these is to identify whether I'm live or not.  I suppose I should create isLive() and deprecate isAWS(), but anyhow...
+
+Below I mention the definitive, crypto-verified solution, but my immediate purpose is much simpler than that.
+
 *****
 2020/06/22 - regarding isAWS()
 

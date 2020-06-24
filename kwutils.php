@@ -15,6 +15,7 @@
  */
 
 require_once('kwshortu.php');
+require_once('machineID.php');
 
 /* user agent, for when a server will ignore a request without a UA.  I am changing this 2020/01/16.  I'm moving towards releasing this file
  * to GitHub, so I should show myself to be properly open source fanatical. */
@@ -194,13 +195,6 @@ function kwTSHeaders($tsin = 1568685376, $etag = false) { // timestamp in; etag 
     }  
 }
 
-/* Often it's very useful to know if this is my local / own / test computer.  I want to know without revealing my machine name, which 
- * might be security sensitive.  2020/01/16 9:38pm - a brand new version.  Let's hope it works. */
-function isKwDev() {
-   $path = '/opt/kwynn/';
-   $name = 'i_am_kwynn_local_dev_201704_to_2020_01.txt';
-   return file_exists($path . $name);
-}
 
 function sslOnly($force = 0) { // make sure the page is SSL
     
@@ -218,7 +212,9 @@ function startSSLSession($force = 0) { // session as in a type of cookie
     session_set_cookie_params(163456789); // over 5 years expiration
     session_start();
     $sid = session_id();
-    kwas($sid && is_string($sid) && strlen($sid) > 5, 'startSSLSessionFail');
+    kwas($sid && is_string($sid) && strlen(trim($sid)) >= 20, 'startSSLSessionFail 1');
+    $prr = preg_match('/[A-Za-z0-9]{20}/', $sid);
+    kwas($prr, 'startSSLSessionFail 2');
     return $sid;
 }
 
@@ -226,22 +222,6 @@ function kwjae($o) { // JSON encode, echo, and exit
     header('application/json');
     echo json_encode($o);
     exit(0);
-}
-
-// ID whether you are in the Amazon Web Services cloud - See README.md 2020/06/22
-// As of 2020/06/22, I consider this temporary, but it works well enough.
-// For Apache, do this:
-// /etc/apache2/sites-enabled$ head -n 3 000-default.conf
-// <VirtualHost *:80>
-//    SetEnv KWYNN_ID_201701 aws-nano-1
-// 
-// For cli/bash/shell, do this:
-// $ tail -n 2 /etc/environment
-// KWYNN_ID_201701=aws-nano-1
-
-function isAWS() { 
-    if (function_exists('apache_getenv') &&  apache_getenv('KWYNN_ID_201701') === 'aws-nano-1') return true;
-    return getenv('KWYNN_ID_201701') === 'aws-nano-1'  ;
 }
 
 function iscli() { return PHP_SAPI === 'cli'; } 
