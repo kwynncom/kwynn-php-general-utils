@@ -124,8 +124,8 @@ class dao_generic  {
 
 /* Kwynn's assert.  It's similar to the PHP assert() except it throws an exception rather than dying.  I use this ALL THE TIME.  
   I'm sure there are 100s if not 1,000s of references to this in my code. */
-function kwas($data = false, $msg = 'no message sent to kwas()', $var = null) {
-    if (!isset($data) || !$data) throw new Exception($msg); 
+function kwas($data = false, $msg = 'no message sent to kwas()', $code = 12345) {
+    if (!isset($data) || !$data) throw new Exception($msg, $code); 
 /* The isset may not be necessary, but I'm not touching anything I've used this much and for this long. */
 }
 
@@ -211,10 +211,16 @@ function startSSLSession($force = 0) { // session as in a type of cookie
     sslOnly($force);
     session_set_cookie_params(163456789); // over 5 years expiration
     session_start();
+    $sid = vsidod();
+    vsidod($sid);
+    return $sid;
+}
+
+function vsidod() { 
     $sid = session_id();
-    kwas($sid && is_string($sid) && strlen(trim($sid)) >= 20, 'startSSLSessionFail 1');
-    $prr = preg_match('/[A-Za-z0-9]{20}/', $sid);
-    kwas($prr, 'startSSLSessionFail 2');
+    kwas($sid && is_string($sid), 'startSSLSessionFail 1');
+    $prr = preg_match('/^[A-Za-z0-9]{20}/', $sid);
+    kwas($prr, 'startSSLSessionFail 2'); unset($prr);
     return $sid;
 }
 

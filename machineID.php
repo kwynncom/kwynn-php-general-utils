@@ -85,3 +85,8 @@ function isAWS()   { return kwisAWSCl::is(); }
 function isKwDev() { return !isAWS();        }
 
 kwisAWSCl::test();
+
+function ispkwd() {
+    if (isAWS()) return false;
+    return file_exists('/var/i_am_kwynn_local_dev_as_of_2020_06');
+}
