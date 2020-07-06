@@ -1,4 +1,4 @@
-<?php 
+<?php // 2020/07/06 7:51pm
 
 /* This is a collection of code that is general enough that I use it in a number of projects. */
 
@@ -132,14 +132,19 @@ function kwas($data = false, $msg = 'no message sent to kwas()', $code = 12345) 
 /* make sure any timestamps you're using make sense: make sure you haven't done something weird and such: make sure you don't have zero 
 values or haven't rolled over bits; make sure your time isn't way in the future or past. Obviously both min and max are somewhat arbitrary, but 
 this has served it's purpose since roughly (northern hemisphere) summer 2019. */
-function strtotimeRecent($strorts, $alreadyTS = false) {
+function strtotimeRecent($strorts) {
     static $min = 1561500882; // June 25, 2019, depending on your tz
     static $max = false;
     
-    if (!$alreadyTS) $ts = strtotime($strorts); 
-    else	     $ts = $strorts;
+    $strorts = trim($strorts);
+
+    $alreadyTS = false;
+    if (is_numeric($strorts)) $alreadyTS = true;
     
-    kwas($ts && $ts >= $min, 'bad string to timestamp pass 1 = ' . $strorts);
+    if (!$alreadyTS) $ts = strtotime($strorts); 
+    else	     $ts = intval($strorts);
+    
+    kwas($ts && is_integer($ts) && $ts >= $min, 'bad string to timestamp pass 1 = ' . $strorts);
     
     if (!$max) $max = time() + 87000; kwas($ts < $max, 'bad string to timestamp pass 2 = ' . $strorts);
 
