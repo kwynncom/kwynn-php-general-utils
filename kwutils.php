@@ -237,10 +237,12 @@ function kwjae($o) { // JSON encode, echo, and exit
 
 function iscli() { return PHP_SAPI === 'cli'; } 
 
-function isCLITest($pcmpin) {
+function didCLICallMe($callingFile) { // $call with __FILE__
     global $argv;
-    return iscli() && isset($argv[0]) && (pathinfo($pcmpin, PATHINFO_FILENAME) === pathinfo($argv[0], PATHINFO_FILENAME));
+    if (!isset($argv[0]) || !iscli()) return false;
+    
+    $cf = basename($callingFile);
+    $af = basename($argv[0]);
+    
+    return $cf === $af;
 }
-
-// testing isAWS()
-if (PHP_SAPI === 'cli' && $argc >= 2 && $argv[0] === __FILE__ && $argv[1] == 'isaws') echo (isAWS() ? 'Y' : 'N') . "\n";
