@@ -246,3 +246,18 @@ function didCLICallMe($callingFile) { // $call with __FILE__
     
     return $cf === $af;
 }
+
+function base62($len = 20) { // see sourcing below the func
+
+    $basea = [ord('A'), ord('a'), ord('0')]; // preg [A-Za-z0-9]
+
+    for ($i=0, $rs = ''; $i < $len; $i++)
+       for ($j=0, $ri = random_int(0, 61); $j < count($basea); $j++, $ri -= 26)
+	    if ($ri < 26) { $rs .= chr($basea[$j] + $ri); break; }
+
+    return $rs;
+}
+/* base62() as derived from https://kwynn.com/t/7/11/blog.html
+ * Entry dated: Feb 2, 2018 - base62
+ * random base62 - Kwynn.com, 2018/02/02 3:11AM EST, UQID: VMbAlZQ13ojI
+ * What I published on my web site is the CLI standalone command version */

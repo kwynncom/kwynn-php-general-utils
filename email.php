@@ -6,6 +6,9 @@ require_once('emailDao.php');
 
 class kwynn_email {
     
+    const devActiveTS = '2020-07-15 01:05';
+    const devActive = 0;
+    
     const smtp_server = 'email-smtp.us-east-1.amazonaws.com';
     
     function __construct() {
@@ -95,7 +98,7 @@ public function smail($body, $subject, $isHTML = true) {
     $sendRet = 'test only - no send attempt';
     
     $bsend   = microtime();
-    if (0 || isAWS() || time() < strtotime('2020-05-31 16:10')) $sendRet = $mail->Send();
+    if (self::devActive || isAWS() || time() < strtotime(self::devActiveTS)) $sendRet = $mail->Send();
     $asend   = microtime();
 
     $this->audit('post', get_defined_vars());
