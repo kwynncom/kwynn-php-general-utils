@@ -18,6 +18,11 @@ class kwynn_creds extends dao_generic {
 	}
 	return $res;
     }
+    
+    public static function get($tin, $f = false) {
+	$o = new self();
+	return $o->getType($tin, $f);
+    }
 }
 
 

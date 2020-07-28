@@ -6,15 +6,38 @@ require_once('emailDao.php');
 
 class kwynn_email {
     
-    const devActiveTS = '2020-07-15 01:05';
+    const devActiveTS = '2020-07-28 19:43';
     const devActive = 0;
     
     const smtp_server = 'email-smtp.us-east-1.amazonaws.com';
     
-    function __construct() {
+    const tov = 'cli_self_test_override';
+    
+    function __construct($isTest = false) {
 	$this->mailo = $this->getMailO();
 	$this->setDefaultTo();
 	$this->auditDao = new dao_email_out_audit();
+	$this->setTestV($isTest);
+    }
+    
+    private function setTestV($p) {
+	if (!iscli()) return;
+	if ($p === self::tov) 
+	     $this->cli_self_test_override = true;
+    }
+    
+    private function isTestOverride() {
+	return      isset($this->cli_self_test_override)
+		 &&       $this->cli_self_test_override
+	    ;
+    }
+    
+    private function shouldSend() {
+	if (isAWS()) return true;
+	if (self::devActive) return true;
+	if (time() < strtotime(self::devActiveTS)) return true;
+	if ($this->isTestOverride()) return true;
+	return false;
     }
     
     private function getMailO() {
@@ -98,11 +121,19 @@ public function smail($body, $subject, $isHTML = true) {
     $sendRet = 'test only - no send attempt';
     
     $bsend   = microtime();
-    if (self::devActive || isAWS() || time() < strtotime(self::devActiveTS)) $sendRet = $mail->Send();
+    if ($this->shouldSend()) $sendRet = $mail->Send();
     $asend   = microtime();
 
     $this->audit('post', get_defined_vars());
     
     return $sendRet;
 } // func
+
+public static function test() {
+    cliOrDie();
+    $o = new self(self::tov);
+    return $o->smail('test', 'test', 0);
 }
+} // class
+
+if (didCliCallMe(__FILE__)) kwynn_email::test();
