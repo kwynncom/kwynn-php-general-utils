@@ -6,12 +6,18 @@ require_once('emailDao.php');
 
 class kwynn_email {
     
-    const devActiveTS = '2020-07-28 22:15';
+    const devActiveTS = '2020-09-07 23:10';
     const devActive = 0;
     
     const smtp_server = 'email-smtp.us-east-1.amazonaws.com';
     
     const tov = 'cli_self_test_override';
+    
+    public static function send($subject, $body, $isHTML = false) {
+	$o = new self();
+	return $o->smail($body, $subject, $isHTML);
+    }
+    
     
     function __construct($isTest = false) {
 	$this->mailo = $this->getMailO();
