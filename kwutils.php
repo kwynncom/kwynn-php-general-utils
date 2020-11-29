@@ -29,98 +29,34 @@ function kw_error_handler($errno, $errstr, $errfile, $errline) {
     echo ' LINE: ' . $errline . ' - ' . $errstr . ' ' . $errfile;
     exit(37); // an arbitrary number, other than it should be non-zero to indicate failure
 }
+
 set_error_handler('kw_error_handler');
 
-
-set_include_path(get_include_path() . PATH_SEPARATOR . '/opt/composer');
-require_once('vendor/autoload.php');  
-unset($__composer_autoload_files);
-/* I do this unset, above, because often I am trying to keep a very clean set of active variables.  I have used this without harm since very 
-roughly the (northern hemisphere) summer of 2019.  */
-
-class kwmoncli extends MongoDB\Client {
-    public function __construct() {
-	parent::__construct('mongodb://127.0.0.1/', [], ['typeMap' => ['array' => 'array','document' => 'array', 'root' => 'array']]);
+/* Tests whether it's safe to include a file--file_exists() does not account for the include path.  My function does.  
+ * Returns true for safe / exists and false for unsafe / does not exist.
+ * It is ironic to create a handler and then reset it, but that's the way this file worked out. */
+function include_exists($f) {
+    set_error_handler('kw_null_error_handler'); // because fopen failure emits a warning
+    $r = fopen($f, 'r', true);
+    set_error_handler('kw_error_handler');
+    if ($r) {
+	fclose($r);
+	return true;
     }
-
-    public function selectCollection     ($db, $coll, array $optionsINGORED_see_below = []) {
-	return new kwcoll($this->getManager(), $db, $coll, ['typeMap' => ['array' => 'array','document' => 'array', 'root' => 'array']]); 
-    }
+    return false;
 }
 
-class kwcoll extends MongoDB\Collection {
-    public function upsert($q, $set) {
-	return $this->updateOne($q, ['$set' => $set], ['upsert' => true]);
-    }
+function kw_null_error_handler($errno, $errstr, $errfile, $errline) { 
+    return;
 }
 
-class dao_generic  {
-    
-    protected $dbname;
-    protected $client;
-    
-    const seqDB = 'seqs';
-    
-    public function __construct($dbname) {
-	$this->dbname = $dbname;
-	$this->client = new kwmoncli();
-    }
+// make sure mongodb.php file exists and include if so
+$minc = __DIR__ . '/mongodb.php';
+if (file_exists($minc)) require_once($minc); unset($minc); // unset so as to not clutter global variable space
 
-    public function getSeq($name) { 
-
-	$osr = self::getOldSeqInfo($name);
-		
-	$c = $this->client->selectCollection(self::seqDB, 'seqs');
-	$q  = ['db' => self::seqDB, 'name' => $name];
-	
-	$this->setSeq($c, $q, $name, $osr);
-	$ret = $c->findOneAndUpdate($q, [ '$inc' => [ 'seq' => 1 ]]);
-	
-	if ($osr) return $osr['seq'];
-        return $ret['seq'];
-    }
-    
-    private function setSeq($c, $q, $name, $oldr = false) {
-
-	$res = $c->findOne($q);
-	if ($res) return;
-	
-	$now = time();
-	$c->createIndex(['db' => -1, 'name' => -1], ['unique' => true ]);
-	
-	$dat['db']   = self::seqDB;
-	$dat['name'] = $name;
-
-	if (!$oldr) {
-	    $dat['seq'] = 1;
-	    $now = time();
-	    $dat['initts'] = $now;
-	    $dat['initR' ] = date('r', $now);
-	} else $this->popOldSeqDat($dat, $oldr);
-
-	$c->insertOne($dat);
-    }
-    
-    private function popOldSeqDat(&$dat, $oldr) {
-	if (!$oldr) return;
-	$dat['seq'] = $oldr['seq'];
-	$dat['initR'] = $oldr['initR'];
-	$dat['initts'] = strtotime($oldr['initR']);
-    }
-    
-    private function getOldSeqInfo($name) {
-	$oldsc = $this->client->selectCollection($this->dbname, 'seqs');
-	$oldq  = ['_id' => $name];
-	$osr = $oldsc->findOne($oldsc);
-	if ($osr) {
-	    $oldsc->drop();
-	    return $osr;
-	}
-	
-	return false;
-    }
-}
-
+/* I am finally defining myself as a null function.  I am sick and tired of creating fake variables for something for NetBeans' debugger to set a 
+ * breakpoint to.  A breakpoint has to have something there.  So "Kwynn's null" is recursively kwynn() */
+function kwynn() {}
 
 /* Kwynn's assert.  It's similar to the PHP assert() except it throws an exception rather than dying.  I use this ALL THE TIME.  
   I'm sure there are 100s if not 1,000s of references to this in my code. */

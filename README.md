@@ -1,7 +1,21 @@
 # kwynn-php-general-utils
-PHP code I wrote and use repeatedly in different types of projects, including a growing number here on GitHub.
+This is PHP code I wrote and use repeatedly in different types of projects, including a growing number here on GitHub.
 
 isAWS() running at http://kwynn.com/t/20/06/machineID.php?testisAWS
+
+*****
+2020/11/28 10:42pm
+
+I was playing with Linux containers and noticed that kwutils.php assumes that a Composer vendor/autoload.php exists.  It also assumes that the 
+MongoDB composer library exists.  So I hopefully fixed this so someone can use other features without composer and composer MongoDB.
+
+So, several changes:
+
+I moved the MongoDB code to a separate file.
+I created a function "include_exists" to determine whether requiring autoload is safe, and conditionally include it, and conditionally create my 
+database functions based on inclusion and the existence of a needed MongoDB class.
+I tried to account for those with earlier versions of my utilities, who don't download the new mongodb.php file.
+
 
 ****
 2020/06/24 7:45pm 
