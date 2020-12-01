@@ -15,9 +15,11 @@ I moved the MongoDB code to a separate file.
 I created a function "include_exists" to determine whether requiring autoload is safe, and conditionally include it, and conditionally create my 
 database functions based on inclusion and the existence of a needed MongoDB class.
 I tried to account for those with earlier versions of my utilities, who don't download the new mongodb.php file.
-
-
 ****
+I also created myself as a null function kwynn() in kwutils.php.  See the note / comment there.
+
+
+*********************
 2020/06/24 7:45pm 
 
 I thumped on isAWS() some more.  I read further in the below-linked Amazon doc page, and I found some answers that still work.
