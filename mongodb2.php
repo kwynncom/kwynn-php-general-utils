@@ -17,6 +17,8 @@ class kwcoll2 extends kwcoll {
 	$seq = $this->seqo->get($this->db, $this->cname, $this->callingPath, $this->tpid, $retid);
 	return $seq;
     }
+    
+    public function find($q = [], $o = []) { return parent::find($q, $o)->toArray();  }
 }
 
 class kwmoncli2 extends kwmoncli {
