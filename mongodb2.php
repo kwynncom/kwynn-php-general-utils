@@ -40,11 +40,11 @@ class dao_generic_2 extends dao_generic {
 	$this->client = new kwmoncli2($path);
     }
     
-    protected function creTabs($dbin, $ts) {
+    protected function creTabs($ts) {
 	foreach($ts as $k => $t) {
 	    $k = $k[0];
 	    $v = $k . 'coll';
-	    $this->$v = $this->client->selectCollection2($dbin, $t, $k);
+	    $this->$v = $this->client->selectCollection2($this->dbname, $t, $k);
 	}	
     }
 }
@@ -57,7 +57,7 @@ class dao_seq_kw2 extends dao_generic_2 {
     public function __construct() {
 	parent::__construct(self::dbName, __FILE__);
 	
-	$this->creTabs(self::dbName, ['s' => 'seqs2']);
+	$this->creTabs(['s' => 'seqs2']);
 	
 	$this->scoll->createIndex(['db'	     => -1, 'name' => -1], ['unique' => true ]);
 	$this->scoll->createIndex(['sem_key' => -1		], ['unique' => true ]);
