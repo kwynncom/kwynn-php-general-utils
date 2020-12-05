@@ -10,13 +10,16 @@ class kwcoll2 extends kwcoll {
 	$this->tpid = $tpid;
 	$this->cname = $coll;
 	$this->callingPath = $path;
+	if (!dao_seq_kw2::iAmSeq2($db, $coll)) 	$this->seqo = new dao_seq_kw2();
     }
     
-    public function getSeq2($retid = false) {
-	if (!isset($this->seqo)) $this->seqo = new dao_seq_kw2();
-	$seq = $this->seqo->get($this->db, $this->cname, $this->callingPath, $this->tpid, $retid);
+    public function getSeq2($retid = false, $ots = false, $otherMeta = false) {
+
+	$seq = $this->seqo->get($this->db, $this->cname, $this->callingPath, $this->tpid, $retid, $ots, $otherMeta);
 	return $seq;
     }
+    
+    public function rmSeq2() { $this->seqo->rm($this->db, $this->cname); }
     
     public function find($q = [], $o = []) { return parent::find($q, $o)->toArray();  }
 }
@@ -53,17 +56,23 @@ class dao_seq_kw2 extends dao_generic_2 {
     
     const dbName = 'seqs';
     const iddel  = '-';
+    const cName  = 'seqs2';
+    
+    public static function iAmSeq2($db, $c) { if ($db === self::dbName && $c === self::cName) return true; else return false; }
     
     public function __construct() {
 	parent::__construct(self::dbName, __FILE__);
 	
-	$this->creTabs(['s' => 'seqs2']);
+	$this->creTabs(['s' => self::cName]);
 	
 	$this->scoll->createIndex(['db'	     => -1, 'name' => -1], ['unique' => true ]);
 	$this->scoll->createIndex(['sem_key' => -1		], ['unique' => true ]);
     }
     
-    public function get($db, $coll, $path, $prid, $retid = false) {
+    public function rm($db, $c) { 
+	$this->scoll->deleteOne(['db' => $db, 'name' => $c]); }
+    
+    public function get($db, $coll, $path, $prid, $retid = false, $ots = false, $ometa = false) {
 	
 	static $locko = false;
 	
@@ -74,32 +83,44 @@ class dao_seq_kw2 extends dao_generic_2 {
 
 	$locko->lock();
 	$now = time();
-	$dat['ts' ]  = $now;
-	$dat['r'  ]  = date('r', $now);
+	if ($ots)  $sts = $ots;
+	else       $sts = $now;
+        $dat['idts' ]   = $sts;
+        $dat['crets'] = $now;
+        $dat['r'  ]   = date('r', $sts);
+
 	$r = $this->scoll->findOne($q, $pr);
 	if (!$r) $r = $this->create($db, $coll, $skey);
 	$newseq = $r['seq'] + 1;
 	$dat['seq'] = $newseq;
-	$r2 = $this->scoll->upsert($q, $dat);
+	$r2 = $this->supsert($q, $dat);
 	$locko->unlock();
 	
-	if (!$retid) return $newseq;
+	if (!$retid && !$ometa) return $newseq;
 
-	unset($dat['r']); 	
-	return self::getID($dat, $now, $newseq);
-
+	unset($dat['r']);
+	return self::getID($dat, $sts, $newseq, $ometa);
     }
     
-    private static function getID($din, $now, $seq) {
+    private function supsert($q, $dat) {
+	$dat['upts'] = $dat['crets'];
+	unset($dat['crets'], $dat['r'], $dat['idts']);
+	$dat['upr']    = date('r', $dat['upts']);
+	$r2 = $this->scoll->upsert($q, $dat);	
+    }
+    
+    private static function getID($din, $sts, $seq, $ometa) {
 
 	$id  = '';
-	$id .= (intval(date('Y', $now)) % 10);
+	$id .= (intval(date('Y', $sts)) % 10);
 	$id .= self::iddel;
-	$id .= date('m-d-H:i:s');
+	$id .= date('m-d-H:i:s', $sts);
 	$id .= self::iddel;
 	$id .=  $seq;
 	$id .= self::iddel;
 	$id .= date('Y');
+	
+	if (!$ometa) return ['_id' => $id, 'seq' => $seq];
 
 	$dat['seqmeta'] = $din;
 	$dat['_id'] = $id;	
