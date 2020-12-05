@@ -1,4 +1,4 @@
-<?php
+<?php // see mongodb2Example.php for a usage example
 
 require_once('/opt/kwynn/kwutils.php');
 require_once('/opt/kwynn/lock.php');
