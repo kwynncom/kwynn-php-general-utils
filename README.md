@@ -1,6 +1,15 @@
 # kwynn-php-general-utils
 This is PHP code I wrote and use repeatedly in different types of projects, including a growing number here on GitHub.
 
+
+2020/12/19 - Human readable MongoDB keys, such as 0-12-17-00:17:44-13-2020
+
+The first 0 indicates year 2020 or 202-0.  12-17 is December 17.  00:17:44 is time.  -13- is the sequence number, using a semaphore lock.  Then 
+I add 2020 in full lest I crash into a Y2K variant in 10 years.
+
+
+******
+
 isAWS() running at http://kwynn.com/t/20/06/machineID.php?testisAWS
 
 *****
