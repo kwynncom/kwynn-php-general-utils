@@ -41,10 +41,13 @@ function include_exists($f) {
     set_error_handler('kw_error_handler');
     if ($r) {
 	fclose($r);
+	require_once($f); // Kwynn 2020/12/29 12:28am
 	return true;
     }
     return false;
 }
+
+function require_once_ifex($f) { include_exists($f); } // Kwynn 2020/12/29 12:31am
 
 function kw_null_error_handler($errno, $errstr, $errfile, $errline) { 
     return;

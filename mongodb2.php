@@ -16,6 +16,8 @@ class kwcoll2 extends kwcoll {
     public function getSeq2($retid = false, $ots = false, $otherMeta = false) {
 
 	$seq = $this->seqo->get($this->db, $this->cname, $this->callingPath, $this->tpid, $retid, $ots, $otherMeta);
+	if ($retid === 'idoia') unset($seq['seq']);
+	if ($retid === 'idoas') return $seq['_id'];
 	return $seq;
     }
     
@@ -74,9 +76,13 @@ class dao_seq_kw2 extends dao_generic_2 {
     
     public function get($db, $coll, $path, $prid, $retid = false, $ots = false, $ometa = false) {
 	
-	static $locko = false;
+	static $lockoa = false;
 	
-	if (!$locko) $locko = new sem_lock($path, $prid);
+	if (!isset(   $lockoa[$prid])) 
+		     $lockoa[$prid] = new sem_lock($path, $prid);
+	
+		
+	$locko = $lockoa[$prid];
 	$q = ['db' => $db, 'name' => $coll];
 	$pr = ['projection' => ['seq' => 1, '_id' => 0]];
 	$skey = $locko->getKey();
@@ -90,7 +96,9 @@ class dao_seq_kw2 extends dao_generic_2 {
         $dat['r'  ]   = date('r', $sts);
 
 	$r = $this->scoll->findOne($q, $pr);
-	if (!$r) $r = $this->create($db, $coll, $skey);
+	if (!$r) {
+	    $r = $this->create($db, $coll, $skey);
+	}
 	$newseq = $r['seq'] + 1;
 	$dat['seq'] = $newseq;
 	$r2 = $this->supsert($q, $dat);
