@@ -1,4 +1,4 @@
-<?php // 2020/07/06 7:51pm
+<?php
 
 /* This is a collection of code that is general enough that I use it in a number of projects. */
 
@@ -201,3 +201,37 @@ function base62($len = 20) { // see sourcing below the func
  * Entry dated: Feb 2, 2018 - base62
  * random base62 - Kwynn.com, 2018/02/02 3:11AM EST, UQID: VMbAlZQ13ojI
  * What I published on my web site is the CLI standalone command version */
+
+class stddev { // 2021/01/12 11:01pm - into kwutils
+    public function __construct() {
+	$this->sum = 0;
+	$this->dat = [];
+    }
+    
+    public function put($din) {
+	if (!is_numeric($din)) return;
+	$this->sum  += $din;
+	$this->dat[] = $din;
+    }
+    
+    public function get() {
+	$n = count($this->dat);
+	if ($n === 0) return null;
+	$avg = $this->sum / $n;
+	
+	$min = PHP_INT_MAX;
+	$max = PHP_INT_MIN;
+	
+	$acc = 0;
+	foreach($this->dat as $v) { 
+	    $acc += pow($v - $avg, 2);
+	    // if ($v < $min) $min = $v;
+	    // if ($v > $max) $max = $v;
+	}
+	$stdd = sqrt($acc / $n);
+	return ['a' => $avg, 's' => $stdd, 'n' => $n /*, 'min' => $min, 'max' => $max*/];
+    }
+}
+					    //  123456789 digits
+if (!defined('M_BILLION')) define('M_BILLION', 1000000000);
+else kwas(false, 'billion constant already defined');
