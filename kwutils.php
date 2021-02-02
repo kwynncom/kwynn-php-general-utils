@@ -225,13 +225,15 @@ class stddev { // 2021/01/12 11:01pm - into kwutils
 	$acc = 0;
 	foreach($this->dat as $v) { 
 	    $acc += pow($v - $avg, 2);
-	    // if ($v < $min) $min = $v;
-	    // if ($v > $max) $max = $v;
+	    if ($v < $min) $min = $v;
+	    if ($v > $max) $max = $v;
 	}
 	$stdd = sqrt($acc / $n);
-	return ['a' => $avg, 's' => $stdd, 'n' => $n /*, 'min' => $min, 'max' => $max*/];
+	return ['a' => $avg, 's' => $stdd, 'n' => $n , 'min' => $min, 'max' => $max];
     }
 }
 					    //  123456789 digits
 if (!defined('M_BILLION')) define('M_BILLION', 1000000000);
 else kwas(false, 'billion constant already defined');
+		 //  123456
+define('M_MILLION', 1000000);
