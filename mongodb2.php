@@ -28,8 +28,8 @@ class kwcoll2 extends kwcoll {
 
 class kwmoncli2 extends kwmoncli {
     
-    public function __construct($path) {
-	parent::__construct();
+    public function __construct($path, $altport = false) {
+	parent::__construct($altport);
 	$this->callingPath = $path;
     }
     
@@ -40,9 +40,9 @@ class kwmoncli2 extends kwmoncli {
 
 class dao_generic_2 extends dao_generic {
 
-    public function __construct($dbname, $path) {
+    public function __construct($dbname, $path, $altport = false) {
 	$this->dbname = $dbname;
-	$this->client = new kwmoncli2($path);
+	$this->client = new kwmoncli2($path, $altport);
     }
     
     protected function creTabs($ts) {

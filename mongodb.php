@@ -13,12 +13,28 @@ require_once($va); unset($va, $__composer_autoload_files, $autolr); // I unset $
 if (class_exists('MongoDB\Client')) {
 
 class kwmoncli extends MongoDB\Client {
-    public function __construct() {
-	parent::__construct('mongodb://127.0.0.1/', [], ['typeMap' => ['array' => 'array','document' => 'array', 'root' => 'array']]);
+    
+    const altportf = '/var/kwynn_www/altmdbport.txt';
+    
+    public function __construct($altport = false) {
+	$cs  = '';
+	$cs .= 'mongodb://127.0.0.1';
+	if ($altport) $cs .= ':' . self::getAltPort();
+	$cs .= '/';
+	parent::__construct($cs, [], ['typeMap' => ['array' => 'array','document' => 'array', 'root' => 'array']]);
     }
 
     public function selectCollection     ($db, $coll, array $optionsINGORED_see_below = []) {
 	return new kwcoll($this->getManager(), $db, $coll, ['typeMap' => ['array' => 'array','document' => 'array', 'root' => 'array']]); 
+    }
+    
+    private static function getAltPort() {
+	static $f = self::altportf;
+	
+	kwas(file_exists($f), 'MongoDB Kwynn alt port file does not exist');
+	$port = intval(trim(file_get_contents($f))); 
+	kwas(is_integer($port) && $port >= 1, 'bad port - MongoDB Kwynn alt port');
+	return $port;
     }
 }
 
