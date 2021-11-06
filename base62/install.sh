@@ -1,5 +1,3 @@
-cp ./base62.php ./base62
+#! /usr/bin/bash
 chmod 755 ./base62
-sudo mv ./base62 /usr/bin
-
-
+sudo cp ./base62 /usr/bin/base62
