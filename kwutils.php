@@ -16,6 +16,7 @@
 
 require_once('kwshortu.php');
 require_once('machineID.php');
+require_once(__DIR__ . '/base62/base62.php'); // both base62() and didCLICallMe()
 
 /* user agent, for when a server will ignore a request without a UA.  I am changing this 2020/01/16.  I'm moving towards releasing this file
  * to GitHub, so I should show myself to be properly open source fanatical. */
@@ -178,25 +179,11 @@ function kwjae($o) { // JSON encode, echo, and exit
 }
 
 function didCLICallMe($callingFile) { // $call with __FILE__
-    global $argv;
-    if (!isset($argv[0]) || !iscli()) return false;
-    
-    $cf = basename($callingFile);
-    $af = basename($argv[0]);
-    
-    return $cf === $af;
+	return base62::didCLICallMe($callingFile);
 }
 
-function base62($len = 20) { // see sourcing below the func
+function base62($len) { return base62::get($len); }
 
-    $basea = [ord('A'), ord('a'), ord('0')]; // preg [A-Za-z0-9]
-
-    for ($i=0, $rs = ''; $i < $len; $i++)
-       for ($j=0, $ri = random_int(0, 61); $j < count($basea); $j++, $ri -= 26)
-	    if ($ri < 26) { $rs .= chr($basea[$j] + $ri); break; }
-
-    return $rs;
-}
 /* base62() as derived from https://kwynn.com/t/7/11/blog.html
  * Entry dated: Feb 2, 2018 - base62
  * random base62 - Kwynn.com, 2018/02/02 3:11AM EST, UQID: VMbAlZQ13ojI

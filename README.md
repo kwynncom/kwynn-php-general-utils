@@ -1,6 +1,9 @@
 # kwynn-php-general-utils
 This is PHP code I wrote and use repeatedly in different types of projects, including a growing number here on GitHub.
 
+2021/11/04
+
+created ./base62 and moved both base62() and didCLICallMe() there
 
 2020/12/19 - Human readable MongoDB keys, such as 0-12-17-00:17:44-13-2020
 
