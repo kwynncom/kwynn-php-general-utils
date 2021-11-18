@@ -19,7 +19,7 @@ class sem_lock {
 	}
     public function   lock()	 { kwas(sem_acquire($this->svs), 'sem_acq failed - sem_lock'); }
     public function unlock()	 { kwas(sem_release($this->svs), 'sem_rel failed - sem_lock'); }
-    public function __destruct() { kwas(sem_remove($this->svs) , 'sem_rem failed - sem_lock'); }
+    // public function __destruct() { if (isset($this->svs)) sem_remove($this->svs); }
     public function getKey() { return $this->key; }
 	
     
