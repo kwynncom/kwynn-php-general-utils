@@ -19,13 +19,5 @@ class sem_lock {
 	}
     public function   lock()	 { kwas(sem_acquire($this->svs), 'sem_acq failed - sem_lock'); }
     public function unlock()	 { kwas(sem_release($this->svs), 'sem_rel failed - sem_lock'); }
-    // public function __destruct() { if (isset($this->svs)) sem_remove($this->svs); }
-	/* My experiements show that this removes the semaphore for all running instances of the lock.  That is, if process A removes the lock while 
-	 * process B is locked, there is no lock for process B to remove.  Also, removing the lock this way defeats the purpose of a multi-process lock.
-	 * Otherwise put, perhaps one should never remove the lock because another process may always use it.  
-	 * 
-	 */
     public function getKey() { return $this->key; }
-	
-    
 }
