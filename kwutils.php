@@ -2,19 +2,8 @@
 
 /* This is a collection of code that is general enough that I use it in a number of projects. */
 
-/* DATABASE USAGE EXAMPLE - the database stuff currently begins on line 36
-
-  class radar_dao extends dao_generic {
-    const db = 'radar';
-	function __construct() {
-	    parent::__construct(self::db);
-	    $this->icoll    = $this->client->selectCollection(self::db, 'img');
-      }
-  } 
-
- */
-
 require_once('kwshortu.php');
+require_once(__DIR__ . '/lock.php');
 require_once('machineID.php');
 require_once(__DIR__ . '/base62/base62.php'); // both base62() and didCLICallMe()
 

@@ -1,6 +1,11 @@
 # kwynn-php-general-utils
 This is PHP code I wrote and use repeatedly in different types of projects, including a growing number here on GitHub.
 
+2021/11/25
+
+If I don't use sem_remove() in lock.php, then switching from CLI to web causes permission denied.  If I do use sem_remove(), there is a lesser error condition.
+I need to keep whittling on this.
+
 2021/11/04
 
 created ./base62 and moved both base62() and didCLICallMe() there
