@@ -1,1 +1,0 @@
-/home/k/sm20/frag/mid

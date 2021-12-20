@@ -58,6 +58,13 @@ function kwas($data = false, $msg = 'no message sent to kwas()', $code = 12345) 
 /* The isset may not be necessary, but I'm not touching anything I've used this much and for this long. */
 }
 
+/*
+function isrv($k) { // is $_REQUEST valid / truthy - if so, return
+	if (PHP_SAPI === 'cli') return;
+	if (!isset($_REQUEST[$k])) return FALSE;
+	return     $_REQUEST[$k];
+} */
+
 /* make sure any timestamps you're using make sense: make sure you haven't done something weird and such: make sure you don't have zero 
 values or haven't rolled over bits; make sure your time isn't way in the future or past. Obviously both min and max are somewhat arbitrary, but 
 this has served it's purpose since roughly (northern hemisphere) summer 2019. */
