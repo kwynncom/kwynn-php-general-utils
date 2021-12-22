@@ -58,12 +58,11 @@ function kwas($data = false, $msg = 'no message sent to kwas()', $code = 12345) 
 /* The isset may not be necessary, but I'm not touching anything I've used this much and for this long. */
 }
 
-/*
-function isrv($k) { // is $_REQUEST valid / truthy - if so, return
-	if (PHP_SAPI === 'cli') return;
+
+function isrv($k) { // is $_REQUEST valid / truthy
 	if (!isset($_REQUEST[$k])) return FALSE;
 	return     $_REQUEST[$k];
-} */
+}
 
 /* make sure any timestamps you're using make sense: make sure you haven't done something weird and such: make sure you don't have zero 
 values or haven't rolled over bits; make sure your time isn't way in the future or past. Obviously both min and max are somewhat arbitrary, but 
@@ -168,9 +167,11 @@ function vsidod() {
     return $sid;
 }
 
-function kwjae($o) { // JSON encode, echo, and exit
-    header('application/json');
-    echo json_encode($o);
+function kwjae($din, $isj = false) { // JSON encode, echo, and exit
+    header('Content-Type: application/json');
+	if (!$isj) $j = json_encode($din);
+	else       $j = $din;
+    echo($j);
     exit(0);
 }
 
