@@ -56,6 +56,7 @@ function kwynn() {}
 function kwas($data = false, $msg = 'no message sent to kwas()', $code = 12345) {
     if (!isset($data) || !$data) throw new Exception($msg, $code); 
 /* The isset may not be necessary, but I'm not touching anything I've used this much and for this long. */
+	return $data;
 }
 
 
