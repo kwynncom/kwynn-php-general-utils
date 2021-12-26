@@ -3,6 +3,7 @@
 /* This is a collection of code that is general enough that I use it in a number of projects. */
 
 require_once('kwshortu.php');
+require_once('mongodb3.php');
 require_once(__DIR__ . '/lock.php');
 require_once('machineID.php');
 require_once(__DIR__ . '/base62/base62.php'); // both base62() and didCLICallMe()
