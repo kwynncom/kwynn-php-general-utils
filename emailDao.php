@@ -11,7 +11,8 @@ class dao_email_out_audit extends dao_generic {
     public function put($vin) {
 
 	$dat = self::parseVars($vin);
-	$this->ecoll->upsert(['seq' => $vin['seq']], $dat);
+	if (!isset($dat['ts']))  $dat['ts'] = time();
+	$this->ecoll->upsert(['_id' => $vin['_id']], $dat);
     }
     
     private static function parseElapsedI(&$dat, $vin) {

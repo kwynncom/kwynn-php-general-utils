@@ -1,6 +1,15 @@
 # kwynn-php-general-utils
 This is PHP code I wrote and use repeatedly in different types of projects, including a growing number here on GitHub.
 
+*********
+2021/12/28 - notes on email.php usage
+
+Make the apt creds/creds document entry.
+Refresh password.
+Create a local password.
+
+
+**********
 2021/11/25
 
 If I don't use sem_remove() in lock.php, then switching from CLI to web causes permission denied.  If I do use sem_remove(), there is a lesser error condition.

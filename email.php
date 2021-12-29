@@ -6,7 +6,7 @@ require_once('emailDao.php');
 
 class kwynn_email {
     
-    const devActiveTS = '2020-09-07 23:10';
+    const devActiveTS = '2021-12-28 23:20';
     const devActive = 0;
     
     const smtp_server = 'email-smtp.us-east-1.amazonaws.com';
@@ -96,16 +96,15 @@ private function audit($when, $dat = false) {
 
    
     if ($when === 'pre') {
-	$dat = [];
-        $this->seq = $this->auditDao->getSeq('email_auto');
-	$dat['seq'] = $this->seq;
-	$dat['state'] = $when;
-	$this->auditDao->put($dat);
-	return;
+		$dat = [];
+		$this->moid = $dat['_id'] = dao_generic_3::get_oids();
+		$dat['state'] = $when;
+		$this->auditDao->put($dat);
+		return;
     }
 
-    $dat['seq'] = $this->seq;
     $dat['state'] = $when;
+	$dat['_id'] = $this->moid;
     
     $this->auditDao->put($dat);
 }

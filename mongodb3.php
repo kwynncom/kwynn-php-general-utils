@@ -48,6 +48,11 @@ class kw3mdbcoll extends MongoDB\Collection {
     }
 	
 	public function find($q = [], $o = []) { return parent::find($q, $o)->toArray();	}
+	
+	public function insertOne($dat, $opts = []) {
+		if (!isset($dat['_id'])) $dat['_id'] = dao_generic_3::get_oids();
+		parent::insertOne($dat, $opts);
+	}
 
 }
 
@@ -67,6 +72,29 @@ class dao_generic_3  {
 			$this->$v = $this->client->selectCollection($this->dbname, $t);
 		}	
     }
+	
+	public static function get_oids($rand = false) {
+		$o   = new MongoDB\BSON\ObjectId();
+		$s   = $o->__toString();
+		$ts  = $o->getTimestamp(); unset($o);
+		$tss = date('md-Hi-Y-s', $ts); unset($ts);
+		$fs  = $tss . 's-' .  substr($s  ,  8);
+		if ($rand) 
+		$fs .= '-' . base62(15); unset($tss, $s, $rand);
+		return $fs;
+	}
+
+	public static function oidsvd($sin, $ckrand = false) {
+		kwas(is_string($sin), 'bad id - 1 - 234');
+		
+		$res = ['/^[\w-]{35}$/',
+				'/^[\w-]{51}$/'	];
+		$rr = preg_match($res[1], $sin, $ms);
+		if ($rr) return $ms[0];
+		if ($ckrand) kwas(0, 'not oids with rand');
+		kwas(preg_match($res[0], $sin, $ms, 'bad id'), 'not valid oids - either type');
+		return $ms[0];
+	}
 	
 } // class
 } // if MongoDB stuff exists
