@@ -59,7 +59,7 @@ class kw3mdbcoll extends MongoDB\Collection {
 class dao_generic_3  {
     
     private $dbname;
-    private $client;
+    protected $client;
     
     protected function __construct($dbname) {
 		$this->dbname = $dbname;

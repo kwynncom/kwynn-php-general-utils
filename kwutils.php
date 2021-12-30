@@ -7,6 +7,7 @@ require_once('mongodb3.php');
 require_once(__DIR__ . '/lock.php');
 require_once('machineID.php');
 require_once(__DIR__ . '/base62/base62.php'); // both base62() and didCLICallMe()
+require_once(__DIR__ . '/mongoDBcli.php');
 
 /* user agent, for when a server will ignore a request without a UA.  I am changing this 2020/01/16.  I'm moving towards releasing this file
  * to GitHub, so I should show myself to be properly open source fanatical. */
