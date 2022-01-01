@@ -9,7 +9,11 @@ class mongocli_tests {
 	public static function doit() {
 		self::t10();
 		self::t20();
-
+		self::t30();
+	}
+	
+	private static function t30() {
+		
 	}
 	
 	private static function t20() {
@@ -21,16 +25,20 @@ class mongocli_tests {
 		$r = self::qf('sum-10');
 		kwas(intval(round($r['sumn'])) === 6, 'bad result t20 sum');
 		
+		$r = self::q(false, __DIR__ . '/q10.js');
+		kwas($r['v'] === 'standalone', 'sa file failed'); 
+		
 		kwas(self::qf('drop-final-coll') === true, 'coll final drop fail');
 		$rdd = self::qf('drop-final-db');
 		kwas($rdd['ok'] === 1, 'drop final db fail');
+		echo("TESTS OK!\n");
 		return;
 		
 	}
 	
 	private static function qf($id) {
 		echo("file q id === $id\n");
-		$r = dbqcl::byFile(self::dbcnm, self::qfile, $id);
+		$r = dbqcl::inFile(self::dbcnm, self::qfile, $id);
 		echo("result === " . print_r($r) . "\n");
 		return $r;
 		
@@ -44,7 +52,7 @@ class mongocli_tests {
 		return;
 	}
 	
-	private static function q($q) {
+	private static function q($q, $file = false) {
 		static $dbs = false;
 		
 		if ($dbs === false) {
@@ -53,7 +61,7 @@ class mongocli_tests {
 		}
 		
 		echo("q === $q\n");
-		$r = dbqcl::q(self::dbcnm, $q);		
+		$r = dbqcl::q(self::dbcnm, $q, $file);		
 		echo("result === " . print_r($r) . "\n");
 		return $r;
 	}
