@@ -9,6 +9,22 @@ require_once('machineID.php');
 require_once(__DIR__ . '/base62/base62.php'); // both base62() and didCLICallMe()
 require_once(__DIR__ . '/mongoDBcli.php');
 
+/* Kwynn's assert.  It's similar to the PHP assert() except it throws an exception rather than dying.  I use this ALL THE TIME.  
+  I'm sure there are 100s if not 1,000s of references to this in my code. */
+function kwas($data = false, $msg = 'no message sent to kwas()', $code = 12345) {
+    if (!isset($data) || !$data) throw new Exception($msg, $code); 
+/* The isset may not be necessary, but I'm not touching anything I've used this much and for this long. */
+	return $data;
+}
+
+function ifs($a, $k, $ifnot = false) { // if set return, else return ifnot
+	if (isset(   $a[$k])) 
+		return   $a[$k];
+	
+	return $ifnot;
+}
+
+
 /* user agent, for when a server will ignore a request without a UA.  I am changing this 2020/01/16.  I'm moving towards releasing this file
  * to GitHub, so I should show myself to be properly open source fanatical. */
 function kwua() { return 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36'; }
@@ -52,15 +68,6 @@ if (file_exists($minc)) require_once($minc); unset($minc); // unset so as to not
 /* I am finally defining myself as a null function.  I am sick and tired of creating fake variables for something for NetBeans' debugger to set a 
  * breakpoint to.  A breakpoint has to have something there.  So "Kwynn's null" is recursively kwynn() */
 function kwynn() {}
-
-/* Kwynn's assert.  It's similar to the PHP assert() except it throws an exception rather than dying.  I use this ALL THE TIME.  
-  I'm sure there are 100s if not 1,000s of references to this in my code. */
-function kwas($data = false, $msg = 'no message sent to kwas()', $code = 12345) {
-    if (!isset($data) || !$data) throw new Exception($msg, $code); 
-/* The isset may not be necessary, but I'm not touching anything I've used this much and for this long. */
-	return $data;
-}
-
 
 function isrv($k) { // is $_REQUEST valid / truthy
 	if (!isset($_REQUEST[$k])) return FALSE;

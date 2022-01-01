@@ -3,6 +3,8 @@
 class dbqcl {
 
 	public static function q($db, $q) {
+		
+		if (strpos($q, 'printjson') === false) $q = 'printjson(' . $q . ')';
 
 		$p = '/tmp/kwqeq10_2021_' . md5($q) . '_' . get_current_user() . '.js';
 
@@ -14,11 +16,9 @@ class dbqcl {
 
 		$cmd = "mongo $db --quiet $p";
 		$t   = shell_exec($cmd);
-		$a = json_decode($t, true); kwas(is_array($a), 'mongoCLI did not result in array');
-		if (count($a) === 1) return $a[0];
+		$a = json_decode($t, true);
+		if (is_array($a) && count($a) === 1) return $a[0];
 		return $a;
-
-
 	}
 	
 	static function byFile($db, $fin, $qid) { 
