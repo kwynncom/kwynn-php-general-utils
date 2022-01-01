@@ -12,13 +12,8 @@ class dbqcl {
 		}
 		else {
 			kwas($q, "either send a query or a file containing a query");
-			$p = '/tmp/kwqeq10_2021_' . md5($q) . '_' . get_current_user() . '.js';
-			if (!file_exists($p)) {
-				file_put_contents($p, '');
-				chmod($p, 0600);
-				file_put_contents($p, $q);
-			}
-		}
+			$p = tuf_once($q, 'kwqeq10_2021_' . md5($q), 'js');
+  	    }
 		
 		if ($cmdPrefix) $cmdPrefix = $cmdPrefix . ' ';
 

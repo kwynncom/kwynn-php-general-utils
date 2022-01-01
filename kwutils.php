@@ -9,6 +9,30 @@ require_once('machineID.php');
 require_once(__DIR__ . '/base62/base62.php'); // both base62() and didCLICallMe()
 require_once(__DIR__ . '/mongoDBcli.php');
 
+// write to temporary user file once - do nothing if it exists; returns the file path
+function tuf_once($contents, $prefix, $suffix = '') {
+	$p  = '';
+	$p .= '/tmp/';
+	$p .= $prefix . '_';
+	$p .= get_current_user();
+	if ($suffix) $p .= '.' . $suffix;
+
+	if (file_exists($p)) return $p;
+
+	unset($prefix, $suffix);
+
+	kwas($r = fopen($p, 'c'), "fopen fail $p");
+	kwas(flock($r, LOCK_EX), "lock on $p failed");
+	kwas(chmod($p, 0600), "cannot chmod $p");
+	kwas(fwrite($r, $contents) === strlen($contents), "write to $p failed");
+	kwas(flock($r, LOCK_UN), "unlock failed for $p");
+	fclose($r);
+	chmod($p, 0400);
+	
+	return $p;
+}
+
+
 /* Kwynn's assert.  It's similar to the PHP assert() except it throws an exception rather than dying.  I use this ALL THE TIME.  
   I'm sure there are 100s if not 1,000s of references to this in my code. */
 function kwas($data = false, $msg = 'no message sent to kwas()', $code = 12345) {
