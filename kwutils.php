@@ -9,13 +9,20 @@ require_once('machineID.php');
 require_once(__DIR__ . '/base62/base62.php'); // both base62() and didCLICallMe()
 require_once(__DIR__ . '/mongoDBcli.php');
 
-// write to temporary user file once - do nothing if it exists; returns the file path
-function tuf_once($contents, $prefix, $suffix = '') {
+// used just below
+function tuf_path($prefix, $suffix = '') {
 	$p  = '';
 	$p .= '/tmp/';
 	$p .= $prefix . '_';
 	$p .= get_current_user();
 	if ($suffix) $p .= '.' . $suffix;
+	return $p;
+}
+
+// write to temporary user file once - do nothing if it exists; returns the file path
+function tuf_once($contents, $prefix, $suffix = '') {
+
+	$p = tuf_path($prefix, $suffix);
 
 	if (file_exists($p)) return $p;
 
@@ -32,6 +39,11 @@ function tuf_once($contents, $prefix, $suffix = '') {
 	return $p;
 }
 
+function tuf_get ($prefix, $suffix = '') {
+	$p = tuf_path($prefix, $suffix);
+	if (file_exists($p)) return file_get_contents($p);
+	return false;
+}
 
 /* Kwynn's assert.  It's similar to the PHP assert() except it throws an exception rather than dying.  I use this ALL THE TIME.  
   I'm sure there are 100s if not 1,000s of references to this in my code. */
