@@ -8,7 +8,7 @@ class dbqcl {
 		$ns  = '';
 		$ns .= substr($rq, 0, $pp + 1);
 		$ns .= strrev($k);
-		$ns .= substr($rq, $pp + strlen($k) + 1);
+		$ns .= substr($rq, $pp  + 1);
 		$ns = strrev($ns);
 		return $ns;
 		
