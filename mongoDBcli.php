@@ -1,10 +1,26 @@
 <?php
 
 class dbqcl {
-
+	
+	public static function addToA($q, $k) {
+		$rq = strrev($q);
+		$pp = strpos($rq, ')');
+		$ns  = '';
+		$ns .= substr($rq, 0, $pp + 1);
+		$ns .= strrev($k);
+		$ns .= substr($rq, $pp + strlen($k) + 1);
+		$ns = strrev($ns);
+		return $ns;
+		
+		
+	}
+	
 	public static function q($db, $q = false, $exf = false, $cmdPrefix = '') {
 		
-		if (strpos($q, 'printjson') === false) $q = 'printjson(' . $q . ')';
+		if (strpos($q, 'printjson' ) === false) $q = 'printjson(' . $q . ')';
+		
+		$tok = '.toArray()';
+		if (strpos($q, $tok) === false) $q = self::addToA($q, $tok);
 
 		if ($exf) {
 			$p = $exf;

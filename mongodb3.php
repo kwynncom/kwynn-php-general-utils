@@ -28,11 +28,18 @@ class kw3moncli extends MongoDB\Client {
 }
 
 class kw3mdbcoll extends MongoDB\Collection {
-    public function upsert($q, $set) {
+	
+	public function upsertMany($q, $set) {
+		return $this->upsert($q, $set, 2);
+	}
+	
+	
+    public function upsert($q, $set, $oom = 1) {
 		$now = time();
 		$set['up_r' ] = date('r', $now);
 		$set['up_ts'] = $now;
-		$r = $this->updateOne($q, ['$set' => $set], ['upsert' => true]);
+		if ($oom === 1) $r = $this->updateOne ($q, ['$set' => $set], ['upsert' => true]);
+		else			$r = $this->updateMany($q, ['$set' => $set]);
 		$sum  = 0;
 		$mc   = $r->getMatchedCount();
 		$sum += $r->getUpsertedCount();
@@ -42,7 +49,7 @@ class kw3mdbcoll extends MongoDB\Collection {
 		if ($mc === 0) {
 			$ca['cre_r' ] = $set['up_r'];
 			$ca['cre_ts'] = $set['up_ts'];
-			$this->updateOne($q, ['$set' => $ca], ['upsert' => true]);
+			if ($oom === 1) $this->updateOne ($q, ['$set' => $ca], ['upsert' => true]);
 		}
 		return $r;
     }
