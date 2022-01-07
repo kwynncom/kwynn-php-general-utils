@@ -20,7 +20,7 @@ class dbqcl {
 		if (strpos($q, 'printjson' ) === false) $q = 'printjson(' . $q . ')';
 		
 		$tok = '.toArray()';
-		if (strpos($q, $tok) === false) $q = self::addToA($q, $tok);
+		if (strpos($q, $tok) === false && strpos($q, ').count(') === false) $q = self::addToA($q, $tok);
 
 		if ($exf) {
 			$p = $exf;
