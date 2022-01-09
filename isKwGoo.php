@@ -1,4 +1,6 @@
-<?php  // see notes at bottom
+<?php   /* WARNING: you have to use this before there is a chance of output, otherwise you may get the dreaded 
+ * "cannot be changed after headers have already been sent" */
+// see other notes at bottom
 
 require_once('/opt/kwynn/kwutils.php');
 

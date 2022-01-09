@@ -2,6 +2,13 @@
 
 require_once('/opt/kwynn/kwutils.php');
 
+function gooOrDev($orDie = false) {
+	if (isKwGoo()) return TRUE;		
+	if (file_exists('/var/kwynn/i_am_Kwynn_local_dev_2021_11')) return TRUE;
+	if ($orDie) kwas(FALSE, 'not auth - gooOrDev 0052');
+	return FALSE;
+}
+
 class kwisAWSCl {
     
     const iddir      = '/sys/devices/virtual/dmi/id/';

@@ -8,7 +8,9 @@ function kwas(v, msg) {
 		throw msg;
 	}
 }
-class jssendcl {
+function time() { return (new Date().getTime()); } 
+
+class kwjss {
     
     static responseTextParse(t) {
 	let o = false;
@@ -24,7 +26,7 @@ class jssendcl {
         sob.dataset = ein.dataset;
         sob.v       = ein.value;
         sob.pageid = pageid;
-        sendcl.sobf(url, sob, cb);
+        kwjss.sobf(url, sob, cb);
     }
     
     static sobf(url, sob, cb, prt) {
@@ -38,7 +40,7 @@ class jssendcl {
         XHR.onloadend = function() { 
             const rt = this.responseText;
             if (prt === false) return cb(rt);
-            if (typeof cb === 'function') cb(sendcl.responseTextParse(rt)); 
+            if (typeof cb === 'function') cb(kwjss.responseTextParse(rt)); 
         }
 
         const formData = new FormData();

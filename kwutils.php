@@ -195,6 +195,8 @@ function sslOnly($force = 0) { // make sure the page is SSL
     }
 }
 
+/* WARNING: you have to use this before there is a chance of output, otherwise you may get the dreaded 
+ * "cannot be changed after headers have already been sent" */
 function startSSLSession($force = 0) { // session as in a type of cookie
     if (session_id()) return session_id();
     sslOnly($force);
