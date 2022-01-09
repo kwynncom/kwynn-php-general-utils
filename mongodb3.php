@@ -99,7 +99,7 @@ class dao_generic_3  {
 		$rr = preg_match($res[1], $sin, $ms);
 		if ($rr) return $ms[0];
 		if ($ckrand) kwas(0, 'not oids with rand');
-		kwas(preg_match($res[0], $sin, $ms, 'bad id'), 'not valid oids - either type');
+		kwas(preg_match($res[0], $sin, $ms), 'not valid oids - either type');
 		return $ms[0];
 	}
 	
