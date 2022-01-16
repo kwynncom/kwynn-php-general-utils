@@ -62,7 +62,7 @@ function ifs($a, $k, $ifnot = false) { // if set return, else return ifnot
 	return $ifnot;
 }
 
-function kwifs($a, ...$ks) { // if set return, else return ifnot
+function kwifs($a, ...$ks) { // if set return, else FALSE
 	
 	$i = 0;
 	$b = $a;
@@ -76,6 +76,13 @@ function kwifs($a, ...$ks) { // if set return, else return ifnot
 	return $b;
 }
 
+function kwam($a, $b) { 
+	$as = [$a, $b];
+	foreach($as as $i => $v) {
+		if (!is_array($v)) $as[$i] = [$v];
+	}
+	return array_merge($as[0], $as[1]); 
+}
 
 /* user agent, for when a server will ignore a request without a UA.  I am changing this 2020/01/16.  I'm moving towards releasing this file
  * to GitHub, so I should show myself to be properly open source fanatical. */
