@@ -8,6 +8,8 @@ require_once(__DIR__ . '/lock.php');
 require_once('machineID.php');
 require_once(__DIR__ . '/base62/base62.php'); // both base62() and didCLICallMe()
 require_once(__DIR__ . '/mongoDBcli.php');
+require_once(__DIR__ . '/js/kwjsrecv.php');
+
 
 // used just below
 function tuf_path($prefix, $suffix = '') {
@@ -52,12 +54,26 @@ function kwas($data = false, $msg = 'no message sent to kwas()', $code = 12345) 
 /* The isset may not be necessary, but I'm not touching anything I've used this much and for this long. */
 	return $data;
 }
-
+// only used in main project and new msg / msgs web form - 2022/01
 function ifs($a, $k, $ifnot = false) { // if set return, else return ifnot
 	if (isset(   $a[$k])) 
 		return   $a[$k];
 	
 	return $ifnot;
+}
+
+function kwifs($a, ...$ks) { // if set return, else return ifnot
+	
+	$i = 0;
+	$b = $a;
+	while (isset      ($ks[$i])) {
+		if (!isset( $b[$ks[$i]])) return FALSE;
+		$b	=		$b[$ks[$i]];
+		
+		$i++;
+	}
+	
+	return $b;
 }
 
 

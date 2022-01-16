@@ -6,7 +6,7 @@ require_once('emailDao.php');
 
 class kwynn_email {
     
-    const devActiveTS = '2021-12-28 23:20';
+    const devActiveTS = '2022-01-10 00:30';
     const devActive = 0;
     
     const smtp_server = 'email-smtp.us-east-1.amazonaws.com';
