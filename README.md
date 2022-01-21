@@ -89,3 +89,6 @@ Per my earlier comment, on June 4, the code is aleady much better tested.
 Very First Commit Comment (ca. 2020/06/04)
 For the most part, I'm going to commit now and comment later.  I will say that several of these files are brand new.  Out of the brand new ones, some are already 
 fairly well tested and some not so much.
+***************
+This repo started with https://github.com/kwynncom/javascript-synchronized-clock
+    The CHANGELOG.md in that repo's tag / version 1.0 notes this fact.

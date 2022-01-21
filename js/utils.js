@@ -2,6 +2,7 @@ function qsa(q)  { return document.querySelectorAll(q); }
 function qs(q) { return document.querySelector(q);}
 function cl(msg) { console.log(msg); }
 function byid(id) { return document.getElementById(id); }
+function cree(ty) { return document.createElement(ty); }
 function kwas(v, msg) {
 	if (!v) {
 		if (!msg) msg = 'unknown message';
@@ -9,6 +10,7 @@ function kwas(v, msg) {
 	}
 }
 function time() { return (new Date().getTime()); } 
+function getOKColor() { return 'rgb(153, 255, 153)'; }
 
 class kwjss {
     

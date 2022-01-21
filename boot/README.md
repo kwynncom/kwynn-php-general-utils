@@ -68,3 +68,8 @@ systemd reference:
 
 https://transang.me/create-startup-scripts-in-ubuntu/
 https://wiki.archlinux.org/index.php/systemd#Get_current_targets
+***********
+*************
+The isAWS() crypto stuff started with my 
+https://github.com/kwynncom/javascript-synchronized-clock
+The 1.0 tag of that repo has it.  I am considering deleting it from that project as of 2022/01/18
