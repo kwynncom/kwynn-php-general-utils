@@ -3,6 +3,11 @@ function qs(q) { return document.querySelector(q);}
 function cl(msg) { console.log(msg); }
 function byid(id) { return document.getElementById(id); }
 function cree(ty) { return document.createElement(ty); }
+function inht(id, s) {
+    const e = byid(id);
+    if (!e) return;
+    e.innerHTML = s;
+}
 function kwas(v, msg) {
 	if (!v) {
 		if (!msg) msg = 'unknown message';
