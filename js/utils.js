@@ -3,8 +3,9 @@ function qs(q) { return document.querySelector(q);}
 function cl(msg) { console.log(msg); }
 function byid(id) { return document.getElementById(id); }
 function cree(ty) { return document.createElement(ty); }
-function inht(id, s) {
-    const e = byid(id);
+function inht(oorid, s) {
+    let e = oorid;
+    if (typeof oorid === 'string') e = byid(oorid);
     if (!e) return;
     e.innerHTML = s;
 }
@@ -73,6 +74,11 @@ function kwifs(a, ...ks) { // if defined return, else FALSE
 }
 
 function is_numeric(x) {
+    if (typeof x === 'undefined') return false;
+    if (typeof x === 'string' && x.search(/\d/) < 0) return false;
     const t = x * 1;
-    return typeof t === 'number';
+    if (isNaN(t)) return false;
+    if (Number.isNaN(t)) return false;
+    const isn = typeof t === 'number';
+    return isn;
 }

@@ -34,19 +34,23 @@ class kw3mdbcoll extends MongoDB\Collection {
 	}
 	
 	
-    public function upsert($q, $set, $oom = 1) {
-		$now = time();
-		$set['up_r' ] = date('r', $now);
-		$set['up_ts'] = $now;
+    public function upsert($q, $set, $oom = 1, $upc = true) {
+		if ($upc) {
+			$now = time();
+			$set['up_r' ] = date('r', $now);
+			$set['up_ts'] = $now;
+		}
+		
 		if ($oom === 1) $r = $this->updateOne ($q, ['$set' => $set], ['upsert' => true]);
 		else			$r = $this->updateMany($q, ['$set' => $set]);
+		
 		$sum  = 0;
 		$mc   = $r->getMatchedCount();
 		$sum += $r->getUpsertedCount();
 		$sum += $r->getModifiedCount();
 		$sum += $mc;
 		kwas($sum >= 1, "kw3mdbcoll upsert sum = $sum when should be >= 1");
-		if ($mc === 0) {
+		if ($mc === 0 && $upc) {
 			$ca['cre_r' ] = $set['up_r'];
 			$ca['cre_ts'] = $set['up_ts'];
 			if ($oom === 1) $this->updateOne ($q, ['$set' => $ca], ['upsert' => true]);
