@@ -10,6 +10,18 @@ require_once(__DIR__ . '/base62/base62.php'); // both base62() and didCLICallMe(
 require_once(__DIR__ . '/mongoDBcli.php');
 require_once(__DIR__ . '/js/kwjsrecv.php');
 
+   		         //  123456789 digits
+define('M_BILLION', 1000000000);
+				 //  123456
+define('M_MILLION', 1000000);
+define('DAY_S', 86400);
+
+function didAnyCallMe($fin) {
+	if ( didCLICallMe($fin)) return TRUE;
+	if ( iscli()) return FALSE;
+	if (basename(__FILE__) === basename($_SERVER['REQUEST_URI'])) return TRUE;
+	return FALSE;
+}
 
 // used just below
 function tuf_path($prefix, $suffix = '') {
@@ -287,8 +299,3 @@ class stddev { // 2021/01/12 11:01pm - into kwutils
 	return ['a' => $avg, 's' => $stdd, 'n' => $n , 'min' => $min, 'max' => $max];
     }
 }
-					    //  123456789 digits
-if (!defined('M_BILLION')) define('M_BILLION', 1000000000);
-else kwas(false, 'billion constant already defined');
-		 //  123456
-define('M_MILLION', 1000000);
