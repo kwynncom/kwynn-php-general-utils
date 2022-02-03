@@ -19,7 +19,7 @@ define('DAY_S', 86400);
 function didAnyCallMe($fin) {
 	if ( didCLICallMe($fin)) return TRUE;
 	if ( iscli()) return FALSE;
-	if (basename(__FILE__) === basename($_SERVER['REQUEST_URI'])) return TRUE;
+	if (basename($fin) === basename($_SERVER['PHP_SELF'])) return TRUE;
 	return FALSE;
 }
 
