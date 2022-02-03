@@ -16,6 +16,19 @@ function kwas(v, msg) {
 	}
 }
 function time() { return (new Date().getTime()); } 
+function tzop() {
+    const dob  = new Date();
+    const minr =  dob.getTimezoneOffset();
+    const hr   = parseInt(minr / 60);
+    const rev  = hr * -1;
+    return rev;
+}
+
+function tzName() {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone;
+}
+
+
 function getOKColor() { return 'rgb(153, 255, 153)'; }
 
 class kwjss {

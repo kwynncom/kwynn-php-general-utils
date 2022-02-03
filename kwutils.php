@@ -23,6 +23,19 @@ function didAnyCallMe($fin) {
 	return FALSE;
 }
 
+function setVTZ($sin) {
+	$sin = trim($sin);
+	try {
+		kwas(preg_match('/^[A-Za-z\/_]{1,75}$/', $sin), 'bad tz form');
+		$o = new DateTimeZone($sin);
+		kwas($o->getName() === $sin, 'in out mismatch tz');
+		date_default_timezone_set($sin);
+		return $o;
+	} catch (Exception $ex) { }
+	
+	return new DateTimeZone(date_default_timezone_get());
+}
+
 // used just below
 function tuf_path($prefix, $suffix = '') {
 	$p  = '';
