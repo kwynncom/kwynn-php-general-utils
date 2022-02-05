@@ -60,9 +60,11 @@ class kw3mdbcoll extends MongoDB\Collection {
 	
 	public function find($q = [], $o = []) { return parent::find($q, $o)->toArray();	}
 	
-	public function insertOne($dat, $opts = []) {
-		if (!isset($dat['_id'])) $dat['_id'] = dao_generic_3::get_oids();
-		parent::insertOne($dat, $opts);
+	public function insertOne($dat, $o = []) {
+		if (!isset($o['kwnos'])) { if (!isset($dat['_id'])) $dat['_id'] = dao_generic_3::get_oids(); }
+		else unset($o['kwnos']);
+		
+		parent::insertOne($dat, $o);
 	}
 
 }

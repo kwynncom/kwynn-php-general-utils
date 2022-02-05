@@ -16,6 +16,30 @@ define('M_BILLION', 1000000000);
 define('M_MILLION', 1000000);
 define('DAY_S', 86400);
 
+define('KWYNN_INSERT_MANY_BUFFER_COUNT', 1000);
+
+function roint($x) { return intval(round($x)); }
+
+function inonebuf($d, $c) {
+	static $b = [];
+	static $i = 0;
+	static $t = 0;
+	static $bc = KWYNN_INSERT_MANY_BUFFER_COUNT;
+
+	$ib = is_bool($d);
+
+	if (!$ib) { $b[] = $d; $i++; }
+
+	if (($i >= $bc) || ($ib && $i > 0))
+	{ 
+		$r = $c->insertMany($b); 
+		kwas($r->getInsertedCount() === $i, 'bad bulk insert count kwutils 0240');
+		$t += $i; $b = []; $i = 0;
+	}	
+
+	return $t;
+}
+
 function didAnyCallMe($fin) {
 	if ( didCLICallMe($fin)) return TRUE;
 	if ( iscli()) return FALSE;
