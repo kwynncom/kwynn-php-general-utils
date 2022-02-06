@@ -6,11 +6,11 @@ class fork {
     
     const reallyFork = true;
     
-    public static function dofork($childFunc, $startat, $endat, $reallyForkIn = true) {
+    public static function dofork($reallyForkIn, $startat, $endat, $childFunc, ...$fargs) {
 	
 	$reallyFork = $reallyForkIn && self::reallyFork;
 	
-	$mcr = multi_core_ranges::get($startat, $endat, $reallyFork ? false : 1);
+	$mcr = multi_core_ranges::get($startat, $endat, false);
 		
 	$cpun = count($mcr);
 	$cpids = [];
@@ -18,13 +18,14 @@ class fork {
 	    $pid = -1;
 	    if ($reallyFork) $pid = pcntl_fork();
 	    if ($pid === 0 || !$reallyFork) {
-		call_user_func($childFunc, $mcr[$i]['l'], $mcr[$i]['h'], $i);
-		exit(0);
+			call_user_func($childFunc, $mcr[$i]['l'], $mcr[$i]['h'], $i, $fargs);
+			if ($reallyFork) exit(0);
 	    }  
 	    $cpids[] = $pid;
 	}
-	for($i=0; $i < $cpun; $i++) pcntl_waitpid($cpids[$i], $status);
-    }
+	
+	if ($reallyFork) for($i=0; $i < $cpun; $i++) pcntl_waitpid($cpids[$i], $status);
+} // func
 } // class
 
 class multi_core_ranges {

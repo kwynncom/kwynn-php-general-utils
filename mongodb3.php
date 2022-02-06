@@ -81,7 +81,11 @@ class dao_generic_3  {
 		$this->client = new kw3moncli();
     }
 	
-	protected function creTabs($ts) {
+	protected function creTabs($tsin) {
+		
+		if (is_string($tsin)) $ts = [$tsin[0] => $tsin];
+		else $ts = $tsin; unset($tsin);
+		
 		foreach($ts as $k => $t) {
 			$v = $k . 'coll';
 			$this->$v = $this->client->selectCollection($this->dbname, $t);

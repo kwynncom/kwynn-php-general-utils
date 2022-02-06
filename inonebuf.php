@@ -2,20 +2,25 @@
 
 class inonebuf extends dao_generic_3 {
 
-	const bufc = 1000; // 62 is slower than 125; other than that, not definitive
-	
-	public function __construct($db, $conm) {
-		parent::__construct($db);
-		$this->coll = $this->client->selectCollection($db, $conm);
-		$this->init();
-	}
+const bufc = 1000;
+
+public function __construct($db, $conm) {
+	parent::__construct($db);
+	$this->coll = $this->client->selectCollection($db, $conm);
+	$this->init();
+}
+
+public function __destruct() {
+	$res = $this->ino();
+	return;
+}
 
 private function init() {
 	$this->b = [];
 	$this->i = 0;
 	$this->t = 0;
 }
-public function ino($d) {
+public function ino($d = false) {
 	
 	static $bc = self::bufc;
 
