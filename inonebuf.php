@@ -4,15 +4,26 @@ class inonebuf extends dao_generic_3 {
 
 	const bufc = 1000;
 	
-	public function __construct() {
+	public function __construct($db, $conm) {
+		parent::__construct($db);
+		$this->coll = $this->client->selectCollection($db, $conm);
+		
+		// $this->init();
 		
 	}
-
-public static function inonebuf($d, $c) {
+/*
+	private function init() {
+		$this->b = [];
+		$this->i = 0;
+		$this->t = 0;
+		$this->bc = self::buf;
+	} */
+public function ino($d) {
 	static $b = [];
 	static $i = 0;
 	static $t = 0;
 	static $bc = self::bufc;
+	$c  = $this->coll;
 
 	$isd = is_array($d) || is_object($d);
 
@@ -27,8 +38,4 @@ public static function inonebuf($d, $c) {
 
 	return $t;
 }
-}
-
-function inonebuf($d, $c) {
-	inonebuf::inonebuf($d, $c);
 }
