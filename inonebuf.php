@@ -7,35 +7,30 @@ class inonebuf extends dao_generic_3 {
 	public function __construct($db, $conm) {
 		parent::__construct($db);
 		$this->coll = $this->client->selectCollection($db, $conm);
-		
-		// $this->init();
-		
+		$this->init();
 	}
-/*
-	private function init() {
-		$this->b = [];
-		$this->i = 0;
-		$this->t = 0;
-		$this->bc = self::buf;
-	} */
+
+private function init() {
+	$this->b = [];
+	$this->i = 0;
+	$this->t = 0;
+}
 public function ino($d) {
-	static $b = [];
-	static $i = 0;
-	static $t = 0;
+	
 	static $bc = self::bufc;
-	$c  = $this->coll;
 
 	$isd = is_array($d) || is_object($d);
 
-	if ($isd) { $b[] = $d; $i++; }
+	if ($isd) { $this->b[] = $d; $this->i++; }
 
-	if (($i >= $bc) || (!$isd && $i > 0))
+	if (($this->i >= $bc) || (!$isd && $this->i > 0))
 	{ 
-		$r = $c->insertMany($b); 
-		kwas($r->getInsertedCount() === $i, 'bad bulk insert count kwutils 0240');
-		$t += $i; $b = []; $i = 0;
+		$r = $this->coll->insertMany($this->b); 
+		kwas($r->getInsertedCount() === $this->i, 'bad bulk insert count kwutils 0240');
+		$this->t += $this->i; $this->b = []; $this->i = 0;
 	}	
 
-	return $t;
+	
+	return $this->t;
 }
 }
