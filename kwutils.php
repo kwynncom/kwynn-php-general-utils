@@ -10,6 +10,7 @@ require_once(__DIR__ . '/base62/base62.php'); // both base62() and didCLICallMe(
 require_once(__DIR__ . '/mongoDBcli.php');
 require_once(__DIR__ . '/js/kwjsrecv.php');
 require_once(__DIR__ . '/' . 'inonebuf.php');
+require_once(__DIR__ . '/fork.php');
 
    		         //  123456789 digits
 define('M_BILLION', 1000000000);

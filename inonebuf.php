@@ -2,7 +2,7 @@
 
 class inonebuf extends dao_generic_3 {
 
-	const bufc = 1000;
+	const bufc = 1000; // 62 is slower than 125; other than that, not definitive
 	
 	public function __construct($db, $conm) {
 		parent::__construct($db);
