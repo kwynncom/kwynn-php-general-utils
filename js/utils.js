@@ -86,9 +86,8 @@ function kwifs(a, ...ks) { // if defined return, else FALSE
     return b;
 }
 
-// I am almost sure I wound up not using this, and I don't think the following is correct yet, either.  
+// I am using this for a test version of a paid project 2022/02/06, but I'm not certain it works correctly
 
-/*
 function is_numeric(x) {
     if (typeof x === 'undefined') return false;
     if (typeof x === 'string' && x.search(/\d/) < 0) return false;
@@ -98,4 +97,3 @@ function is_numeric(x) {
     const isn = typeof t === 'number';
     return isn;
 }
-*/

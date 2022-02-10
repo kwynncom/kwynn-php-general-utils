@@ -105,12 +105,13 @@ function kwifs($a, ...$ks) { // if set return, else FALSE
 	return $b;
 }
 
-function kwam($a, $b) { 
-	$as = [$a, $b];
-	foreach($as as $i => $v) {
-		if (!is_array($v)) $as[$i] = [$v];
+function kwam(...$aa) { 
+	$ra = [];
+	foreach($aa as $i => $v) {
+		if (!is_array($v)) $v = [$v];
+		if ($v) $ra = array_merge($ra, $v);
 	}
-	return array_merge($as[0], $as[1]); 
+	return $ra;
 }
 
 /* user agent, for when a server will ignore a request without a UA.  I am changing this 2020/01/16.  I'm moving towards releasing this file
