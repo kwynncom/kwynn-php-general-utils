@@ -2,15 +2,23 @@
 
 require_once('/opt/kwynn/kwutils.php');
 
+interface fork_worker {
+	public static function shouldSplit (int $low, int $high, int $cpuCount) : bool;
+	public static function workit	  (int $low, int $high, int $workerN);		  
+}
+
 class fork {
     
     const reallyFork = true;
     
-    public static function dofork($reallyForkIn, $startat, $endat, $childFunc, ...$fargs) {
+public static function dofork($reallyForkIn, $startat, $endat, $childCl, ...$fargs) {
 	
-	$reallyFork = $reallyForkIn && self::reallyFork;
+	$should = call_user_func([$childCl, 'shouldSplit'], $startat, $endat, multi_core_ranges::CPUCount());
+	$reallyFork = $reallyForkIn && self::reallyFork && $should;
 	
-	$mcr = multi_core_ranges::get($startat, $endat, false);
+	$mcr = [];
+	if ($should) $mcr    = multi_core_ranges::get($startat, $endat, false);
+	else		 $mcr[0] = ['l' => $startat, 'h' => $endat];
 		
 	$cpun = count($mcr);
 	$cpids = [];
@@ -18,7 +26,7 @@ class fork {
 	    $pid = -1;
 	    if ($reallyFork) $pid = pcntl_fork();
 	    if ($pid === 0 || !$reallyFork) {
-			call_user_func($childFunc, $mcr[$i]['l'], $mcr[$i]['h'], $i, $fargs);
+			call_user_func([$childCl, 'workit' ], $mcr[$i]['l'], $mcr[$i]['h'], $i, $fargs);
 			if ($reallyFork) exit(0);
 	    }  
 	    $cpids[] = $pid;
@@ -32,9 +40,9 @@ class multi_core_ranges {
     
     const maxcpus = 600; // AWS has a 192 core processor as of early 2022
     
-    public static function getCPUCount() { return self::validCPUCount(shell_exec('grep -c processor /proc/cpuinfo'));   }
+    public static function CPUCount() { return self::getValidCPUCount(shell_exec('grep -c processor /proc/cpuinfo'));   }
     
-    public static function validCPUCount($nin) {
+    public static function getValidCPUCount($nin) {
 	$nin = trim($nin);
 	kwas(is_numeric($nin), 'cpu count not a number');
 	$nin = intval($nin);
@@ -48,7 +56,7 @@ class multi_core_ranges {
 	$endat = intval($endat); $stat = intval($stat); kwas($endat >= 0 && $stat >=0, 'bad numbers 2 getRanges()');
 	
 	if ($cpuin) $cpun = self::validCPUCount($cpuin);
-	else	    $cpun = self::getCPUCount();
+	else	    $cpun = self::CPUCount();
 	
 	$rs = [];
 	
@@ -116,7 +124,7 @@ class multi_core_ranges {
 
 	$max = count($ts) - 1;
 	
-	for ($i=1; $i <= 1; $i++) {
+	for ($i=3; $i <= 3; $i++) {
 	$t = $ts[$i];
 	if (!isset($t[2])) $t[2] = 12;
 	try {
