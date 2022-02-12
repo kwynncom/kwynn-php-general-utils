@@ -14,11 +14,16 @@ class fork {
 public static function dofork($reallyForkIn, $startat, $endat, $childCl, ...$fargs) {
 	
 	$should = call_user_func([$childCl, 'shouldSplit'], $startat, $endat, multi_core_ranges::CPUCount());
-	$reallyFork = $reallyForkIn && self::reallyFork && $should;
+	$reallyFork = $reallyForkIn && self::reallyFork && $should; unset($reallyForkIn);
+	
+	if ($reallyFork && amDebugging()) {
+		$reallyFork = false;
+		echo('This code is being debugged, so it will not fork().' . "\n");
+	}
 	
 	$mcr = [];
-	if ($should) $mcr    = multi_core_ranges::get($startat, $endat, false);
-	else		 $mcr[0] = ['l' => $startat, 'h' => $endat];
+	if ($should) $mcr    = multi_core_ranges::get($startat, $endat, false); 
+	else		 $mcr[0] = ['l' => $startat, 'h' => $endat]; unset($should);
 		
 	$cpun = count($mcr);
 	$cpids = [];
