@@ -60,7 +60,7 @@ class multi_core_ranges {
 	kwas(is_numeric($endat) && is_numeric($stat), 'bad numbers 1 getRanges()');
 	$endat = intval($endat); $stat = intval($stat); kwas($endat >= 0 && $stat >=0, 'bad numbers 2 getRanges()');
 	
-	if ($cpuin) $cpun = self::validCPUCount($cpuin);
+	if ($cpuin) $cpun = self::getValidCPUCount($cpuin);
 	else	    $cpun = self::CPUCount();
 	
 	$rs = [];
@@ -110,6 +110,7 @@ class multi_core_ranges {
     
     public static function tests() {
 	$ts = [
+		[1,2],
 		[1592696603, 1603313775],
 		[1, 284717],
 		[0, 0],
@@ -129,7 +130,7 @@ class multi_core_ranges {
 
 	$max = count($ts) - 1;
 	
-	for ($i=3; $i <= 3; $i++) {
+	for ($i=0; $i <= 0; $i++) {
 	$t = $ts[$i];
 	if (!isset($t[2])) $t[2] = 12;
 	try {
