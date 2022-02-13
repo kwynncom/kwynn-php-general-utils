@@ -15,12 +15,12 @@ class dbqcl {
 		
 	}
 	
-	public static function q($db, $q = false, $exf = false, $cmdPrefix = '') {
+	public static function q($db, $q = false, $exf = false, $cmdPrefix = '', $rawc = false, $csuf = '', $ecc = false) {
 		
-		if (strpos($q, 'printjson' ) === false) $q = 'printjson(' . $q . ')';
+		if ((strpos($q, 'printjson' ) === false) && !$rawc) $q = 'printjson(' . $q . ')';
 		
 		$tok = '.toArray()';
-		if (strpos($q, $tok) === false && strpos($q, ').count(') === false) $q = self::addToA($q, $tok);
+		if (strpos($q, $tok) === false && strpos($q, ').count(') === false && !$rawc) $q = self::addToA($q, $tok);
 
 		if ($exf) {
 			$p = $exf;
@@ -34,11 +34,17 @@ class dbqcl {
 		if ($cmdPrefix) $cmdPrefix = $cmdPrefix . ' ';
 
 		$cmd = $cmdPrefix . "mongo $db --quiet $p";
+		if ($csuf) $cmd .= ' ' . $csuf;
+		if ($ecc) echo($cmd . "\n");
 		$t   = shell_exec($cmd);
-		$t   = self::processMongoJSON($t);
-		$a = json_decode($t, true);
-		if (is_array($a) && count($a) === 1) return $a[0];
-		return $a;
+		if (!$rawc) {
+			$t   = self::processMongoJSON($t);
+			$a = json_decode($t, true);
+			if (is_array($a) && count($a) === 1) return $a[0];
+			return $a;
+		}
+		else return $t;
+		
 	}
 	
 	public static function processMongoJSON($jin) { return preg_replace('/NumberLong\(["\']?(\d+)["\']?\)/', '$1' , $jin); }
