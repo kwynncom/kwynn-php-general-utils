@@ -11,7 +11,13 @@ class fork {
     
     const reallyFork = true;
     
+	private static function vcc($v) {
+		kwas(is_string($v), 'child class must be string - not object, not array');
+	}
+	
 public static function dofork($reallyForkIn, $startat, $endat, $childCl, ...$fargs) {
+	
+	self::vcc($childCl);
 	
 	$should = call_user_func([$childCl, 'shouldSplit'], $startat, $endat, multi_core_ranges::CPUCount());
 	$reallyFork = $reallyForkIn && self::reallyFork && $should; unset($reallyForkIn);
@@ -42,74 +48,112 @@ public static function dofork($reallyForkIn, $startat, $endat, $childCl, ...$far
 } // class
 
 class multi_core_ranges {
-    
-    const maxcpus = 600; // AWS has a 192 core processor as of early 2022
-    
-    public static function CPUCount() { return self::getValidCPUCount(shell_exec('grep -c processor /proc/cpuinfo'));   }
+	const maxcpus = 600; // AWS has a 192 core processor as of early 2022
+	const testcpus = 12;
+
+	public static function CPUCount() { return self::getValidCPUCount(shell_exec('grep -c processor /proc/cpuinfo'));   }
     
     public static function getValidCPUCount($nin) {
-	$nin = trim($nin);
-	kwas(is_numeric($nin), 'cpu count not a number');
-	$nin = intval($nin);
-	kwas($nin >= 1 && $nin <= self::maxcpus, 'invalid number of (hyper)threads / cores / cpus');
-	return $nin;
-    }
-    
-    public static function get($stat, $endat, $cpuin = false) { 
-
-	kwas(is_numeric($endat) && is_numeric($stat), 'bad numbers 1 getRanges()');
-	$endat = intval($endat); $stat = intval($stat); kwas($endat >= 0 && $stat >=0, 'bad numbers 2 getRanges()');
-	
-	if ($cpuin) $cpun = self::getValidCPUCount($cpuin);
-	else	    $cpun = self::CPUCount();
-	
-	$rs = [];
-	
-	if ($endat === 0) $itd = 0;
-	else		 $itd = $endat - $stat + 1;
-	
-	$h = true; // just because the logic works
-	$l = true;
-
-	for ($i=0; $i < $cpun; $i++) {
-	    
-	    if ($l === false || $h === false) { $rs[$i]['l'] = $rs[$i]['h'] = false; continue; }
-	    
-	    if ($i === 0) self::set($l, $rs, 'l', $i, $i + $stat, $stat, $endat);
-	    else          self::set($l, $rs, 'l', $i, $h + 1, $stat, $endat);
-	    if ($i < $cpun - 1) {
-		$h = intval(round(($itd / $cpun) * ($i + 1))) + $stat;   
-	    } else $h = $itd + $stat - 1;
-
-	    self::set($h, $rs, 'h', $i    , $h , $stat, $endat, $l, $h);
-
-   
+		$nin = trim($nin);
+		kwas(is_numeric($nin), 'cpu count not a number');
+		$nin = intval($nin);
+		kwas($nin >= 1 && $nin <= self::maxcpus, 'invalid number of (hyper)threads / cores / cpus');
+		return $nin;
 	}
 
-	return $rs;
-    }
-    
-    private static function set(&$lhr, &$a, $lhk, $i, $to, $stat, $endat, $l = false, $h = false) {
-	if ($endat === 0) return self::set20($lhr, $a, $lhk, false, $i);
-        if ($to > $endat) $to = false;
-        else $to = $to;
+public static function vse($v) {
+	kwas(is_numeric($v), 'not a number vse kw');
+	$v = intval($v);
+	kwas($v >= 0, 'not 0 or postive int vse kw');
+	return $v;
 	
-	if ($lhk === 'h' && $l === false) return self::set20($lhr, $a, $lhk, false, $i);
+}
+
+private function getInc(int $s, int $e) {
+	$n = $this->theon;
+	$d = $e - $s;
+	$i = roint($d / $n);
+	if ($i < 1) return 1;
+	return $i;
+}
+
+private function __construct(int $s, int $e, $n) {
+	$this->setN($n);
+	$tres = $this->do10($s, $e);
+	$this->setVOR($tres, $s, $e);
+}
+
+private function setVOR(array $a, int $s, int $e) {
+	kwas($a && is_array($a), 'bad array ranges kw');
+	$an = count($a); kwas($an >= 1 && $an <= $this->theon, 'bad array count kw ranges');
+	kwas($a[0]['l'] === $s, 'bad start ranges kw');
+	kwas($a[$an - 1]['h'] === $e, 'bad end ranges kw');
+	kwas($a[$an - 1]['l'] <= 
+		 $a[$an - 1]['h'], 'bad ranges 2254 kw');
 	
-	if ($h < $l && $lhk === 'h') $to = $l; 
+	$l = $s; 
+	$tot = 0;
+	for($i=0; $i < $an; $i++) {
+		kwas($a[$i]['l'] <= $a[$i]['h'], 'bad iter ranges kw 2254');
+		$tot += $a[$i]['h'] - $a[$i]['l'] + 1;
+		if ($i === $an - 1) break;
+		kwas($a[$i + 1]['l'] === $a[$i]['h'] + 1);
+	}
 	
-	$lhr = $to;
-	$a[$i][$lhk] = $to;
-	return $to;
-    }
-    
-    private static function set20(&$lhr, &$a, $lhk, $to, $i) {
-	$lhr = $a[$i][$lhk] = $to;
+	kwas($tot === ($e - $s + 1), 'bad sum ranges kw');
+	$this->oares = $a;
 	
-    }
-    
+}
+
+public static function get(int $s, int $e, $n = false) {
+	$o = new self($s, $e, $n);
+	return $o->getR();
+}
+
+private function setN($n) {
+	if ($n === false) $n = self::CPUCount(); kwas(self::getValidCPUCount($n), 'bad cpu / divide by count');
+	$this->theon = $n;
+	
+}
+
+public function getR() {  return $this->oares;  }
+
+public function do10(int $s, int $e) {
+
+	self::vse($s); self::vse($e);
+	kwas($e >= $s, 'start end reversed');
+	$inc = $this->getInc($s, $e);
+
+	$ite = 0;
+	$res = [];
+	for ($ite = 0, $l=$s; $ite < $this->theon; $ite++) {
+		unset($s);
+
+		if ($l > $e) return $res;
+		
+		$res[$ite]['l'] = $l;
+		$th = $l + $inc;
+		if ($th >= $e) {
+			$res[$ite]['h'] = $e;
+			return $res;
+		}
+		$res[$ite]['h'] = $th;
+		$l = $th + 1;
+		
+	}
+	
+
+	
+	
+	
+	
+}
+
     public static function tests() {
 	$ts = [
+		[-1,0],
+		[0,0, 0],
+		[0,0],
 		[1,2],
 		[1592696603, 1603313775],
 		[1, 284717],
@@ -127,23 +171,24 @@ class multi_core_ranges {
 		
 	    ];
 	
-
-	$max = count($ts) - 1;
+	for ($i=0; $i < count($ts); $i++) {
+		$t = $ts[$i];
+		if (!isset($t[2])) $t[2] = self::testcpus;
+		try {
+			$out = [];
+			$out['in'] = $t;
+			$res = self::get($t[0], $t[1], $t[2]);
+			$out['out'] = $res;
+			print_r($out);
+		} catch (Exception $ex) {
+			print_r($out);
+			echo($ex->getMessage() . "\n");
+		}
+		
+		print("*************\n");
+	}
+} // func
 	
-	for ($i=0; $i <= 0; $i++) {
-	$t = $ts[$i];
-	if (!isset($t[2])) $t[2] = 12;
-	try {
-	    $res = self::get($t[0], $t[1], $t[2]);
-	    $out = [];
-	    $out['in'] = $t;
-	    $out['out'] = $res;
-	    print_r($out);
-	} catch (Exception $ex) {
-	    throw $ex;
-	}
-	}
-    } // func
 
 }
 
