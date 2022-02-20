@@ -255,11 +255,16 @@ function sslOnly($force = 0) { // make sure the page is SSL
 function startSSLSession($force = 0) { // session as in a type of cookie
     if (session_id()) return session_id();
     sslOnly($force);
-    session_set_cookie_params(163456789); // over 5 years expiration
+    session_set_cookie_params(400000); // a few days before expiration
     session_start();
     $sid = vsidod();
     vsidod($sid);
     return $sid;
+}
+
+function contSSLSession() {
+	if (isset($_COOKIE['PHPSESSID'])) return startSSLSession();
+	return false;
 }
 
 function vsidod() { 
