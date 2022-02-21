@@ -42,7 +42,11 @@ class dbqcl {
 			$t   = self::processMongoJSON($t);
 			$a = json_decode($t, true);
 			if (is_array($a) && count($a) === 1)
-				if (isset($a[0])) return $a[0];
+				if (isset($a[0])) {
+					$r = $a[0];
+					if (is_array($r) && count($r) === 1) return reset($r);
+					return $a[0];
+				}
 				else return reset($a);
 			return $a;
 		}
