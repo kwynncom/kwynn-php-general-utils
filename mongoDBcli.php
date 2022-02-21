@@ -20,7 +20,8 @@ class dbqcl {
 		if ((strpos($q, 'printjson' ) === false) && !$rawc) $q = 'printjson(' . $q . ')';
 		
 		$tok = '.toArray()';
-		if (strpos($q, $tok) === false && strpos($q, ').count(') === false && !$rawc) $q = self::addToA($q, $tok);
+		if (strpos($q, $tok) === false && strpos($q, ').count(') === false && !$rawc
+				&& strpos($q, 'findOne') === false) $q = self::addToA($q, $tok);
 
 		if ($exf) {
 			$p = $exf;
@@ -40,7 +41,9 @@ class dbqcl {
 		if (!$rawc) {
 			$t   = self::processMongoJSON($t);
 			$a = json_decode($t, true);
-			if (is_array($a) && count($a) === 1) return $a[0];
+			if (is_array($a) && count($a) === 1)
+				if (isset($a[0])) return $a[0];
+				else return reset($a);
 			return $a;
 		}
 		else return $t;
