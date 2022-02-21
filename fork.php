@@ -2,24 +2,20 @@
 
 require_once('/opt/kwynn/kwutils.php');
 
-interface fork_worker {
+interface forker {
+	public function __construct(bool $worker = false, int $low = -1, int $high = -1, int $workerN = -1);
 	public static function shouldSplit (int $low, int $high, int $cpuCount) : bool;
-	public static function workit	  (int $low, int $high, int $workerN);		  
+	// public function workit	   (		      int $low, int $high, int $workerN);	  
 }
 
 class fork {
     
-    const reallyFork = true;
+const reallyFork = true;
     
-	private static function vcc($v) {
-		kwas(is_string($v), 'child class must be string - not object, not array');
-	}
+
+public static function dofork($reallyForkIn, $startat, $endat, $thecl, ...$fargs) {
 	
-public static function dofork($reallyForkIn, $startat, $endat, $childCl, ...$fargs) {
-	
-	self::vcc($childCl);
-	
-	$should = call_user_func([$childCl, 'shouldSplit'], $startat, $endat, multi_core_ranges::CPUCount());
+	$should = call_user_func([$thecl, 'shouldSplit'], $startat, $endat, multi_core_ranges::CPUCount());
 	$reallyFork = $reallyForkIn && self::reallyFork && $should; unset($reallyForkIn);
 	
 	if ($reallyFork && amDebugging()) {
@@ -37,7 +33,7 @@ public static function dofork($reallyForkIn, $startat, $endat, $childCl, ...$far
 	    $pid = -1;
 	    if ($reallyFork) $pid = pcntl_fork();
 	    if ($pid === 0 || !$reallyFork) {
-			call_user_func([$childCl, 'workit' ], $mcr[$i]['l'], $mcr[$i]['h'], $i, $fargs);
+			new $thecl(true, $mcr[$i]['l'], $mcr[$i]['h'], $i, $fargs);
 			if ($reallyFork) exit(0);
 	    }  
 	    $cpids[] = $pid;
