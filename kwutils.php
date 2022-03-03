@@ -96,7 +96,8 @@ function ifs($a, $k, $ifnot = false) { // if set return, else return ifnot
 function kwifs($a, ...$ks) { // if set return, else FALSE
 	
 	$i = 0;
-	$b = $a;
+	if (is_object($a)) $b = (array)$a;
+	else $b = $a;
 	while (isset      ($ks[$i])) {
 		if (!isset( $b[$ks[$i]])) return FALSE;
 		$b	=		$b[$ks[$i]];

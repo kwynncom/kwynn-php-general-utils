@@ -15,7 +15,7 @@ class dbqcl {
 		
 	}
 	
-	public static function q($db, $q = false, $exf = false, $cmdPrefix = '', $rawc = false, $csuf = '', $ecc = false) {
+	public static function q($db, $q = false, $exf = false, $cmdPrefix = '', $rawc = false, $csuf = '', $ecc = false, $doit = true) {
 		
 		if ((strpos($q, 'printjson' ) === false) && !$rawc) $q = 'printjson(' . $q . ')';
 		
@@ -37,6 +37,7 @@ class dbqcl {
 		$cmd = $cmdPrefix . "mongo $db --quiet $p";
 		if ($csuf) $cmd .= ' ' . $csuf;
 		if ($ecc) echo($cmd . "\n");
+		if (!$doit) return;
 		$t   = shell_exec($cmd);
 		if (!$rawc) {
 			$t   = self::processMongoJSON($t);

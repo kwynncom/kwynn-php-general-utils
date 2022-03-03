@@ -87,7 +87,9 @@ class dao_generic_3  {
 		else $ts = $tsin; unset($tsin);
 		
 		foreach($ts as $k => $t) {
-			$v = $k . 'coll';
+			if (is_integer($k)) $kl = substr($t, 0, 1);
+			else				$kl = $k;
+			$v = $kl . 'coll';
 			$this->$v = $this->client->selectCollection($this->dbname, $t);
 		}	
     }
