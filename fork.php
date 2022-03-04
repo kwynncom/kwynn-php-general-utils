@@ -5,7 +5,30 @@ require_once('/opt/kwynn/kwutils.php');
 interface forker {
 	public function __construct(bool $worker = false, int $low = -1, int $high = -1, int $workerN = -1);
 	public static function shouldSplit (int $low, int $high, int $cpuCount) : bool;
-	// public function workit	   (		      int $low, int $high, int $workerN);	  
+}
+
+interface forkerrr {
+	public function __construct(bool $worker = false, int $workerN = -1);
+}
+
+class forkrr {
+	public static function dofork($reallyFork, $startat, $endat, $thecl, ...$fargs) {
+
+		$reallyFork = $reallyFork && !amDebugging();
+		
+		$cpids = [];
+		for ($i=$startat; $i <= $endat; $i++) {
+		    $pid = -1;	
+			if ($reallyFork) $pid = pcntl_fork();
+			if ($pid === 0 || !$reallyFork) {
+				new $thecl(true, $i, $fargs);
+				if ($reallyFork) exit(0);
+			}  
+			$cpids[$i] = $pid;	
+		}
+
+		if ($reallyFork) for($i=$startat; $i <= $endat; $i++) pcntl_waitpid($cpids[$i], $status);
+	}
 }
 
 class fork {
