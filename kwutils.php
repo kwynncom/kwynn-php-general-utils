@@ -239,24 +239,19 @@ function kwTSHeaders($tsin = 1568685376, $etag = false) { // timestamp in; etag 
 
 function iscli() { return PHP_SAPI === 'cli'; } 
 
-function sslOnly($force = 0) { // make sure the page is SSL
-    
+function sslOnly() { // make sure the page is SSL
     if (iscli()) return;
-    
-    if (isKwDev() && !$force) return; // but don't force it if it's my machine and I don't have SSL set up.
-
-    if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] !== 'on') {
-	header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-	exit(0);
-    }
+   // if (isKwDev() && !$force) return; // but don't force it if it's my machine and I don't have SSL set up.
+    kwas(kwifs($_SERVER, 'HTTPS') === 'on', 'SSL only invoked 0136');
 }
 
 /* WARNING: you have to use this before there is a chance of output, otherwise you may get the dreaded 
  * "cannot be changed after headers have already been sent" */
-function startSSLSession($force = 0) { // session as in a type of cookie
+function startSSLSession() {
     if (session_id()) return session_id();
-    sslOnly($force);
-    session_set_cookie_params(400000); // a few days before expiration
+    sslOnly();
+// lifetime, path, domain, secure, httponly and samesite.
+    session_set_cookie_params(['lifetime' => 400000, 'secure' => true, 'httponly' => true, 'samesite' => 'Strict']); // 4.6 days until expires
     session_start();
     $sid = vsidod();
     vsidod($sid);
@@ -270,9 +265,9 @@ function contSSLSession() {
 
 function vsidod() { 
     $sid = session_id();
-    kwas($sid && is_string($sid), 'startSSLSessionFail 1');
+    kwas($sid && is_string($sid), 'start SSL Session Fail 1');
     $prr = preg_match('/^[A-Za-z0-9]{20}/', $sid);
-    kwas($prr, 'startSSLSessionFail 2'); unset($prr);
+    kwas($prr, 'start SSL Session Fail 2'); unset($prr);
     return $sid;
 }
 
