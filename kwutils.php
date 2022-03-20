@@ -2,6 +2,8 @@
 
 /* This is a collection of code that is general enough that I use it in a number of projects. */
 
+define('KW_DEFAULT_COOKIE_LIFETIME_S', 400000);
+
 require_once('kwshortu.php');
 require_once('mongodb3.php');
 require_once(__DIR__ . '/lock.php');
@@ -250,9 +252,8 @@ function sslOnly() { // make sure the page is SSL
 function startSSLSession() {
     if (session_id()) return session_id();
     sslOnly();
-// lifetime, path, domain, secure, httponly and samesite.
-    session_set_cookie_params(['lifetime' => 400000, 'secure' => true, 'httponly' => true, 'samesite' => 'Strict']); // 4.6 days until expires
-    session_start();
+	kwscookie();
+	session_start();
     $sid = vsidod();
     vsidod($sid);
     return $sid;
@@ -270,6 +271,34 @@ function vsidod() {
     kwas($prr, 'start SSL Session Fail 2'); unset($prr);
     return $sid;
 }
+
+function kwscookie(string $kin = null, $v = null, $eo = null) {
+	$iss = !$kin;
+	if (!$iss) $now = time();
+	$o = [];
+	if ((is_string($eo) || $eo === false) &&  $iss) $o['lifetime'] = 0;
+	if ((is_string($eo) || $eo === false) && !$iss) $o['expires' ] = $now - 100000;
+	if (is_null	  ($eo)					  && !$iss) $o['expires' ] = $now + KW_DEFAULT_COOKIE_LIFETIME_S;
+	if (is_null	  ($eo)					  &&  $iss) $o['lifetime'] = KW_DEFAULT_COOKIE_LIFETIME_S;
+	if (is_numeric($eo)					  &&  $iss) $o['lifetime'] = $eo;
+	if (is_numeric($eo)					  && !$iss && $eo <= M_BILLION) 
+													$o['expires' ] = $eo + $now;
+	if (is_numeric($eo)					  && !$iss && $eo >  M_BILLION) 
+													$o['expires' ] = $eo;
+	if (is_numeric($eo)					  &&  $iss) $o['lifetime'] = $eo;
+	
+	$ds = ['secure' => true, 'httponly' => true, 'samesite' => 'Strict'];
+	if (!$eo || !is_array($eo)) $o = kwam($o, $ds);
+	else {
+		$o = kwam($eo, $o);
+		foreach($fs as $kt => $vt) if (!isset($eo[$kt]))  $o[$kt] = $ds[$kt];
+	}
+	
+	if ($iss) session_set_cookie_params($o);
+	else			   setcookie($kin, $v, $o);
+
+
+}	
 
 function kwjae($din, $isj = false) { // JSON encode, echo, and exit
     header('Content-Type: application/json');
