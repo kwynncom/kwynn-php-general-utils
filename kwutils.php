@@ -230,17 +230,21 @@ function kwscookie(string $kin = null, $v = null, $eo = null) {
 	$iss = !$kin;
 	if (!$iss) $now = time();
 	$o = [];
-	if ((is_string($eo) || $eo === false) &&  $iss) $o['lifetime'] = 0;
-	if ((is_string($eo) || $eo === false) && !$iss) $o['expires' ] = $now - 100000;
-	if (is_null	  ($eo)					  && !$iss) $o['expires' ] = $now + KW_DEFAULT_COOKIE_LIFETIME_S;
-	if (is_null	  ($eo)					  &&  $iss) $o['lifetime'] = KW_DEFAULT_COOKIE_LIFETIME_S;
-	if (is_numeric($eo)					  &&  $iss) $o['lifetime'] = $eo;
-	if (is_numeric($eo)					  && !$iss && $eo <= M_BILLION) 
-													$o['expires' ] = $eo + $now;
-	if (is_numeric($eo)					  && !$iss && $eo >  M_BILLION) 
-													$o['expires' ] = $eo;
-	if (is_numeric($eo)					  &&  $iss) $o['lifetime'] = $eo;
-	
+
+	if (!$iss && $eo === 0) $o['expires'] = 0; 
+	else {
+		if ((is_string($eo) || $eo === false) &&  $iss) $o['lifetime'] = -100000; // will this work?
+		if ((is_string($eo) || $eo === false) && !$iss) $o['expires' ] = $now - 100000;
+		if (is_null	  ($eo)					  && !$iss) $o['expires' ] = $now + KW_DEFAULT_COOKIE_LIFETIME_S;
+		if (is_null	  ($eo)					  &&  $iss) $o['lifetime'] = KW_DEFAULT_COOKIE_LIFETIME_S;
+		if (is_numeric($eo)					  &&  $iss) $o['lifetime'] = $eo;
+		if (is_numeric($eo)					  && !$iss && $eo <= M_BILLION) 
+														$o['expires' ] = $eo + $now;
+		if (is_numeric($eo)					  && !$iss && $eo >  M_BILLION) 
+														$o['expires' ] = $eo;
+		if (is_numeric($eo)					  &&  $iss) $o['lifetime'] = $eo;
+	}
+		
 	$ds = ['secure' => true, 'httponly' => true, 'samesite' => 'Strict'];
 	if (!$eo || !is_array($eo)) $o = kwam($o, $ds);
 	else {
