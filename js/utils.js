@@ -50,7 +50,7 @@ class kwjss {
         kwjss.sobf(url, sob, cb);
     }
     
-    static sobf(url, sob, cb, prt) {
+    static sobf(url, sob, cb, prt, fdin) {
         if (1) {
             if (url.search(/\?/) >= 0) url += '&';
             else                     url += '?';
@@ -60,13 +60,22 @@ class kwjss {
         XHR.open('POST', url);
         XHR.onloadend = function() { 
             const rt = this.responseText;
-            if (prt === false) return cb(rt);
-            if (typeof cb === 'function') cb(kwjss.responseTextParse(rt)); 
+            if (typeof cb === 'function') {
+                if (prt === false) return cb(rt);
+                cb(kwjss.responseTextParse(rt)); 
+            }
         }
 
-        const formData = new FormData();
-        if (sob) formData.append('POSTob', JSON.stringify(sob));
-        XHR.send(formData);        
+        let fdata = {};
+        if (!fdin) { 
+            fdata = new FormData();
+            if (sob) fdata.append('POSTob', JSON.stringify(sob));
+        } else {
+            fdata = fdin;
+            fdata.append('isPureFormData',true);
+        }
+        
+        XHR.send(fdata);        
         
     }
 }
@@ -97,3 +106,5 @@ function is_numeric(x) {
     const isn = typeof t === 'number';
     return isn;
 }
+
+function onDOMLoad(f) { window.addEventListener('DOMContentLoaded', f); }

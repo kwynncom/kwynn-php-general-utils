@@ -10,7 +10,6 @@ require_once(__DIR__ . '/lock.php');
 require_once('machineID.php');
 require_once(__DIR__ . '/base62/base62.php'); // both base62() and didCLICallMe()
 require_once(__DIR__ . '/mongoDBcli.php');
-require_once(__DIR__ . '/js/kwjsrecv.php');
 require_once(__DIR__ . '/' . 'inonebuf.php');
 require_once(__DIR__ . '/fork.php');
 
@@ -23,13 +22,6 @@ define('DAY_S', 86400);
 function amDebugging() { static $f = 'xdebug_is_debugger_active'; return function_exists($f) && $f(); }
 
 function roint($x) { return intval(round($x)); }
-
-function didAnyCallMe($fin) {
-	if ( didCLICallMe($fin)) return TRUE;
-	if ( iscli()) return FALSE;
-	if (basename($fin) === basename($_SERVER['PHP_SELF'])) return TRUE;
-	return FALSE;
-}
 
 function setVTZ($sin) {
 	$sin = trim($sin);
@@ -80,34 +72,12 @@ function tuf_get ($prefix, $suffix = '') {
 	return false;
 }
 
-/* Kwynn's assert.  It's similar to the PHP assert() except it throws an exception rather than dying.  I use this ALL THE TIME.  
-  I'm sure there are 100s if not 1,000s of references to this in my code. */
-function kwas($data = false, $msg = 'no message sent to kwas()', $code = 12345) {
-    if (!isset($data) || !$data) throw new Exception($msg, $code); 
-/* The isset may not be necessary, but I'm not touching anything I've used this much and for this long. */
-	return $data;
-}
 // only used in main project and new msg / msgs web form - 2022/01
 function ifs($a, $k, $ifnot = false) { // if set return, else return ifnot
 	if (isset(   $a[$k])) 
 		return   $a[$k];
 	
 	return $ifnot;
-}
-
-function kwifs($a, ...$ks) { // if set return, else FALSE
-	
-	$i = 0;
-	if (is_object($a)) $b = (array)$a;
-	else $b = $a;
-	while (isset      ($ks[$i])) {
-		if (!isset( $b[$ks[$i]])) return FALSE;
-		$b	=		$b[$ks[$i]];
-		
-		$i++;
-	}
-	
-	return $b;
 }
 
 function kwam(...$aa) { 
@@ -123,16 +93,6 @@ function kwam(...$aa) {
  * to GitHub, so I should show myself to be properly open source fanatical. */
 function kwua() { return 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36'; }
 
-/* The major purpose of this (below) is to make warnings and notices an error.  I have found it's best to "die" on warnings and uncaught exceptions. */
-function kw_error_handler($errno, $errstr, $errfile, $errline) {
-    echo "ERROR: ";
-    echo pathinfo($errfile, PATHINFO_FILENAME) . '.';
-    echo pathinfo($errfile, PATHINFO_EXTENSION);
-    echo ' LINE: ' . $errline . ' - ' . $errstr . ' ' . $errfile;
-    exit(37); // an arbitrary number, other than it should be non-zero to indicate failure
-}
-
-set_error_handler('kw_error_handler');
 
 /* Tests whether it's safe to include a file--file_exists() does not account for the include path.  My function does.  
  * Returns true for safe / exists and false for unsafe / does not exist.
@@ -163,10 +123,6 @@ if (file_exists($minc)) require_once($minc); unset($minc); // unset so as to not
  * breakpoint to.  A breakpoint has to have something there.  So "Kwynn's null" is recursively kwynn() */
 function kwynn() {}
 
-function isrv($k) { // is $_REQUEST valid / truthy
-	if (!isset($_REQUEST[$k])) return FALSE;
-	return     $_REQUEST[$k];
-}
 
 /* make sure any timestamps you're using make sense: make sure you haven't done something weird and such: make sure you don't have zero 
 values or haven't rolled over bits; make sure your time isn't way in the future or past. Obviously both min and max are somewhat arbitrary, but 
@@ -239,8 +195,6 @@ function kwTSHeaders($tsin = 1568685376, $etag = false) { // timestamp in; etag 
     }  
 }
 
-function iscli() { return PHP_SAPI === 'cli'; } 
-
 function sslOnly() { // make sure the page is SSL
     if (iscli()) return;
    // if (isKwDev() && !$force) return; // but don't force it if it's my machine and I don't have SSL set up.
@@ -306,10 +260,6 @@ function kwjae($din, $isj = false) { // JSON encode, echo, and exit
 	else       $j = $din;
     echo($j);
     exit(0);
-}
-
-function didCLICallMe($callingFile) { // $call with __FILE__
-	return base62::didCLICallMe($callingFile);
 }
 
 function base62($len) { return base62::get($len); }
