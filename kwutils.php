@@ -226,30 +226,35 @@ function vsidod() {
     return $sid;
 }
 
-function kwscookie(string $kin = null, $v = null, $eo = null) {
+function kwscookie(string $kin = null, $v = null, $copt = null) {
 	$iss = !$kin;
 	if (!$iss) $now = time();
 	$o = [];
+	
+	if (isset( $copt['kwcex'])) {
+		$cxo = $copt['kwcex'];
+		unset ($copt['kwcex']);
+	} else $cxo = $copt;
 
-	if (!$iss && $eo === 0) $o['expires'] = 0; 
+	if (!$iss && $cxo === 0) $o['expires'] = 0; 
 	else {
-		if ((is_string($eo) || $eo === false) &&  $iss) $o['lifetime'] = -100000; // will this work?
-		if ((is_string($eo) || $eo === false) && !$iss) $o['expires' ] = $now - 100000;
-		if (is_null	  ($eo)					  && !$iss) $o['expires' ] = $now + KW_DEFAULT_COOKIE_LIFETIME_S;
-		if (is_null	  ($eo)					  &&  $iss) $o['lifetime'] = KW_DEFAULT_COOKIE_LIFETIME_S;
-		if (is_numeric($eo)					  &&  $iss) $o['lifetime'] = $eo;
-		if (is_numeric($eo)					  && !$iss && $eo <= M_BILLION) 
-														$o['expires' ] = $eo + $now;
-		if (is_numeric($eo)					  && !$iss && $eo >  M_BILLION) 
-														$o['expires' ] = $eo;
-		if (is_numeric($eo)					  &&  $iss) $o['lifetime'] = $eo;
+		if ((is_string($cxo) || $cxo === false) &&  $iss) $o['lifetime'] = -100000; // will this work?
+		if ((is_string($cxo) || $cxo === false) && !$iss) $o['expires' ] = $now - 100000;
+		if (is_null	  ($cxo)					  && !$iss) $o['expires' ] = $now + KW_DEFAULT_COOKIE_LIFETIME_S;
+		if (is_null	  ($cxo)					  &&  $iss) $o['lifetime'] = KW_DEFAULT_COOKIE_LIFETIME_S;
+		if (is_numeric($cxo)					  &&  $iss) $o['lifetime'] = $cxo;
+		if (is_numeric($cxo)					  && !$iss && $cxo <= M_BILLION) 
+														$o['expires' ] = $cxo + $now;
+		if (is_numeric($cxo)					  && !$iss && $cxo >  M_BILLION) 
+														$o['expires' ] = $cxo;
+		if (is_numeric($cxo)					  &&  $iss) $o['lifetime'] = $cxo;
 	}
 		
-	$ds = ['secure' => true, 'httponly' => true, 'samesite' => 'Strict'];
-	if (!$eo || !is_array($eo)) $o = kwam($o, $ds);
+	$ds = ['secure' => true, 'httponly' => true, 'samesite' => 'Strict', 'path' => '/'];
+	if (!$copt || !is_array($copt)) $o = kwam($o, $ds);
 	else {
-		$o = kwam($eo, $o);
-		foreach($fs as $kt => $vt) if (!isset($eo[$kt]))  $o[$kt] = $ds[$kt];
+		$o = kwam($copt, $o);
+		foreach($ds as $kt => $vt) if (!isset($copt[$kt]))  $o[$kt] = $ds[$kt];
 	}
 	
 	if ($iss) session_set_cookie_params($o);
