@@ -196,8 +196,9 @@ function kwTSHeaders($tsin = 1568685376, $etag = false) { // timestamp in; etag 
 }
 
 function sslOnly() { // make sure the page is SSL
+	
+	// if (file_exists('/var/kwynn/i_am_Kwynn_local_dev_2021_11')) return;
     if (iscli()) return;
-   // if (isKwDev() && !$force) return; // but don't force it if it's my machine and I don't have SSL set up.
     kwas(kwifs($_SERVER, 'HTTPS') === 'on', 'SSL only invoked 0136');
 }
 
