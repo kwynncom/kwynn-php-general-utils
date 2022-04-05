@@ -34,6 +34,9 @@ function getOKColor() { return 'rgb(153, 255, 153)'; }
 class kwjss {
     
     static responseTextParse(t) {
+        
+        if (typeof t === 'object') return t;
+        
 	let o = false;
 	try { o = JSON.parse(t); } catch(ex) {  }
 	if (!o) o = { 'kwdbss' : 'ERROR', 'msg' : t };
@@ -66,17 +69,18 @@ class kwjss {
             }
         }
 
-        let fdata = {};
-        if (!fdin) { 
-            fdata = new FormData();
-            if (sob) fdata.append('POSTob', JSON.stringify(sob));
-        } else {
-            fdata = fdin;
-            fdata.append('isPureFormData',true);
-        }
+        if (!sob) sob = {};
+        const poch = sob;
+
         
-        XHR.send(fdata);        
+        if (fdin) for(const [key, value] of fdin.entries()) { 
+            poch[key] = value; 
+        } 
+    
         
+        const fdfinal = new FormData();
+        fdfinal.append('POSTob', JSON.stringify(poch));
+        XHR.send(fdfinal);       
     }
 }
 
