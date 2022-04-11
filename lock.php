@@ -22,7 +22,7 @@ class sem_lock {
     public function unlock()	 { 
 		if (!isset($this->svs) || !$this->svs) return;
 		try { 
-			$r = sem_release($this->key);
+			$r = sem_release($this->svs);
 			return $r; 
 		} catch(Exception $ex) {} 
 		
