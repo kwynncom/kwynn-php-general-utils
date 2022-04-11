@@ -13,7 +13,7 @@ class sem_lock {
 		$p = $path;
 		kwas($p && is_string($p) && strlen(trim($p)) > self::minFileLen, 'bad path for sem_lock' ); unset($p);
 		$key = ftok($path, $projectID); kwas($key !== -1, 'ftok failed - sem_lock');
-		$svs = sem_get($key, 1, 0666);  kwas($svs, 'bad sem_get - sem_lock'); // note below
+		$svs = sem_get($key);  kwas($svs, 'bad sem_get - sem_lock');
 		$this->key = $key; unset($key);
 		$this->svs = $svs; unset($svs); 
 	}
@@ -22,13 +22,12 @@ class sem_lock {
     public function unlock()	 { 
 		if (!isset($this->svs) || !$this->svs) return;
 		try { 
+			restore_error_handler();
 			$r = sem_release($this->svs);
+			set_error_handler('kw_error_handler');
 			return $r; 
 		} catch(Exception $ex) {} 
 		
 	}
     public function getKey() { return $this->key; }
 }
-
-/* Regarding permissions, one could spend a long time resolving a conflict between CLI and the www-data user / group.  
- * Versus that, the potential problem with giving world / other permission seems very theoretical. */
