@@ -21,7 +21,7 @@ class sem_lock {
     public function   lock()	 { kwas(sem_acquire($this->svs), 'sem_acq failed - sem_lock'); }
     public function unlock()	 { 
 		if (!isset($this->svs) || !$this->svs) return;
-		kwas($r = sem_release($this->svs), 'sem_rel failed - sem_lock'); 
+		$r = sem_release($this->svs);
 		return $r; 
 		
 	}
