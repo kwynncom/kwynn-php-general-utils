@@ -73,7 +73,7 @@ function tuf_get ($prefix, $suffix = '') {
 }
 
 // only used in main project and new msg / msgs web form - 2022/01
-function ifs($a, $k, $ifnot = false) { // if set return, else return ifnot
+function kwifse($a, $k, $ifnot = false) { // if set return, else return ifnot
 	if (isset(   $a[$k])) 
 		return   $a[$k];
 	

@@ -95,5 +95,5 @@ kwisAWSCl::test();
 
 function ispkwd() {
     if (isAWS()) return false;
-    return file_exists('/var/i_am_kwynn_local_dev_as_of_2020_06');
+    return file_exists('/var/kwynn/i_am_Kwynn_local_dev_2021_11_cont_2022_03');
 }
