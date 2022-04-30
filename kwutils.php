@@ -266,7 +266,7 @@ function kwscookie(string $kin = null, $v = null, $copt = null) {
 
 function kwjae($din, $isj = false) { // JSON encode, echo, and exit
     header('Content-Type: application/json');
-	if (!$isj) $j = json_encode($din);
+	if (!$isj) $j = json_encode($din, JSON_PRETTY_PRINT |  JSON_UNESCAPED_SLASHES);
 	else       $j = $din;
     echo($j);
     exit(0);
