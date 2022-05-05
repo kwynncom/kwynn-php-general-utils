@@ -112,3 +112,9 @@ function is_numeric(x) {
 }
 
 function onDOMLoad(f) { window.addEventListener('DOMContentLoaded', f); }
+
+function okswc(e) {
+    e.style.backgroundColor = getOKColor();
+    return setTimeout(() => { e.style.backgroundColor = 'white'; }, 4000);
+    
+}

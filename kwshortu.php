@@ -48,11 +48,8 @@ function didAnyCallMe($fin) {
 	return FALSE;
 }
 
+// function isrv($k) { } // moving to js/kwjsrecv.php
 
-function isrv($k) { // is $_REQUEST valid / truthy
-	if (!isset($_REQUEST[$k])) return FALSE;
-	return     $_REQUEST[$k];
-}
 
 function didCLICallMe($callingFile) { // $call with __FILE__
 	return base62::didCLICallMe($callingFile);
