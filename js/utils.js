@@ -90,7 +90,7 @@ function kwifs(a, ...ks) { // if defined return, else FALSE
     let i = 0;
     let b = a;
     while (ks[i]) {
-        if (    !b[ks[i]]) return false;
+        if (!b ||    !b[ks[i]]) return false;
             b =	 b[ks[i]];
 
             i++;

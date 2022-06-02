@@ -35,11 +35,7 @@ class kw3mdbcoll extends MongoDB\Collection {
 	
 	
     public function upsert($q, $set, $oom = 1, $upc = true) {
-		if ($upc) {
-			$now = time();
-			$set['up_r' ] = date('r', $now);
-			$set['up_ts'] = $now;
-		}
+		if ($upc) self::addCreUp($set, false);
 		
 		if ($oom === 1) $r = $this->updateOne ($q, ['$set' => $set], ['upsert' => true]);
 		else			$r = $this->updateMany($q, ['$set' => $set]);
@@ -51,12 +47,19 @@ class kw3mdbcoll extends MongoDB\Collection {
 		$sum += $mc;
 		kwas($sum >= 1, "kw3mdbcoll upsert sum = $sum when should be >= 1");
 		if ($mc === 0 && $upc) {
-			$ca['cre_r' ] = $set['up_r'];
-			$ca['cre_ts'] = $set['up_ts'];
-			if ($oom === 1) $this->updateOne ($q, ['$set' => $ca], ['upsert' => true]);
+			self::addCreUp($set, true);
+			if ($oom === 1) $this->updateOne ($q, ['$set' => $set], ['upsert' => true]);
 		}
 		return $r;
     }
+	
+	public static function addCreUp(&$set, $crec = true) {
+		
+		if (!isset($set['up_ts' ]))			 $set['up_ts' ] = time();
+		if (!isset($set['up_r'  ]))			 $set['up_r'  ] = date('r', $set['up_ts']);
+		if (!isset($set['cre_ts']) && $crec) $set['cre_ts'] = $set['up_ts'];
+		if (!isset($set['cre_r' ]) && $crec) $set['cre_r' ] = $set['up_r'];
+	}
 	
 	public function findc($q = [], $o = []) { return parent::find($q, $o);			  }
 	public function find ($q = [], $o = []) { return parent::find($q, $o)->toArray(); }
@@ -65,6 +68,7 @@ class kw3mdbcoll extends MongoDB\Collection {
 		if (!isset($o['kwnos'])) { if (!isset($dat['_id'])) $dat['_id'] = dao_generic_3::get_oids(); }
 		else unset($o['kwnos']);
 		
+		self::addCreUp($dat);
 		parent::insertOne($dat, $o);
 	}
 
