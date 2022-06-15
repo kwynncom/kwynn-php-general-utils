@@ -68,7 +68,10 @@ class kw3mdbcoll extends MongoDB\Collection {
 		if (!isset($o['kwnos'])) { if (!isset($dat['_id'])) $dat['_id'] = dao_generic_3::get_oids(); }
 		else unset($o['kwnos']);
 		
-		self::addCreUp($dat);
+		if (!isset($o['kwnoup']))
+			self::addCreUp($dat);
+		else unset($o['kwnoup']);
+				
 		parent::insertOne($dat, $o);
 	}
 
