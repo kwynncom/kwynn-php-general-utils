@@ -112,7 +112,10 @@ function is_numeric(x) {
     return isn;
 }
 
-function onDOMLoad(f) { window.addEventListener('DOMContentLoaded', f); }
+function onDOMLoad(f) { 
+    if (document.readyState !== 'loading') f();
+    window.addEventListener('DOMContentLoaded', f); 
+}
 
 function okswc(e) {
     e.style.backgroundColor = getOKColor();
