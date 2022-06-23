@@ -112,13 +112,16 @@ function is_numeric(x) {
     return isn;
 }
 
-function onDOMLoad(f) { 
-    if (document.readyState !== 'loading') f();
-    window.addEventListener('DOMContentLoaded', f); 
-}
+function onDOMLoad(f) { window.addEventListener('DOMContentLoaded', f); }
 
 function okswc(e) {
     e.style.backgroundColor = getOKColor();
     return setTimeout(() => { e.style.backgroundColor = 'white'; }, 4000);
+}
+
+function kwtos(s) {
+    if (!s) return '';
+    return s;
     
 }
+
