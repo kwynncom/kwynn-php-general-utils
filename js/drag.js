@@ -98,7 +98,7 @@ class dragKwBaseClass {
     
     send(e) {
        const newordx = this.ordo.getOrdx(e);        
-       const id = this.getID(e);
+       const id = this.getIDDB(e);
        this.neto.send(id, newordx);
     }
     
@@ -114,13 +114,14 @@ class dragKwBaseClass {
     
     dragKwInit10() {
         this.ableEs = [];
+        this.eidpre = 'e_dragKwP_';
         this.viso = new dragKwVisClass();
         this.ordo = new dragKwOrdClass();
 
     }
     
     doResponse(res) {
-        const e = byid(res['response_id']);
+        const e = byid(this.eidpre + res['response_id']);
         this.ordo.netOKOrDie(e, res['response_ordx']);
         this.able(true);
         this.viso.ok();
@@ -188,14 +189,14 @@ class dragKwBaseClass {
         for (let i=0; i < chn; i++) {
             const che = ch[i];
             if (kwifs(che, 'dataset', 'dragKwIamP')) ++di;
-            if (        this.getID(che) 
-                    === this.getID(row)) return di;
+            if (        this.getIDDB(che) 
+                    === this.getIDDB(row)) return di;
         }
         
         kwas(false, 'getI() no result');
     }
     
-    getID(e) {
+    getIDDB(e) {
         return kwifs(this.getRow(e), 'dataset', 'dragKwUqID');
     }
     
@@ -256,7 +257,8 @@ class dragKwBaseClass {
     
     setDragParent(e, uq, ordx, interval) {
         e.dataset.dragKwIamP = true;
-        if (uq) e.dataset.dragKwUqID = e.id = uq;
+        if (uq) e.dataset.dragKwUqID = uq;
+        e.id = this.eidpre + uq;
         this.ordo.inite(e, ordx, interval);
             
          
