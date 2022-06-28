@@ -103,12 +103,12 @@ class dragKwNetClass {
         const m = this.meta;
         kwas(r[m['returnStatusName']] === m['returnStatusOKValue'], 'save non-OK response ordx');
         const idnm = m['dbuqid'];
-        kwas(r[idnm] === ino[idnm], 'drag in and out result mismatch - id');
+        kwas(r[idnm] == ino[idnm], 'drag in and out result mismatch - id'); // probably OK to do == rather than === because otherwise chase tail
         const dbordxnm = m['dbordxfn'];
         kwas(dragKwOrdClass.eq(r[dbordxnm], ino[dbordxnm]), 'ordx in out mismatch');
         const dat = {};
-        dat['response_ordx'] = r['ordx'];
-        dat['response_id'] = r['_id'];
+        dat['response_ordx'] = r[dbordxnm];
+        dat['response_id'] = r[idnm];
         dat['netStatus'] = 'OK';
         if (this.cbr) this.cbr(dat);
     }
@@ -125,7 +125,7 @@ class dragKwBaseClass {
         this.neto = new dragKwNetClass(this.ordServerURL, this.dragMeta, (arg) => { this.doResponse(arg); });   
     }
     
-    dragSetMoreDat(d) { this.moreDat = d; }
+    dragSetMoreData(d) { this.moreDat = d; }
     
     send(e) {
        const newordx = this.ordo.getOrdx(e);        
