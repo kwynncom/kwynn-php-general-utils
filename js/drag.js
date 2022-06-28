@@ -75,15 +75,31 @@ class dragKwOrdClass {
 }
 
 class dragKwNetClass {
+    
+    constructor(url, meta, cb) { 
+        this.serverURL = url; 
+        this.cbr = cb; 
+        this.meta = meta;
+    }
+    
     send(id, ordx) {
-        const ino = {'_id' : id, 'ordx' : ordx, 'action' : 'setOrder'};
+        // const ino = {meta['dbuqid'] : id, 'ordx' : ordx, 'action' : 'setOrder'};
+        const meta = this.meta;
+        const ino = {};
+        ino[meta.dbuqid] = id;
+        ino[meta.dbordxfn] = ordx;
+        ino[meta.actionName] = meta.actionValue;
+        
         kwjss.sobf(this.serverURL, ino, (res) => { this.doResponse(res, ino); });
     }
     
     doResponse(r, ino) {
-        kwas(r['postOrdxSave'] === 'OK', 'save non-OK response ordx');
-        kwas(r['_id'] === ino['_id'], 'drag in and out result mismatch - id');
-        kwas(dragKwOrdClass.eq(r['ordx'], ino['ordx']), 'ordx in out mismatch');
+        const m = this.meta;
+        kwas(r[m['returnStatusName']] === m['returnStatusOKValue'], 'save non-OK response ordx');
+        const idnm = m['dbuqid'];
+        kwas(r[idnm] === ino[idnm], 'drag in and out result mismatch - id');
+        const dbordxnm = m['dbordxfn'];
+        kwas(dragKwOrdClass.eq(r[dbordxnm], ino[dbordxnm]), 'ordx in out mismatch');
         const dat = {};
         dat['response_ordx'] = r['ordx'];
         dat['response_id'] = r['_id'];
@@ -91,10 +107,17 @@ class dragKwNetClass {
         if (this.cbr) this.cbr(dat);
     }
     
-    constructor(url, cb) { this.serverURL = url; this.cbr = cb; }
+
 }
 
 class dragKwBaseClass {
+    
+    dragSetMeta(u, m) {
+        this.ordInterval = m['interval'];
+        this.dragMeta = m;
+        this.ordServerURL = u; 
+        this.neto = new dragKwNetClass(this.ordServerURL, this.dragMeta, (arg) => { this.doResponse(arg); });   
+    }
     
     send(e) {
        const newordx = this.ordo.getOrdx(e);        
@@ -105,11 +128,6 @@ class dragKwBaseClass {
     constructor() {
         this.dragKwInit10();
         this.setDocumentLevelDrag();
-    }
-    
-    setServerURL(u) { 
-        this.ordServerURL = u; 
-        this.neto = new dragKwNetClass(this.ordServerURL, (arg) => { this.doResponse(arg); });        
     }
     
     dragKwInit10() {
@@ -255,11 +273,11 @@ class dragKwBaseClass {
         this.ableEs.push(e);
     }
     
-    setDragParent(e, uq, ordx, interval) {
+    setDragParent(e, uq, ordx) {
         e.dataset.dragKwIamP = true;
         if (uq) e.dataset.dragKwUqID = uq;
         e.id = this.eidpre + uq;
-        this.ordo.inite(e, ordx, interval);
+        this.ordo.inite(e, ordx, this.ordInterval);
             
          
     }
