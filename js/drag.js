@@ -1,3 +1,5 @@
+// make the base and interval part of server-side - 2022/06/28 18:36
+
 class dragKwVisClass {
     onOver(ede, dir, ove) {
         if (this.doe) this.doe.style.borderTop = this.doe.style.borderBottom = 'none';
@@ -82,13 +84,17 @@ class dragKwNetClass {
         this.meta = meta;
     }
     
-    send(id, ordx) {
-        // const ino = {meta['dbuqid'] : id, 'ordx' : ordx, 'action' : 'setOrder'};
+    send(id, ordx, moreDat) {
         const meta = this.meta;
         const ino = {};
         ino[meta.dbuqid] = id;
         ino[meta.dbordxfn] = ordx;
         ino[meta.actionName] = meta.actionValue;
+        if (moreDat) {
+            for (const [k, v] of Object.entries(moreDat)) {
+               ino[k] = v;
+           }           
+        }
         
         kwjss.sobf(this.serverURL, ino, (res) => { this.doResponse(res, ino); });
     }
@@ -119,10 +125,12 @@ class dragKwBaseClass {
         this.neto = new dragKwNetClass(this.ordServerURL, this.dragMeta, (arg) => { this.doResponse(arg); });   
     }
     
+    dragSetMoreDat(d) { this.moreDat = d; }
+    
     send(e) {
        const newordx = this.ordo.getOrdx(e);        
        const id = this.getIDDB(e);
-       this.neto.send(id, newordx);
+       this.neto.send(id, newordx, this.moreDat);
     }
     
     constructor() {
@@ -278,13 +286,11 @@ class dragKwBaseClass {
         if (uq) e.dataset.dragKwUqID = uq;
         e.id = this.eidpre + uq;
         this.ordo.inite(e, ordx, this.ordInterval);
-            
-         
     }
     
     getRow(e) {
       if (kwifs(e,'dataset','dragKwIamP')) return e;
-      if (e.parentNode) return this.getRow(e.parentNode);
+      if (e && e.parentNode) return this.getRow(e.parentNode);
       return false;     
     }
     
