@@ -89,9 +89,7 @@ function kwam(...$aa) {
 	return $ra;
 }
 
-/* user agent, for when a server will ignore a request without a UA.  I am changing this 2020/01/16.  I'm moving towards releasing this file
- * to GitHub, so I should show myself to be properly open source fanatical. */
-function kwua() { return 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36'; }
+function kwua() { return 'Mozilla/5.0 (X11; Linux x86_64; rv:101.0) Gecko/20100101 Firefox/101.0'; }
 
 
 /* Tests whether it's safe to include a file--file_exists() does not account for the include path.  My function does.  

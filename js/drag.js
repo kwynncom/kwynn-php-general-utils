@@ -88,7 +88,7 @@ class dragKwNetClass {
         dat['response_ordx'] = r['ordx'];
         dat['response_id'] = r['_id'];
         dat['netStatus'] = 'OK';
-        this.cbr(dat);
+        if (this.cbr) this.cbr(dat);
     }
     
     constructor(url, cb) { this.serverURL = url; this.cbr = cb; }
