@@ -1,5 +1,3 @@
-// make the base and interval part of server-side - 2022/06/28 18:36
-
 class dragKwVisClass {
     onOver(ede, dir, ove) {
         if (this.doe) this.doe.style.borderTop = this.doe.style.borderBottom = 'none';
@@ -103,7 +101,10 @@ class dragKwNetClass {
         const m = this.meta;
         kwas(r[m['returnStatusName']] === m['returnStatusOKValue'], 'save non-OK response ordx');
         const idnm = m['dbuqid'];
-        kwas(r[idnm] == ino[idnm], 'drag in and out result mismatch - id'); // probably OK to do == rather than === because otherwise chase tail
+        let inoid = ino[idnm];
+        if (m['dbuqidType'] === 'integer') inoid = parseInt(inoid); 
+        
+        kwas(r[idnm] === inoid, 'drag in and out result mismatch - id');
         const dbordxnm = m['dbordxfn'];
         kwas(dragKwOrdClass.eq(r[dbordxnm], ino[dbordxnm]), 'ordx in out mismatch');
         const dat = {};
