@@ -119,6 +119,9 @@ function kwtos(s) {
     return s;
     
 }
+
+function kwynn() { }
+
 // ***************************
    
 class delayedDo {
@@ -182,6 +185,41 @@ class delayedDo {
 
 } // do later class
 
+// ***************************
+
+class kwStandardTextIOCl {
+    
+    constructor(e, url, fin) {
+        this.thee = e;
+        this.url = url;
+        this.isokevf = fin;
+        this.okcolor = getOKColor();
+        this.init10();
+        return;
+    }
+    
+    init10() {
+        this.ddo = new delayedDo(kwjss.sobf, 307, 2000, this.url, delayedDo.getRV(), 
+                                    (res) => {this.oninret(res); });
+        this.thee.oninput = () => { this.oninput(this.thee); /* subclasses might need the element argument */};
+    }
+    
+    oninput() {
+        clearTimeout(this.okstov);
+        const e = this.thee;
+        e.style.backgroundColor = 'yellow';
+        this.ddo.doAtInterval({'v' : e.value});
+    }
+    
+    oninret(res) {
+        if (this.isokevf && this.isokevf(res)) {
+            const e = this.thee;            
+            e.style.backgroundColor = this.okcolor;
+            this.okstov = setTimeout(() => { e.style.backgroundColor = 'white'; }, 4000);
+        }
+    }
+    
+}
 
 // ***************************
 
