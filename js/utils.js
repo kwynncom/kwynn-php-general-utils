@@ -204,11 +204,12 @@ class kwStandardTextIOCl {
         this.thee.oninput = () => { this.oninput(this.thee); /* subclasses might need the element argument */};
     }
     
-    oninput() {
+    oninput(ein, dat) {
         clearTimeout(this.okstov);
-        const e = this.thee;
+        let e = this.thee;
+        if (ein) e = ein;
         e.style.backgroundColor = 'yellow';
-        this.ddo.doAtInterval({'v' : e.value});
+        this.ddo.doAtInterval(dat);
     }
     
     oninret(res) {
