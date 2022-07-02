@@ -71,13 +71,8 @@ class kwjss {
 
         if (!sob) sob = {};
         const poch = sob;
-
-        
-        if (fdin) for(const [key, value] of fdin.entries()) { 
-            poch[key] = value; 
-        } 
-    
-        
+        if (fdin) for(const [key, value] of Object.entries(fdin)) poch[key] = value;  
+         
         const fdfinal = new FormData();
         fdfinal.append('POSTob', JSON.stringify(poch));
         XHR.send(fdfinal);       
@@ -124,4 +119,69 @@ function kwtos(s) {
     return s;
     
 }
+// ***************************
+   
+class delayedDo {
+
+    static getRV() { return 'kwDDreplaceMe'; }
+
+    constructor(dof, delayms, commitint) {
+        this.clfan = 3; // should equal named arguments above
+        this.comint = commitint;
+        this.dof = dof;
+        this.delayms = delayms;
+        this.iargs = Array.prototype.slice.call(arguments);
+        this.rpv = delayedDo.getRV();
+        this.doneAt = 0;
+    }
+
+    doNow() { // later will come later
+        const args =  Array.prototype.slice.call(arguments);
+        const inia = this.iargs.slice(this.clfan).concat(args);
+
+        let i=0, j=0;
+        let fina = [];
+        let jdo = false;
+        
+        do {
+            jdo = false;
+            
+            if (isset(inia[i]) && inia[i] === this.rpv) {
+                i++;
+                if (isset(args[j])) fina.push(args[j++]);
+            }
+            else jdo = true;
+            if (i >= inia.length) jdo = true;
+            
+            if (isset(inia[i])) fina.push(inia[i++]);
+            
+            if (jdo) if (isset(args[j])) fina.push(args[j++]);
+   
+        } while(i < inia.length || j < args.length);
+
+        this.dof(... fina);
+        this.doneAt = time();
+    }
+
+    doLater(args) {
+       return setTimeout(() => { this.doNow(args); }, this.delayms);
+    }
+
+    doAtInterval(args) {
+
+        clearTimeout(this.daistv);
+
+        if (time() - this.doneAt >= this.comint) { 
+            this.doNow(args); 
+            return; 
+        }
+
+        this.daistv = this.doLater(args);
+
+    }
+
+} // do later class
+
+
+// ***************************
 
