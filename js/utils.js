@@ -200,7 +200,7 @@ class kwStandardTextIOCl {
     
     init10() {
         this.ddo = new delayedDo(kwjss.sobf, 307, 2000, this.url, delayedDo.getRV(), 
-                                    (res) => {this.oninret(res); });
+                                    (res) => {this.oninret(this.thee, res); });
         this.thee.oninput = () => { this.oninput(this.thee); /* subclasses might need the element argument */};
     }
     
@@ -212,12 +212,15 @@ class kwStandardTextIOCl {
         this.ddo.doAtInterval(dat);
     }
     
-    oninret(res) {
-        if (this.isokevf && this.isokevf(res)) {
-            const e = this.thee;            
-            e.style.backgroundColor = this.okcolor;
-            this.okstov = setTimeout(() => { e.style.backgroundColor = 'white'; }, 4000);
-        }
+    oninret(res, subck) {
+        if (res === 'subck' && subck === true) { this.dook(); return; }
+        if (this.isokevf && this.isokevf(res)) this.dook();
+    }
+    
+    dook() {
+        const e = this.thee;            
+       e.style.backgroundColor = this.okcolor;
+       this.okstov = setTimeout(() => { e.style.backgroundColor = 'white'; }, 4000);       
     }
     
 }
