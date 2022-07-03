@@ -156,10 +156,15 @@ class delayedDo {
             else jdo = true;
             if (i >= inia.length) jdo = true;
             
-            if (isset(inia[i])) fina.push(inia[i++]);
+            if (isset(inia[i])) fina.push(inia[i]);
+            i++;
             
-            if (jdo) if (isset(args[j])) fina.push(args[j++]);
-   
+            if (jdo) {
+                if (isset(args[j])) fina.push(args[j]);
+                j++;
+                
+            }
+ 
         } while(i < inia.length || j < args.length);
 
         this.dof(... fina);
@@ -205,14 +210,16 @@ class kwStandardTextIOCl {
     }
     
     oninput(ein, dat) {
-        clearTimeout(this.okstov);
+        this.clearTO();
         let e = this.thee;
         if (ein) e = ein;
         e.style.backgroundColor = 'yellow';
         this.ddo.doAtInterval(dat);
     }
     
-    oninret(res, subck) {
+    clearTO() { clearTimeout(this.okstov);  }
+    
+    oninret(e, res, subck) {
         if (res === 'subck' && subck === true) { this.dook(); return; }
         if (this.isokevf && this.isokevf(res)) this.dook();
     }
