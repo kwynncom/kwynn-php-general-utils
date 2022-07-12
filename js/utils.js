@@ -71,7 +71,9 @@ class kwjss {
 
         if (!sob) sob = {};
         const poch = sob;
-        if (fdin) for(const [key, value] of Object.entries(fdin)) poch[key] = value;  
+        // if (fdin) for(const [key, value] of Object.entries(fdin)) poch[key] = value;  
+        if (fdin) for(const [key, value] of fdin) poch[key] = value;   
+        
          
         const fdfinal = new FormData();
         fdfinal.append('POSTob', JSON.stringify(poch));
