@@ -49,6 +49,7 @@ class kwjss {
         if (Object.keys(ein.dataset).length) 
         sob.dataset = ein.dataset;
         sob.v       = ein.value;
+        sob.checked = ein.checked;
         sob.pageid = pageid;
         kwjss.sobf(url, sob, cb);
     }

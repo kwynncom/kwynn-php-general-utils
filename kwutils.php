@@ -83,7 +83,7 @@ function kwifse($a, $k, $ifnot = false) { // if set return, else return ifnot
 function kwam(...$aa) { 
 	$ra = [];
 	foreach($aa as $i => $v) {
-		if (!is_array($v)) $v = [$v];
+		if (!is_array($v) && $v) $v = [$v];
 		if ($v) $ra = array_merge($ra, $v);
 	}
 	return $ra;
