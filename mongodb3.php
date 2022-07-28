@@ -72,7 +72,7 @@ class kw3mdbcoll extends MongoDB\Collection {
 			self::addCreUp($dat);
 		else unset($o['kwnoup']);
 				
-		parent::insertOne($dat, $o);
+		return parent::insertOne($dat, $o);
 	}
 
 }
