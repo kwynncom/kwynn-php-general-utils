@@ -1,8 +1,8 @@
 <?php
 
-set_include_path(get_include_path() . PATH_SEPARATOR . '/opt/composer');
+set_include_path(get_include_path() . PATH_SEPARATOR . '/opt/composer'); // Where I assume composer libraries are.
 
-$va = 'vendor/autoload.php';
+$va = 'vendor/autoload.php'; // The next few lines attempt to let users without composer libraries in the above path use the rest of my library.
 $autolr = true;
 $ci = 'include_exists';
 if (function_exists($ci)) $autolr = $ci($va); unset($ci);

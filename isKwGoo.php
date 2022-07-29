@@ -1,53 +1,56 @@
-<?php   /* WARNING: you have to use this before there is a chance of output, otherwise you may get the dreaded 
- * "cannot be changed after headers have already been sent" */
-// see other notes at bottom
+<?php   // This is NOT included by default with the rest of the library.
 
-require_once('/opt/kwynn/kwutils.php');
+require_once('/opt/kwynn/kwutils.php'); // Thus I have to include the rest of the library.
 
-function isGoo2($rin) {
-    if (!$rin) return false;
-    $fs = [  'type' => 'Kwynn_own_addr_hash',
-	     'rand' => 'KxkhCOkkq0RaE5BNBZvjyvSPI',
-	     'myr'  => '2019-09-07 21:17'    ];
+class isKwGooCl extends dao_generic_3 {
+	
+	const dbname = 'qemail'; // using the same as my GMail unread count checker
+	const dbcoll = 'sessions'; // same
+	const emfs = ['/var/kwynn/myemail.txt', '/var/kwynn/kwEmail_1_2007.txt'];
+	const isKwGooTrueRes = 'YouAreKwGoo_2022_start!!!';
 
-    foreach ($fs as $f => $v) {
-	if (!isset($rin[$f]))       return false;
-	if (       $rin[$f] !== $v) return false;
-    }
-    
-    return TRUE;
-}
+	private function __construct() {
+		$this->theores = false;
+		try {
+			parent::__construct(self::dbname);
+			$this->creTabs	   (self::dbcoll);
+			$this->loadMatchingEmail();
+			$this->tryMatch();
+		} catch(Exception $ex) { }
+	}
+	
+	private function loadMatchingEmail() {
+		foreach(self::emfs as $f) {
+			try {
+				kwas(is_readable($f), "$f not readable isKwGoo email files");
+				$t = strtolower(trim(file_get_contents($f))); kwas($t && is_string($t), 'no valid string isKwGoo ef 2');
+				$this->myemail = $t;
+				return;
+			} catch (Exception $ex) { }
+		}
+		
+		kwas(false, 'no email to try to match found isKwGoo');
+	}
+	
+	private function tryMatch() {
+		try {
+			$sid = startSSLSession();
+			$hsid = hash('sha256', $sid);
+			$emh  = hash('sha256', $this->myemail);
+			$cnt = $this->scoll->count(['sid' => $hsid, 'addr' => $emh]);
+			kwas($cnt >= 1, 'iskwgoo count fail');
+			$this->theores = self::isKwGooTrueRes;
+		} catch(Exception $ex) { }	
+	}
+	
+	public function isKwGooRes() { return $this->theores; }
+	
+	public static function isKwGoo() {
 
-function isKwGoo() {
-try {
-    $sid = startSSLSession();
-    $hsid = hash('sha256', $sid);
-    $dao = new kwmoncli();
-    $scoll = $dao->selectCollection('qemail', 'sessions');
-    $res = $scoll->findOne(['sid' => $hsid]);
-    kwas(isset($res['addr']) && $res['addr'], 'no valid addr hash');
-    $hash = hash('sha256', $res['addr']);
-    $ccoll = $dao->selectCollection('creds', 'creds');
-    $res = $ccoll->findOne(['addr_hash' => $hash]);
-    $bigres = isGoo2($res);
-    if ($bigres) {
-	file_put_contents('/tmp/iskgoo.txt', date('r') . "\n", FILE_APPEND);
-	return TRUE;
-    }
-} catch(Exception $ex) { }
+		$o = new self();
+		return $o->isKwGooRes();
 
-return false;
+	} // func
+} // class
 
-}
-/* This interacts with my email checker at https://github.com/kwynncom/positive-gmail-check
- * The email checker uses Google OAUTH / OAUTH2 to correlate a session to an email address.  So isKwGoo() is "Does this session belong to Kwynn's 
- * email (GMail) address as confirmed by Google OAUTH?" or "is Kwynn? (as confirmed by Google)" 
- * 
- * The "rand" is not for security.  It was just a unique ID for searching and otherwise keeping track.  Upon further thought, I'm not sure there is a 
- * point to it.  "myr" meaning the PHP 'r' date readout, or something close.  It just means a human-readable, complete date of when I created that 
- * hash entry.
- * 
- * HISTORY
- * 
- * History up through 2020/06/06 is now in GitHub, so I will erase most and then all of this.
- */
+function isKwGoo() { return isKwGooCl::isKwGoo() === isKwGooCl::isKwGooTrueRes; }

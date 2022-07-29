@@ -1,94 +1,32 @@
 # kwynn-php-general-utils
-This is PHP code I wrote and use repeatedly in different types of projects, including a growing number here on GitHub.
+PHP (and client-side JavaScript) code I wrote and use repeatedly in different projects
 
-*********
-2021/12/28 - notes on email.php usage
+I include this library in almost everything I write.  I have it cloned to /opt/kwynn.  Almost everything I write begins with:
 
-Make the apt creds/creds document entry.
-Refresh password.
-Create a local password.
+require_once('/opt/kwynn/kwutils.php');
 
+Most popular with my own usage are kwas() and my MongoDB class dao_generic_3.  kwas($condition, $errorMessage); is "Kwynn's assert()": 
+either the condition or true or an exception is thrown with the error message.
 
-**********
-2021/11/25
+isAWS() is running at http://kwynn.com/t/20/06/machineID.php?testisAWS
 
-If I don't use sem_remove() in lock.php, then switching from CLI to web causes permission denied.  If I do use sem_remove(), there is a lesser error condition.
-I need to keep whittling on this.
-
-2021/11/04
-
-created ./base62 and moved both base62() and didCLICallMe() there
-
-2020/12/19 - Human readable MongoDB keys, such as 0-12-17-00:17:44-13-2020
-
-The first 0 indicates year 2020 or 202-0.  12-17 is December 17.  00:17:44 is time.  -13- is the sequence number, using a semaphore lock.  Then 
-I add 2020 in full lest I crash into a Y2K variant in 10 years.
-
-
-******
-
-isAWS() running at http://kwynn.com/t/20/06/machineID.php?testisAWS
-
-*****
-2020/11/28 10:42pm
-
-I was playing with Linux containers and noticed that kwutils.php assumes that a Composer vendor/autoload.php exists.  It also assumes that the 
-MongoDB composer library exists.  So I hopefully fixed this so someone can use other features without composer and composer MongoDB.
-
-So, several changes:
-
-I moved the MongoDB code to a separate file.
-I created a function "include_exists" to determine whether requiring autoload is safe, and conditionally include it, and conditionally create my 
-database functions based on inclusion and the existence of a needed MongoDB class.
-I tried to account for those with earlier versions of my utilities, who don't download the new mongodb.php file.
-****
-I also created myself as a null function kwynn() in kwutils.php.  See the note / comment there.
-
-
-*********************
-2020/06/24 7:45pm 
-
-I thumped on isAWS() some more.  I read further in the below-linked Amazon doc page, and I found some answers that still work.
-
-I've also decided that, for now, isKwDev() is identical to !isAWS()
-
-The purposes of these is to identify whether I'm live or not.  I suppose I should create isLive() and deprecate isAWS(), but anyhow...
-
-Below I mention the definitive, crypto-verified solution, but my immediate purpose is much simpler than that.
-
-*****
-2020/06/22 - regarding isAWS()
-
-I just upgraded to an AWS EC2 t3a.nano type (from t2.nano) and Ubuntu 20.04 (from 18.04) at the same time.  isAWS() in kwutils.php broke.  
-
-Assuming you are I are not running certain types of virtualization (presumably Xen and probably others), it used to be this simple:
-
-function isAWS() { return file_exists('/sys/hypervisor/uuid'); }
-
-Per this comment: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/identify_ec2_instances.html
-
-Now it is not that simple.  Both my local, non-virtualized machine and my new AWS instance have /sys/hypervisor, but NEITHER has uuid or anything else under 
-the hypervisor directory.  
-
-A solution that works well enough for now is to fall back on what I used to do to identify machines--use both Apache and cli / shell environment variables.  
-I added some comments in the isAWS() demonstrating this.
-
-I believe it's my clock project that has a stupdendously complex (relatively speaking) but definitive solution using crypto validation that you're in AWS EC2.  I 
-suppose I will elaborate on that one day.
-
-Yeah, below is the in-progress version.  So far this is just a toy, but I'll have to work on it:
-
-https://github.com/kwynncom/javascript-synchronized-clock/blob/master/services/isAWS.php
-
-***
-2020/06/22 (also)
-
-Per my earlier comment, on June 4, the code is aleady much better tested.
+I'm surprised it's still running.  I've tried to stop using that, but it's one item that is running directly live, so I mention it.
 
 *******
-Very First Commit Comment (ca. 2020/06/04)
-For the most part, I'm going to commit now and comment later.  I will say that several of these files are brand new.  Out of the brand new ones, some are already 
-fairly well tested and some not so much.
-***************
-This repo started with https://github.com/kwynncom/javascript-synchronized-clock
-    The CHANGELOG.md in that repo's tag / version 1.0 notes this fact.
+function isKwGoo()
+
+This interacts with my email checker at https://github.com/kwynncom/positive-gmail-check
+The email checker uses Google OAUTH / OAUTH2 to correlate a session to an email address.  So isKwGoo() is "Does this session belong to Kwynn's 
+email (GMail) address as confirmed by Google OAUTH?" or "is Kwynn? (as confirmed by Google)" 
+
+WARNING: you have to use this before there is a chance of output, otherwise you may get the dreaded "cannot be changed after headers have already 
+been sent"
+
+I haven't seen that one in many months, although that's because I'm so careful of it.
+
+This is NOT included by default with the rest of the library.
+******
+THIS FILE HISTORY
+
+2022/07/29: I will erase a lot of this because it's in the git history.  The truly geeky might find the previous versions interesting.  I 
+should probably review them myself one day.
