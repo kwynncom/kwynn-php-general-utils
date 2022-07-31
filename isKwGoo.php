@@ -54,3 +54,5 @@ class isKwGooCl extends dao_generic_3 {
 } // class
 
 function isKwGoo() { return isKwGooCl::isKwGoo() === isKwGooCl::isKwGooTrueRes; }
+
+function kwGooOrDie() { kwas(isKwGoo(), 'not auth - iskgoo 0334'); }
