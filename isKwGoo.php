@@ -5,7 +5,7 @@ require_once('/opt/kwynn/kwutils.php'); // Thus I have to include the rest of th
 class isKwGooCl extends dao_generic_3 {
 	
 	const dbname = 'qemail'; // using the same as my GMail unread count checker
-	const dbcoll = 'sessions'; // same
+	const dbcoll = 'usage'; // same
 	const emfs = ['/var/kwynn/myemail.txt', '/var/kwynn/kwEmail_1_2007.txt'];
 	const isKwGooTrueRes = 'YouAreKwGoo_2022_start!!!';
 
@@ -34,11 +34,12 @@ class isKwGooCl extends dao_generic_3 {
 	
 	private function tryMatch() {
 		try {
+			$ires = $this->ucoll->createIndex(['sid' => 1, 'email' => 1, 'type' => 1]); unset($ires);
 			$sid = startSSLSession();
 			$hsid = hash('sha256', $sid);
-			$emh  = hash('sha256', $this->myemail);
-			$cnt = $this->scoll->count(['sid' => $hsid, 'addr' => $emh]);
-			kwas($cnt >= 1, 'iskwgoo count fail');
+			$em  = $this->myemail;
+			$res = $this->ucoll->findOne(['sid' => $hsid, 'email' => $em, 'type' => 'checked']);
+			kwas(kwifs($res, 'email') === $em, 'failed cross check isKwGoo');
 			$this->theores = self::isKwGooTrueRes;
 		} catch(Exception $ex) { }	
 	}

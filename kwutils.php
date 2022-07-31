@@ -203,13 +203,14 @@ function sslOnly() { // make sure the page is SSL
 /* WARNING: you have to use this before there is a chance of output, otherwise you may get the dreaded 
  * "cannot be changed after headers have already been sent" */
 function startSSLSession() {
-    if (session_id()) return session_id();
+	try {
+		$vsc10 = vsidod();
+		return $vsc10;
+	} catch(Exception $ex) {}
     sslOnly();
 	kwscookie();
 	session_start();
-    $sid = vsidod();
-    vsidod($sid);
-    return $sid;
+    return vsidod();
 }
 
 function contSSLSession() {
