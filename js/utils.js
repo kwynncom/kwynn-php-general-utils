@@ -74,23 +74,38 @@ class kwjss {
         return din;
     }
     
-    static ole10(XHR, cb, prt) {
-       const rt = XHR.responseText;
-        if (prt === false) return cb(rt);
-        return cb(kwjss.responseTextParse(rt)); 
-      }
-      
-    
-    static sobf (url, sob, cbin, prt, fdin) {
-        const cbo = kwjss.ccb(cbin);
-        const cb  = cbo.f;
-        const isp = cbo.isp;
-        
-        return kwjss.sobf20(url, sob, cb, prt, fdin);
+    static ole10(xres, cb, prt) {
+       const rt = xres.responseText;
        
+        if (prt === false) {
+            if (cb) return cb(rt);
+            else return rt;
+        }
+        
+        const retv = kwjss.responseTextParse(rt);
+        if (cb) return cb(retv); 
+        return retv;
+        
+      }
+       
+    static sobf (url, sob, cb, prt, fdin) { 
+        kwjss.sobf20(url, sob, prt, fdin, function () { kwjss.ole10(cb, prt);});   
     }
     
-    static sobf20(url, sob, cb, prt, fdin) {
+    static async asobf(url, sob, prt, fdin) {
+        const cbo = kwjss.ccb('p');
+        const cb  = cbo.f;
+        const isp = cbo.isp;
+        let pf0014;
+        const p0003 = new Promise((resolve) => { pf0014 = resolve; })
+                            .then((event) => {
+                                return kwjss.ole10(event.target, false, prt);
+                              });
+        kwjss.sobf20(url, sob, prt, fdin, pf0014);
+        return await p0003;
+    }
+    
+    static sobf20(url, sob, prt, fdin, olf0011) {
         if (1) {
             if (url.search(/\?/) >= 0) url += '&';
             else                     url += '?';
@@ -98,10 +113,7 @@ class kwjss {
         }
         const XHR = new XMLHttpRequest(); 
         XHR.open('POST', url);
-        const p10 = new Promise((resolve) => { 
-            return kwjss.ole10(XHR, cb, prt); 
-        });
-        XHR.onloadend = p10;
+        XHR.onloadend = olf0011;    
 
         if (!sob) sob = {};
         const poch = sob;
@@ -111,7 +123,6 @@ class kwjss {
         const fdfinal = new FormData();
         fdfinal.append('POSTob', JSON.stringify(poch));
         XHR.send(fdfinal);       
-        return p10;
     }
 } // class
 
