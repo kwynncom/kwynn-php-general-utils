@@ -67,15 +67,11 @@ class kwjss {
     
     static ccb(fin) {
         if (typeof fin === 'function') return { f : fin, isp : false};
-        return { f : kwjss.ipcb, isp : true };
+        return { f : false, isp : true };
     }
-    
-    static ipcb(din) {
-        return din;
-    }
-    
-    static ole10(xres, cb, prt) {
-       const rt = xres.responseText;
+  
+    static ole10 (xht, cb, prt) {
+       const rt = xht.responseText;
        
         if (prt === false) {
             if (cb) return cb(rt);
@@ -88,24 +84,22 @@ class kwjss {
         
       }
        
-    static sobf (url, sob, cb, prt, fdin) { 
-        kwjss.sobf20(url, sob, prt, fdin, function () { kwjss.ole10(cb, prt);});   
-    }
-    
-    static async asobf(url, sob, prt, fdin) {
-        const cbo = kwjss.ccb('p');
+    static sobf(url, sob, cbin, prt, fdin) {
+        const cbo = kwjss.ccb(cbin);
         const cb  = cbo.f;
         const isp = cbo.isp;
-        let pf0014;
-        const p0003 = new Promise((resolve) => { pf0014 = resolve; })
-                            .then((event) => {
-                                return kwjss.ole10(event.target, false, prt);
-                              });
-        kwjss.sobf20(url, sob, prt, fdin, pf0014);
-        return await p0003;
+        if (isp) {
+            let resolvePH;
+            const theResolve = new Promise((resolve) => { resolvePH = resolve; })
+                                            .then((event) => { return kwjss.ole10(event.target, false, prt); });
+            kwjss.sobf20(url, sob, prt, fdin, resolvePH);
+            return theResolve;
+        }
+        
+        kwjss.sobf20(url, sob, prt, fdin, (event) => { return kwjss.ole10(event.target, cb, prt);});
     }
     
-    static sobf20(url, sob, prt, fdin, olf0011) {
+    static sobf20(url, sob, prt, fdin, olcbf) {
         if (1) {
             if (url.search(/\?/) >= 0) url += '&';
             else                     url += '?';
@@ -113,7 +107,7 @@ class kwjss {
         }
         const XHR = new XMLHttpRequest(); 
         XHR.open('POST', url);
-        XHR.onloadend = olf0011;    
+        XHR.onloadend = olcbf;    
 
         if (!sob) sob = {};
         const poch = sob;
