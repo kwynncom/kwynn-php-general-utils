@@ -1,3 +1,13 @@
+function UtoLocF(U) {
+    const df = { year    : 'numeric', month  : 'short'  , day    : '2-digit',
+                 weekday : 'short'  , hour   : '2-digit', minute : '2-digit', timeZoneName : 'short'};
+    
+    const dateo = new Date(U * 1000);
+    const s     = dateo.toLocaleDateString([], df);
+    return s;
+}
+
+// ****
 function qsa(q)  { return document.querySelectorAll(q); }
 function qs(q) { return document.querySelector(q);}
 function cl(msg) { console.log(msg); }
