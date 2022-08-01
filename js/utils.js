@@ -65,21 +65,50 @@ class kwjss {
         kwjss.sobf(url, sob, cb);
     }
     
-    static sobf(url, sob, cb, prt, fdin) {
-        if (1) {
+    static ccb(fin) {
+        if (typeof fin === 'function') return { f : fin, isp : false};
+        return { f : kwjss.ipcb, isp : true };
+    }
+    
+    static ipcb(din) {
+        return din;
+    }
+    
+    static ole10(cb, prt) {
+       const rt = this.responseText;
+        if (prt === false) return cb(rt);
+        return cb(kwjss.responseTextParse(rt)); 
+      }
+      
+      static ole20(cb, prt, isp) {
+        const f = kwjss.ole10(cb, prt);
+        if (!isp) return f();
+        return new Promise((f));
+      }
+    
+    static sobf (url, sob, cbin, prt, fdin) {
+        const cbo = kwjss.ccb(cbin);
+        const cb  = cbo.f;
+        const isp = cbo.isp;
+        
+        return new Promise((resolve) => { kwjss.sobf20(url, sob, cb, prt, fdin)});
+        
+        
+    }
+    
+    static sobf20(url, sob, cbin, prt, fdin) {
+        if (true) {
             if (url.search(/\?/) >= 0) url += '&';
             else                     url += '?';
             url += 'XDEBUG_SESSION_START=netbeans-xdebug';
         }
+        
+
+        
         const XHR = new XMLHttpRequest(); 
         XHR.open('POST', url);
-        XHR.onloadend = function() { 
-            const rt = this.responseText;
-            if (typeof cb === 'function') {
-                if (prt === false) return cb(rt);
-                cb(kwjss.responseTextParse(rt)); 
-            }
-        }
+        const olef = function() { kwjss.ole10(cb, prt, isp); };
+        XHR.onloadend = olef;
 
         if (!sob) sob = {};
         const poch = sob;
@@ -89,7 +118,10 @@ class kwjss {
          
         const fdfinal = new FormData();
         fdfinal.append('POSTob', JSON.stringify(poch));
-        XHR.send(fdfinal);       
+        
+        const pr = new Promise((olef) => { });
+        
+        XHR.send(fdfinal);
     }
 }
 
