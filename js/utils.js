@@ -74,56 +74,46 @@ class kwjss {
         return din;
     }
     
-    static ole10(cb, prt) {
-       const rt = this.responseText;
+    static ole10(XHR, cb, prt) {
+       const rt = XHR.responseText;
         if (prt === false) return cb(rt);
         return cb(kwjss.responseTextParse(rt)); 
       }
       
-      static ole20(cb, prt, isp) {
-        const f = kwjss.ole10(cb, prt);
-        if (!isp) return f();
-        return new Promise((f));
-      }
     
     static sobf (url, sob, cbin, prt, fdin) {
         const cbo = kwjss.ccb(cbin);
         const cb  = cbo.f;
         const isp = cbo.isp;
         
-        return new Promise((resolve) => { kwjss.sobf20(url, sob, cb, prt, fdin)});
-        
-        
+        return kwjss.sobf20(url, sob, cb, prt, fdin);
+       
     }
     
-    static sobf20(url, sob, cbin, prt, fdin) {
-        if (true) {
+    static sobf20(url, sob, cb, prt, fdin) {
+        if (1) {
             if (url.search(/\?/) >= 0) url += '&';
             else                     url += '?';
             url += 'XDEBUG_SESSION_START=netbeans-xdebug';
         }
-        
-
-        
         const XHR = new XMLHttpRequest(); 
         XHR.open('POST', url);
-        const olef = function() { kwjss.ole10(cb, prt, isp); };
-        XHR.onloadend = olef;
+        const p10 = new Promise((resolve) => { 
+            return kwjss.ole10(XHR, cb, prt); 
+        });
+        XHR.onloadend = p10;
 
         if (!sob) sob = {};
         const poch = sob;
-        // if (fdin) for(const [key, value] of Object.entries(fdin)) poch[key] = value;  
+
         if (fdin) for(const [key, value] of fdin) poch[key] = value;   
-        
          
         const fdfinal = new FormData();
         fdfinal.append('POSTob', JSON.stringify(poch));
-        
-        const pr = new Promise((olef) => { });
-        
-        XHR.send(fdfinal);
+        XHR.send(fdfinal);       
+        return p10;
     }
-}
+} // class
 
 function isset(v) { return typeof v !== 'undefined'; }
 
