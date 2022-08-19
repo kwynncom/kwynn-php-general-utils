@@ -19,12 +19,22 @@ function inht(oorid, s) {
     if (!e) return;
     e.innerHTML = s;
 }
-function kwas(v, msg) {
+
+/* Below, just starting to harmonize Node.js and client-side.  I do NOT claim this is exactly the right answer, but it works for 
+ * my immediate purposes. */
+
+if (typeof module === 'undefined') { 
+    var module = {}; // const does not work in client-side, probably due to the {} scope, but not entirely sure
+    module.exports = {};
+}
+
+module.exports.kwas = function kwas(v, msg) {
 	if (!v) {
 		if (!msg) msg = 'unknown message';
 		throw msg;
 	}
-}
+};
+
 function time() { return (new Date().getTime()); } 
 function tzop() {
     const dob  = new Date();
@@ -100,9 +110,10 @@ class kwjss {
     }
     
     static sobf20(url, sob, prt, fdin, olcbf) {
-        if (1) {
+        if (0) { // !*!*!*!*!*!****************************!!!!!*!*!*
             if (url.search(/\?/) >= 0) url += '&';
             else                     url += '?';
+            
             url += 'XDEBUG_SESSION_START=netbeans-xdebug';
         }
         const XHR = new XMLHttpRequest(); 
