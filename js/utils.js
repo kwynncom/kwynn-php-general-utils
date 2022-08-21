@@ -250,7 +250,7 @@ class delayedDo {
 
 // ***************************
 
-class kwStandardTextIOCl {
+class kwStdWebIOCl {
     
     constructor(e, url, fin) {
         this.thee = e;
@@ -262,8 +262,16 @@ class kwStandardTextIOCl {
     }
     
     init10() {
-        this.ddo = new delayedDo(kwjss.sobf, 307, 2000, this.url, delayedDo.getRV(), 
-                                    (res) => {this.oninret(this.thee, res); });
+        
+        let keystrokeDelay = 307;
+        let constantTypingDelay = 2000;
+        
+        if (this.thee.tagName === 'SELECT') keystrokeDelay = constantTypingDelay = 0;
+        
+        
+        this.ddo = new delayedDo(() => { kwjss.sendEle(this.url, this.thee, (res) => {this.oninret(this.thee, res); });}, // first param
+                                            keystrokeDelay, constantTypingDelay); 
+                                   
         this.thee.oninput = () => { this.oninput(this.thee); /* subclasses might need the element argument */};
     }
     
