@@ -20,6 +20,14 @@ function inht(oorid, s) {
     e.innerHTML = s;
 }
 
+function kwas(v, msg) {
+	if (!v) {
+		if (!msg) msg = 'unknown message';
+		throw msg;
+	}
+};
+
+// 2022/08/20 20:47 - was broken on client side; now works but not sure about server.  
 /* Below, just starting to harmonize Node.js and client-side.  I do NOT claim this is exactly the right answer, but it works for 
  * my immediate purposes. */
 
@@ -28,14 +36,12 @@ if (typeof module === 'undefined') {
     module.exports = {};
 }
 
-module.exports.kwas = function kwas(v, msg) {
-	if (!v) {
-		if (!msg) msg = 'unknown message';
-		throw msg;
-	}
-};
+module.exports.kwas = kwas;
 
 function time() { return (new Date().getTime()); } 
+
+const ignore2045 = false;
+
 function tzop() {
     const dob  = new Date();
     const minr =  dob.getTimezoneOffset();
@@ -110,7 +116,7 @@ class kwjss {
     }
     
     static sobf20(url, sob, prt, fdin, olcbf) {
-        if (0) { // !*!*!*!*!*!****************************!!!!!*!*!*
+        if (1) { // !*!*!*!*!*!****************************!!!!!*!*!*
             if (url.search(/\?/) >= 0) url += '&';
             else                     url += '?';
             

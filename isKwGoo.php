@@ -35,7 +35,8 @@ class isKwGooCl extends dao_generic_3 {
 	private function tryMatch() {
 		try {
 			$ires = $this->ucoll->createIndex(['sid' => 1, 'email' => 1, 'type' => 1]); unset($ires);
-			$sid = startSSLSession();
+			$sid = contSSLSession();
+			if (!$sid) return false;
 			$hsid = hash('sha256', $sid);
 			$em  = $this->myemail;
 			$res = $this->ucoll->findOne(['sid' => $hsid, 'email' => $em, 'type' => 'checked']);
