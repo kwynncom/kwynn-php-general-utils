@@ -269,10 +269,12 @@ class kwStdWebIOCl {
         if (this.thee.tagName === 'SELECT') keystrokeDelay = constantTypingDelay = 0;
         
         
-        this.ddo = new delayedDo(() => { kwjss.sendEle(this.url, this.thee, (res) => {this.oninret(this.thee, res); });}, // first param
+        this.ddo = new delayedDo((exob) => { kwjss.sendEle(this.url, this.thee, (res) => {this.oninret(this.thee, res); }, false, exob);}, // first param
                                             keystrokeDelay, constantTypingDelay); 
                                    
-        this.thee.oninput = () => { this.oninput(this.thee); /* subclasses might need the element argument */};
+        this.thee.oninput = (dat) => { 
+            this.oninput(this.thee, dat); /* subclasses might need the element argument */
+        };
     }
     
     oninput(ein, dat) {
