@@ -1,3 +1,5 @@
+if (typeof module === 'undefined') {  var module = {}; module.exports = {}; }
+
 function UtoLocF(U) {
     const df = { year    : 'numeric', month  : 'short'  , day    : '2-digit',
                  weekday : 'short'  , hour   : '2-digit', minute : '2-digit', timeZoneName : 'short'};
@@ -11,6 +13,7 @@ function UtoLocF(U) {
 function qsa(q)  { return document.querySelectorAll(q); }
 function qs(q) { return document.querySelector(q);}
 function cl(msg) { console.log(msg); }
+module.exports.cl = cl;
 function byid(id) { return document.getElementById(id); }
 function cree(ty) { return document.createElement(ty); }
 function inht(oorid, s) {
@@ -27,18 +30,11 @@ function kwas(v, msg) {
 	}
 };
 
-// 2022/08/20 20:47 - was broken on client side; now works but not sure about server.  
-/* Below, just starting to harmonize Node.js and client-side.  I do NOT claim this is exactly the right answer, but it works for 
- * my immediate purposes. */
-
-if (typeof module === 'undefined') { 
-    var module = {}; // const does not work in client-side, probably due to the {} scope, but not entirely sure
-    module.exports = {};
-}
-
 module.exports.kwas = kwas;
 
 function time() { return (new Date().getTime()); } 
+
+module.exports.time = time;
 
 const ignore2045 = false;
 
@@ -78,6 +74,7 @@ class kwjss {
         sob.v       = ein.value;
         sob.checked = ein.checked;
         sob.pageid = pageid;
+        sob.eleType = ein.type;
         kwjss.sobf(url, sob, cb);
     }
     
@@ -281,7 +278,8 @@ class kwStdWebIOCl {
         this.clearTO();
         let e = this.thee;
         if (ein) e = ein;
-        e.style.backgroundColor = 'yellow';
+        const ech = this.getColorE(e);
+        ech.style.backgroundColor = 'yellow';
         this.ddo.doAtInterval(dat);
     }
     
@@ -292,10 +290,12 @@ class kwStdWebIOCl {
         if (this.isokevf && this.isokevf(res)) this.dook();
     }
     
+    getColorE(e) { return e.type === 'checkbox' ? e.parentNode : e; }
+    
     dook() {
-        const e = this.thee;            
-       e.style.backgroundColor = this.okcolor;
-       this.okstov = setTimeout(() => { e.style.backgroundColor = 'white'; }, 4000);       
+       const e = this.thee;            
+       this.getColorE(e).style.backgroundColor = this.okcolor;
+       this.okstov = setTimeout(() => { this.getColorE(e).style.backgroundColor = 'white'; }, 4000);       
     }
     
 }

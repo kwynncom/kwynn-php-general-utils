@@ -87,7 +87,7 @@ class dao_generic_3  {
 		$this->client = new kw3moncli();
     }
 	
-	protected function creTabs($tsin) {
+	public function creTabs($tsin) {
 		
 		if (is_string($tsin)) $ts = [$tsin[0] => $tsin];
 		else $ts = $tsin; unset($tsin);

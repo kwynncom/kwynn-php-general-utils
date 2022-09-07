@@ -1,6 +1,5 @@
 <?php
 
-
 function kwjssrp($k = false) {
 	try {
 		
