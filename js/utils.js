@@ -1,5 +1,8 @@
 if (typeof module === 'undefined') {  var module = {}; module.exports = {}; }
 
+function islam() { return process.env.AWS_LAMBDA_FUNCTION_NAME; /* Is AWS Lambda? */ }
+module.exports.islam = islam;
+
 function UtoLocF(U) {
     const df = { year    : 'numeric', month  : 'short'  , day    : '2-digit',
                  weekday : 'short'  , hour   : '2-digit', minute : '2-digit', timeZoneName : 'short'};
