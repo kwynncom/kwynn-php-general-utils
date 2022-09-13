@@ -252,6 +252,17 @@ class delayedDo {
 
 class kwStdWebIOCl {
     
+    static stdInit(clnm, url, endh) {
+        const tys = ['input', 'select', 'textarea'];
+        
+        tys.forEach((ty) => {
+           qsa(ty).forEach((e) => {
+               new clnm(e, url, endh);
+           });
+       });
+
+    }    
+    
     constructor(e, url, fin) {
         this.thee = e;
         this.url = url;
