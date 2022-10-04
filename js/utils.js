@@ -71,7 +71,11 @@ class kwjss {
     static sendEle(url, ein, cb, pageid, exob) {
         let sob = {};
         if (typeof exob === 'object') sob = exob;
-        sob.eid		= ein.id;
+        
+        if  (!ein.id && ein.name)
+             sob.eid =  ein.name;
+        else sob.eid =  ein.id;
+        
         if (Object.keys(ein.dataset).length) 
         sob.dataset = ein.dataset;
         sob.v       = ein.value;
