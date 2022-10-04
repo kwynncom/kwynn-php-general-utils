@@ -2,22 +2,18 @@
 
 class jscssht {
 	
-	const jsDefault = '/opt/kwynn/js/utils.js';
+	const jsDefault = '';
 	const fileTypes = ['css' => '/^.*\.css$/', 'js' => '/^.*\.js$/'];
 	
-	private function __construct(string $base = '') {
-		$this->url =  $url = dirname($_SERVER['REQUEST_URI']);
+	private function __construct(string $base = '', string $url = '') {
+		if (!$url) $this->url =  $url = dirname($_SERVER['REQUEST_URI']);
+		else $this->url = $url;
 		if (!$base) $base = $_SERVER['DOCUMENT_ROOT'] . $url;
 		$this->base = $base;
 	}
 	
-	
-	public static function echoAll(string $base = '') {
-		echo(self::getAll($base));
-	}
-
-	public static function getAll(string $base = '') {
-		$o = new self($base);
+	public static function getAll(string $base = '', string $url = '') {
+		$o = new self($base, $url);
 		return $o->getAllI();
 	}
 	
