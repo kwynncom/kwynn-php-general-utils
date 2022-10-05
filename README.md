@@ -8,9 +8,10 @@ require_once('/opt/kwynn/kwutils.php');
 Most popular with my own usage are kwas() and my MongoDB class dao_generic_3.  kwas($condition, $errorMessage); is "Kwynn's assert()": 
 either the condition or true or an exception is thrown with the error message.
 
-isAWS() is running at http://kwynn.com/t/20/06/machineID.php?testisAWS
+isAWS() is running at https://kwynn.com/t/20/06/machineID.php?testisAWS
 
-I'm surprised it's still running.  I've tried to stop using that, but it's one item that is running directly live, so I mention it.
+I'm surprised it's still running.  I've tried to stop using that, but it's one item that is running live that I can easily show, so I mention it.  
+As of late 2022, it may not last long.
 
 *******
 function isKwGoo()
@@ -25,7 +26,8 @@ been sent"
 I haven't seen that one in many months, although that's because I'm so careful of it.
 
 This is NOT included by default with the rest of the library.
-******
+
+*************
 THIS FILE HISTORY
 
 2022/07/29: I will erase a lot of this because it's in the git history.  The truly geeky might find the previous versions interesting.  I 

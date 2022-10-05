@@ -338,3 +338,16 @@ function getValidIPOrFalsey(bool | string $ip, bool $orDie = false) {
 	
 	return '';
 }
+
+function kwnohup($cmdin) { // This does NOT seem to work if run within NetBeans.  
+
+	$cmdf = 'nohup ' . $cmdin . ' < /dev/null > /dev/null 2>&1 & echo $! ';
+
+	$pids = trim(shell_exec($cmdf));
+	if ($pids && is_numeric($pids)) {
+		$pid = intval($pids);
+		if ($pid > 0) return $pid;
+	}
+	
+	return 0;
+}
