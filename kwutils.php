@@ -13,6 +13,7 @@ require_once(__DIR__ . '/mongoDBcli.php');
 require_once(__DIR__ . '/' . 'inonebuf.php');
 require_once(__DIR__ . '/fork.php');
 require_once(__DIR__ . '/jscss.php');
+require_once(__DIR__ . '/sntp.php');
 
    		         //  123456789 digits
 define('M_BILLION', 1000000000);
@@ -350,37 +351,4 @@ function kwnohup($cmdin) { // This does NOT seem to work if run within NetBeans.
 	}
 	
 	return 0;
-}
-
-function SNTPTextToArr($t) {
-	
-	static $tln = 4;
-	static $ipi = 4;
-	static $tol = M_BILLION;
-	
-	try {
-		$a  = explode("\n", trim($t)); unset($t); kwas($a && is_array($a) && count($a) >= $tln, 'wrong lines sntp sanity check'); 
-		$ip = getValidIPOrFalsey(kwifs($a, $ipi)); 
-		$a = array_slice($a, 0, $tln);
-
-		$n = $tln;
-		kwas(count($a) === $n, 'bad tline count sntp sanity 2');
-		for ($i=0; $i < $n; $i++) $a[$i] = intval($a[$i]);
-		kwas(count($a) >= 4, 'fail - for immediate tline sntp sanity purposes');
-		
-		$min = min($a);
-		$max = max($a);
-		kwas($max - $min < $tol, 'time sanity check fails');
-		$ds = abs(nanotime() - $max);
-		kwas($ds < $tol , 'time sanity check fail 2 - perhaps quota fail');
-		kwas($a[1] <= $a[2], 'server time sanity check fail between in and out');
-		kwas($a[0] <  $a[3], 'server time sanity check internal out and in');
-		
-		$ret['ip'  ] = $ip;
-		$ret['Uns4'] = $a;
-
-		return $ret;
-	} catch (Exception $ex) {
-		return false;
-	}
 }
