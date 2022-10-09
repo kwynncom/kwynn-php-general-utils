@@ -15,6 +15,7 @@ class sntpSanity {
 	private function __construct(string $t, bool $contiff) {
 		$this->contif  = $contiff;
 		$this->oret = false;
+		$this->sanFail = false;
 		$this->oret = $this->ttoa($t);
 	}
 	
@@ -24,6 +25,7 @@ class sntpSanity {
 	
 	private function ass(bool $tock, string $msg) {
 		if ($tock) return true;
+		$this->sanFail = true;
 		if ($this->contif) echo("**FAIL: " . $msg . "\n");
 		else throw new Exception($msg);
 		
@@ -61,6 +63,7 @@ class sntpSanity {
 
 			$ret['ip'  ] = $ip;
 			$ret['Uns4'] = $a;
+			$ret['sane'] = !$this->sanFail;
 
 			return $ret;
 		} catch (Exception $ex) {
