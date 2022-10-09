@@ -100,10 +100,11 @@ class dao_generic_3  {
 		}	
     }
 	
-	public static function get_oids($rand = false) {
+	public static function get_oids($rand = false, int $tsin = null) {
 		$o   = new MongoDB\BSON\ObjectId();
 		$s   = $o->__toString();
-		$ts  = $o->getTimestamp(); unset($o);
+		if ($tsin) $ts = $tsin;  
+		else       $ts  = $o->getTimestamp(); unset($tsin, $o);
 		$tss = date('md-Hi-Y-s', $ts); unset($ts);
 		$fs  = $tss . 's-' .  substr($s  ,  8);
 		if ($rand) 
