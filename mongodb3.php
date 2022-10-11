@@ -78,6 +78,8 @@ class kw3mdbcoll extends MongoDB\Collection {
 }
 
 class dao_generic_3  {
+	
+	const defOidsFmt = 'md-Hi-Y-s'; // usage below assumes seconds at the end *if* using this default
     
     private $dbname;
     protected $client;
@@ -100,13 +102,17 @@ class dao_generic_3  {
 		}	
     }
 	
-	public static function get_oids($rand = false, int $tsin = null) {
+	public static function get_oids(bool $rand = false, int $tsin = null, string $fmtin = null) {
 		$o   = new MongoDB\BSON\ObjectId();
 		$s   = $o->__toString();
 		if ($tsin) $ts = $tsin;  
 		else       $ts  = $o->getTimestamp(); unset($tsin, $o);
-		$tss = date('md-Hi-Y-s', $ts); unset($ts);
-		$fs  = $tss . 's-' .  substr($s  ,  8);
+		
+		if ($fmtin) $fmt = $fmtin;
+		else        $fmt = self::defOidsFmt;
+		
+		$tss = date($fmt, $ts); unset($ts);
+		$fs  = $tss . ($fmtin ? '-' : 's-') .  substr($s  ,  8);
 		if ($rand) 
 		$fs .= '-' . base62(15); unset($tss, $s, $rand);
 		return $fs;
