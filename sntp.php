@@ -5,6 +5,7 @@ class sntpSanity {
 	const tln   = 4;
 	const ipi   = self::tln;
 	const tolns = M_BILLION;
+	const ssVersion = '10/10 19:41';
 	
 	public static function ck(string $t, bool $contiff = false) {
 		$o = new self($t, $contiff);
@@ -23,10 +24,10 @@ class sntpSanity {
 		return $this->oret;
 	}
 	
-	private function ass(bool $tock, string $msg) {
+	private function ass(bool $tock, string $msg, bool $failAnyhow = false) {
 		if ($tock) return true;
 		$this->sanFail = true;
-		if ($this->contif) echo("**FAIL: " . $msg . "\n");
+		if ($this->contif && !$failAnyhow) echo("**FAIL: " . $msg . "\n");
 		else throw new Exception($msg);
 		
 	}
@@ -46,12 +47,14 @@ class sntpSanity {
 			$a = array_slice($a, 0, self::tln);
 
 			$n = self::tln;
-			$o->ass(count($a) === $n, 'bad tline count sntp sanity 2');
+			$o->ass(count($a) === $n, 'bad tline count sntp sanity 2', true);
 			for ($i=0; $i < $n; $i++) {
-				
-				$a[$i] = intval($a[$i]);
+				if (is_numeric($a[$i])) 
+					 $a[$i] = intval($a[$i]);
+				else kwas(false, 'non-numeric value sent to time array 4 Uns');
 			}
-			$o->ass(count($a) >= 4, 'fail - for immediate tline sntp sanity purposes');
+
+			$o->ass(count($a) >= 4, 'fail - for immediate tline sntp sanity purposes', true);
 
 			$min = min($a);
 			$max = max($a);
@@ -66,9 +69,7 @@ class sntpSanity {
 			$ret['sane'] = !$this->sanFail;
 
 			return $ret;
-		} catch (Exception $ex) {
-
-		}
+		} catch (Exception $ex) {	}
 		
 		return $failv;
 	} // func
