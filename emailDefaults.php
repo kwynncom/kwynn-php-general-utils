@@ -18,7 +18,7 @@ class kwynn_email_default extends kwynn_email {
 	public function __construct() {
 		parent::__construct();
 		$this->omo = new PHPMailer\PHPMailer\PHPMailer();
-		$this->personlDefaultFromDB();
+		$this->fromDB();
 		$this->common();
 		
 	}
@@ -30,7 +30,7 @@ class kwynn_email_default extends kwynn_email {
 		return $o->getMailO();
 	}
 	
-    private function personlDefaultFromDB() {
+    private function fromDB() {
 		
 		if (!(isAWS() || ispkwd())) return;
 		
