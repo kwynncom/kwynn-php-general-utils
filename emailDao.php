@@ -28,12 +28,25 @@ class dao_email_out_audit extends dao_generic {
     }
 	
 	private function popDat($ain) {
-		$this->od = [];	
-		$this->od['sendResult'] = $ain['sendResult'];
-		$this->od['Ubefore'] = $ain['Ubsend'];
-		$this->od['sendTime'] = $ain['Uasend'] - $ain['Ubsend'];
-		$this->od['isTest'] = $ain['isTest'];
-		return $this->od;
+		$od = [];	
+		$od['sendResult'] = $ain['sendResult'];
+		$od['Ubefore'] = $ain['Ubsend'];
+		$od['sendTime'] = $ain['Uasend'] - $ain['Ubsend'];
+		$ist = $od['isTest'] = $ain['isTest'];
+		$mo = crackObject::crack($ain['mail']);
+		$od['to'] = implode(' ', array_keys($mo['all_recipients']));
+		if (!$ist) {
+			$sm = $mo['smtp'];
+			$od['smtpErr'] = trim(implode(' ', $sm['error']));
+			$od['signoff'] = $sm['last_reply'];
+			
+		}
+		$od['status'] = 'post';
+		$od['subject'] = substr($mo['Subject'], 0, 50);
+		$od['body'] = substr($mo['Body'], 0, 200);
+		$od['mid'] = $mo['lastMessageID'];
+		$od['uname'] = $mo['Username'];
+		return $od;
 	}
 	
 	private function pd20($ain) {
