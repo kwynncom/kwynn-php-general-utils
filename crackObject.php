@@ -1,35 +1,26 @@
 <?php
 class crackObject {
 	public function __construct($oin) {
-		$this->oin = (array)$oin;
-		$this->init10($oin);
+		$this->do10($oin);
+		return;
 	
 	}
 	
-	public function getp(...$pp) {
-		for ($i=0; $i < count($pp); $i++) {
-			$ta = array_slice($i, 0, 1);
-			$t = kwifs($this->oin, $ta);
-			// $this->
-			
-		}
-	}
-	
-	private function init10($oin) {
-		new ReflectionClass($oin);
-		$this->o = new stdClass();
-
+	private function do10(&$oin) {
+		if (is_object($oin)) $a = (array)$oin;
+		else $a = $oin;
 		
+		foreach($a as $k => $v) {
+			$ppn = self::ppn($k);
+			if (!is_object($v)) $a[$ppn] = $v; 
+			else				$a[$ppn] = $this->do10((array)$v);
 
-	}
-	
-	private function get20($pp) {
-		$propertyLength = strlen($pp);
-		foreach ($this->oin as $key => $value) {
-			if (substr($key, -$propertyLength) === $pp) {
-				return $value;
-			}
+			if ($ppn !== $k) unset($a[$k]);			
 		}
+		
+		return $a;
 	} // https://www.lambda-out-loud.com/posts/accessing-private-properties-php/
 
+	public static function ppn(string $p) { if (kwifs($p, 0) === '*') return substr($p, 1); 	}
+	
 }
