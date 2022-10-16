@@ -3,128 +3,65 @@
 require_once('kwutils.php');
 require_once('creds.php');
 require_once('emailDao.php');
+require_once('emailDefaults.php');
 
 class kwynn_email {
     
-    const devActiveTS = '2022-10-16 00:50';
-    const devActive = 0;
-    
-    const smtp_server = 'email-smtp.us-east-1.amazonaws.com';
-    
-    const tov = 'cli_self_test_override';
-    
+    const devActiveTS = '2022-10-16 01:36';
+   
     public static function send($subject, $body, $isHTML = false) {
-	$o = new self();
-	return $o->smail($body, $subject, $isHTML);
+		$o = new self();
+		return $o->smail($body, $subject, $isHTML);
     }
     
     
-    function __construct($isTest = false) {
-	$this->mailo = $this->getMailO();
-	$this->setDefaultTo();
-	$this->auditDao = new dao_email_out_audit();
-	$this->setTestV($isTest);
-    }
-    
-    private function setTestV($p) {
-	if (!iscli()) return;
-	if ($p === self::tov) 
-	     $this->cli_self_test_override = true;
-    }
-    
-    private function isTestOverride() {
-	return      isset($this->cli_self_test_override)
-		 &&       $this->cli_self_test_override
-	    ;
+    function __construct() {
+		$this->auditDao = new dao_email_out_audit();
     }
     
     private function shouldSend() {
-	if (isAWS()) return true;
-	if (self::devActive) return true;
-	if (time() < strtotime(self::devActiveTS)) return true;
-	if ($this->isTestOverride()) return true;
-	return false;
+		if (!ispkwd()) return true;
+		if (time() < strtotime(self::devActiveTS)) return true;
+		return false;
     }
-    
-    private function getMailO() {
-	$mailo = self::getCommonO();
-	$this->popCreds($mailo);
-	return $mailo;
-    }
-    
-    private function getCreds() {
-	$dao = new kwynn_creds('creds');
-	$c = $dao->getType('email'); kwas($c && is_array($c) && count($c) >0, 'bad creds array');
-	$t = ['uname', 'pwd', 'from', 'from_name'];
-	foreach($t as $i) {
-	    kwas(isset($c[$i]),"bad $i in kwynn email");
-	    $s = $c[$i];
-	    kwas(	 isset    ($s)  
-		    && 	 is_string($s)
-		    &&   strlen(   $s) > 10, "bad $i in kwynn email");
+ 
+	private function getMO() {
+		if ($o = kwifs($this, 'omo')) return $o;
+		return kwynn_email_default::get();
 	}
 	
-	$this->creds = $c;
-	return $c;
-    }
-    
-    private static function getCommonO() {
-    $mail             = new PHPMailer\PHPMailer\PHPMailer();
-    $mail->IsSMTP(); // telling the class to use SMTP
-    $mail->SMTPDebug  = 0;  // 1 = errors and messages; 2 = messages only
-    $mail->SMTPAuth   = true;                  
-    $mail->SMTPSecure = 'tls';                 
-    $mail->Port       = 587;   
-    
-    return $mail;
-}
+	public function smail($body, $subject, $isHTML = true) {
+		$mail = $this->getMO();
+		$mail->Subject = $subject;
+		if ($isHTML) {
+			$mail->IsHTML(true);
+			$mail->MsgHTML($body);
+		}
+		else {
+			$mail->IsHTML(false);
+			$mail->Body =  $body;
+		}
 
-private function popCreds(&$mail) {
-    $creds = $this->getCreds();
-    $mail->Host       = self::smtp_server;  
-    $mail->Username   = $creds['uname'];
-    $mail->Password   = $creds['pwd'];
-    $mail->SetFrom(     $creds['from'], 
-			$creds['from_name']);
-}
+		$this->auditDao->put('pre');
 
-private function setDefaultTo() {
-    $this->mailo->AddAddress($this->creds['default_to'], $this->creds['default_to_name']);
-}
+		$sendResult = false;
 
-public function smail($body, $subject, $isHTML = true) {
-    $mail = $this->mailo;
-    $mail->Subject = $subject;
-    if ($isHTML) {
-	$mail->IsHTML(true);
-	$mail->MsgHTML($body);
-    }
-    else {
-	$mail->IsHTML(false);
-	$mail->Body =  $body;
-    }
-    
-    $this->auditDao->put('pre');
-    
-    $sendResult = false;
+		$isTest = !$this->shouldSend();
 
-	$isTest = !$this->shouldSend();
-    $bsend   = microtime(1);
-    if (!$isTest) $sendResult = $mail->Send();
-    $asend   = microtime(1);
-	
-	
+		$bsend   = microtime(1);
+		if (!$isTest) $sendResult = $mail->Send();
+		$asend   = microtime(1);
 
-    $this->auditDao->put('post', sendResult: $sendResult, mail: $mail, Ubsend: $bsend, Uasend: $asend, isTest: $isTest);
-    
-    return $sendResult;
-} // func
+		$this->auditDao->put('post', sendResult: $sendResult, mail: $mail, Ubsend: $bsend, Uasend: $asend, isTest: $isTest);
+
+		return $sendResult;
+	} // func
 
 
 public static function test() {
     cliOrDie();
-    $o = new self(self::tov);
-    $ret = $o->smail('test', 'test', false);
+    $o = new kwynn_email();
+    $ret = $o->smail('test', 'test  2022/10/16 01:41', false);
 	return $ret;
 }
 } // class
