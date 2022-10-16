@@ -1,8 +1,12 @@
 <?php
 
+require_once(__DIR__ . '/email.php');
+
 class kwynn_email_default extends kwynn_email {
 	
-	private function common() {	
+	const def = '/var/kwynn/kwEmail_1_2007.txt';
+	
+	public function common() {	
 
 		$this->omo->Host = 'email-smtp.us-east-1.amazonaws.com';
 		
@@ -17,20 +21,27 @@ class kwynn_email_default extends kwynn_email {
 	
 	public function __construct() {
 		parent::__construct();
-		$this->omo = new PHPMailer\PHPMailer\PHPMailer();
-		$this->fromDB();
-		$this->common();
-		
+
 	}
+	
 	
 	public function getMailO() { return $this->omo; } 
 	
 	public static function get() {
 		$o = new self();
+		$o->kwynnPersonalFromDB();
+		$o->common();
+		$o->setDefaultTo();
+		
 		return $o->getMailO();
 	}
 	
-    private function fromDB() {
+	public function setDefaultTo() {
+		$em = strtolower(trim(file_get_contents(self::def)));
+		$this->omo->addAddress($em);
+	}
+	
+    public function kwynnPersonalFromDB() {
 		
 		if (!(isAWS() || ispkwd())) return;
 		

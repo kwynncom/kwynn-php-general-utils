@@ -7,7 +7,7 @@ require_once('emailDefaults.php');
 
 class kwynn_email {
     
-    const devActiveTS = '2022-10-16 01:36';
+    const devActiveTS = '2022-10-16 02:19';
    
     public static function send($subject, $body, $isHTML = false) {
 		$o = new self();
@@ -16,6 +16,7 @@ class kwynn_email {
     
     
     function __construct() {
+		$this->omo = new PHPMailer\PHPMailer\PHPMailer();
 		$this->auditDao = new dao_email_out_audit();
     }
     
@@ -26,7 +27,7 @@ class kwynn_email {
     }
  
 	private function getMO() {
-		if ($o = kwifs($this, 'omo')) return $o;
+		if (($o = kwifs($this, 'omo')) && $o->Password) return $o; 
 		return kwynn_email_default::get();
 	}
 	
@@ -60,7 +61,8 @@ class kwynn_email {
 
 public static function test() {
     cliOrDie();
-    $o = new kwynn_email();
+    if (0) $o = new kwynn_email();
+	else   $o = new kwynn_email_default();
     $ret = $o->smail('test', 'test  2022/10/16 01:41', false);
 	return $ret;
 }
