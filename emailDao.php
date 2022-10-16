@@ -48,8 +48,9 @@ class dao_email_out_audit extends dao_generic {
     }
     
 	private function dump($oin) {
-		$o = new crackObject($oin);
-		// $o->getp('all_recipients');
+		crackObject::crack($oin);
+		return;
+		
 	}
 	
     private static function parseVars($vin) {
