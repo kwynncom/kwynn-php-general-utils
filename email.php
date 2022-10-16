@@ -92,23 +92,6 @@ private function setDefaultTo() {
     $this->mailo->AddAddress($this->creds['default_to'], $this->creds['default_to_name']);
 }
 
-private function audit($when, $dat = false) {
-
-   
-    if ($when === 'pre') {
-		$dat = [];
-		$this->moid = $dat['_id'] = dao_generic_3::get_oids();
-		$dat['state'] = $when;
-		$this->auditDao->put($dat);
-		return;
-    }
-
-    $dat['state'] = $when;
-	$dat['_id'] = $this->moid;
-    
-    $this->auditDao->put($dat);
-}
-
 public function smail($body, $subject, $isHTML = true) {
     $mail = $this->mailo;
     $mail->Subject = $subject;
@@ -121,31 +104,27 @@ public function smail($body, $subject, $isHTML = true) {
 	$mail->Body =  $body;
     }
     
-    $this->audit('pre');
+    $this->auditDao->put('pre');
     
-    $sendRet = 'test only - no send attempt';
-    
-    $bsend   = microtime();
-    if ($this->shouldSend()) $sendRet = $mail->Send();
-    $asend   = microtime();
+    $sendResult = false;
 
-    $this->audit('post', get_defined_vars());
+	$isTest = !$this->shouldSend();
+    $bsend   = microtime(1);
+    if (!$isTest) $sendResult = $mail->Send();
+    $asend   = microtime(1);
+	
+	
+
+    $this->auditDao->put('post', sendResult: $sendResult, mail: $mail, Ubsend: $bsend, Uasend: $asend, isTest: $isTest);
     
-    return $sendRet;
+    return $sendResult;
 } // func
 
-public function getDetailedResults() {
-	$dat = [];
-	$dat['mail'] = $this->mailo;
-	$this->audit('dump', $dat);
-	
-}
 
 public static function test() {
     cliOrDie();
     $o = new self(self::tov);
-    $ret = $o->smail('test', 'test', 0);
-	$o->getDetailedResults();
+    $ret = $o->smail('test', 'test', false);
 	return $ret;
 }
 } // class
