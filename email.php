@@ -6,7 +6,7 @@ require_once('emailDao.php');
 
 class kwynn_email {
     
-    const devActiveTS = '2022-01-10 00:30';
+    const devActiveTS = '2022-10-15 21:40';
     const devActive = 0;
     
     const smtp_server = 'email-smtp.us-east-1.amazonaws.com';
@@ -134,10 +134,19 @@ public function smail($body, $subject, $isHTML = true) {
     return $sendRet;
 } // func
 
+public function getDetailedResults() {
+	$dat = [];
+	$dat['mail'] = $this->mailo;
+	$this->audit('dump', $dat);
+	
+}
+
 public static function test() {
     cliOrDie();
     $o = new self(self::tov);
-    return $o->smail('test', 'test', 0);
+    $ret = $o->smail('test', 'test', 0);
+	$o->getDetailedResults();
+	return $ret;
 }
 } // class
 

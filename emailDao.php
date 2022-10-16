@@ -1,5 +1,7 @@
 <?php
 
+require_once(__DIR__ . '/crackObject.php');
+
 class dao_email_out_audit extends dao_generic {
     const db = 'emails_auto_out';
     
@@ -9,6 +11,11 @@ class dao_email_out_audit extends dao_generic {
     }
     
     public function put($vin) {
+		
+		if ($vin['state'] === 'dump') {
+			$this->dump($vin['mail'], 'all_recipients');
+			return;
+		}
 
 	$dat = self::parseVars($vin);
 	if (!isset($dat['ts']))  $dat['ts'] = time();
@@ -40,7 +47,13 @@ class dao_email_out_audit extends dao_generic {
 	} catch (Exception $ex) { return false; }
     }
     
+	private function dump($oin) {
+		$o = new crackObject($oin);
+		$o->getp('all_recipients');
+	}
+	
     private static function parseVars($vin) {
+		
 	$vin['iaminput'] = true;
 	$dat = [];
 	self::setVar($dat, 'servi', 'serv', $vin, 'mail', 'Host');

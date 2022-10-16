@@ -261,6 +261,7 @@ class kwStdWebIOCl {
         
         tys.forEach((ty) => {
            qsa(ty).forEach((e) => {
+			   if (e.dataset.kwinputsuppress) return;
                new clnm(e, url, endh);
            });
        });

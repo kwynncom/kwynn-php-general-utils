@@ -102,9 +102,12 @@ class dao_generic_3  {
 		}	
     }
 	
-	public static function get_oids(bool $rand = false, int $tsin = null, string $fmtin = null) {
+	public static function get_oids(bool $rand = false, int $tsin = null, string $fmtin = null, $ntonly = false) {
 		$o   = new MongoDB\BSON\ObjectId();
 		$s   = $o->__toString();
+		
+		if ($ntonly) return substr($s, 8);
+		
 		if ($tsin) $ts = $tsin;  
 		else       $ts  = $o->getTimestamp(); unset($tsin, $o);
 		
