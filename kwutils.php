@@ -14,6 +14,7 @@ require_once(__DIR__ . '/' . 'inonebuf.php');
 require_once(__DIR__ . '/fork.php');
 require_once(__DIR__ . '/jscss.php');
 require_once(__DIR__ . '/sntp.php');
+require_once(__DIR__ . '/filePtrTracker.php');
 
    		         //  123456789 digits
 define('M_BILLION', 1000000000);
