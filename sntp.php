@@ -73,5 +73,7 @@ class sntpSanity {
 		
 		return $failv;
 	} // func
+	
+	public static function SNTPOffset($T) {	return ((($T[1] - $T[0]) + ($T[2] - $T[3]))) >> 1;	}
 
 } // class
