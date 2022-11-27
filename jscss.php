@@ -27,7 +27,7 @@ class jscssht {
 			$fs = [];
 			if ($ext === 'js' && self::jsDefault && is_readable(self::jsDefault)) $fs[] = self::jsDefault;
 			$fs = kwam($fs, self::recursiveSearch($this->base, $re ));
-			foreach($fs as $f) $ht .= $this->get1HTI($f, $ext);
+			foreach($fs as $f => $ignore) $ht .= $this->get1HTI($f, $ext);
 		}
 		
 		return $ht;
@@ -55,7 +55,7 @@ class jscssht {
 		while($iti->valid()){
 			$p = $iti->key();
 			if (preg_match($re, $p, $ms)) {
-				$return[] = $ms[0];
+				$return[$ms[0]] = true;
 			}
 			$iti->next();
 		}

@@ -22,6 +22,13 @@ define('M_BILLION', 1000000000);
 define('M_MILLION', 1000000);
 define('DAY_S', 86400);
 
+function dr() {
+	if (!isset($_SERVER)) return '';
+	$p = kwifs($_SERVER, 'DOCUMENT_ROOT');
+	if (!$p) return '';
+	return $p . '/';
+}
+
 function amDebugging() { static $f = 'xdebug_is_debugger_active'; return function_exists($f) && $f(); }
 
 function roint($x) { return intval(round($x)); }
