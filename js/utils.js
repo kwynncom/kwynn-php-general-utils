@@ -39,19 +39,39 @@ function time() { return (new Date().getTime()); }
 
 module.exports.time = time;
 
-const ignore2045 = false;
-
-function tzop() {
+function tzomin() {
     const dob  = new Date();
     const minr =  dob.getTimezoneOffset();
+	return minr;
+}
+
+
+function tzop() { // defined roughly mid-2022 ; I don't think it's used
+	const minr = tzomin();
     const hr   = parseInt(minr / 60);
     const rev  = hr * -1;
     return rev;
 }
 
-function tzName() {
-    return Intl.DateTimeFormat().resolvedOptions().timeZone;
+function tzoms() {
+	const minr = tzomin();
+	const ms = minr * 60000;
+	return ms;
 }
+
+
+
+function tzName() { return Intl.DateTimeFormat().resolvedOptions().timeZone; /* i.e. America/New_York */ } 
+
+// https://stackoverflow.com/questions/1954397/detect-timezone-abbreviation-using-javascript
+// such as EST, UTC, CET
+// may not work for my purposes because depends on date I am processing - daylight saving
+// function tzabb()  { return new Date().toLocaleTimeString('en-us',{timeZoneName:'short'}).split(' ')[2]; }
+
+
+// function dftftoU(df, tf) {
+	// 01 Jan 1970 00:00:00 UTC
+// }
 
 
 function getOKColor() { return 'rgb(153, 255, 153)'; }
@@ -161,7 +181,11 @@ function kwifs(a, ...ks) { // if defined return, else FALSE
 
 function is_numeric(x) {
     if (typeof x === 'undefined') return false;
-    if (typeof x === 'string' && x.search(/\d/) < 0) return false;
+    if (typeof x === 'string') {
+		if (x.search(/\d/) < 0) return false;
+	}
+	else if (typeof x !== 'number') return false;
+
     const t = x * 1;
     if (isNaN(t)) return false;
     if (Number.isNaN(t)) return false;

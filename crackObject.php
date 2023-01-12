@@ -20,4 +20,14 @@ class crackObject {
 		else return $p;
 	}
 	
+	public static function crackGoo($a) { 
+		if (is_object($a)) $a = (array)$a;
+		$j = json_encode($a);
+		$j = str_replace("\u0000", '', $j);
+		$j = str_replace("\\", '_', $j);		
+		$j = str_replace("__", '_', $j);
+		$a = json_decode($j, true);
+		return $a;
+	}
+	
 }
