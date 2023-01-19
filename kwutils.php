@@ -223,9 +223,9 @@ function startSSLSession() {
     return vsidod();
 }
 
-function contSSLSession() {
+function contSSLSession() : string {
 	if (isset($_COOKIE['PHPSESSID'])) return startSSLSession();
-	return false;
+	return '';
 }
 
 function vsidod() { 
