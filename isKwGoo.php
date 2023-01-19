@@ -1,7 +1,7 @@
 <?php   // This is NOT included by default with the rest of the library.
 
 require_once('/opt/kwynn/kwutils.php'); // Thus I have to include the rest of the library.
-require_once(dr() . '/t/7/12/email/usageLimit/usageLimitDao.php');
+require_once('/var/kwynn/gooauth/qemail/' . /* beware double // */ 'usageLimit/usageLimitDao.php');
 
 class isKwGooCl {
 
