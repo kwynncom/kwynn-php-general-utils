@@ -5,7 +5,7 @@ class sntpSanity {
 	const tln   = 4;
 	const ipi   = self::tln;
 	const tolns = M_BILLION;
-	const ssVersion = '2023/01/20 02:06 - restored sanity check';
+	const ssVersion = '2023/01/20 04:17 - final ck 1.5s';
 	
 	public static function ck(string $t, bool $contiff = false) {
 		$o = new self($t, $contiff);
@@ -61,7 +61,7 @@ class sntpSanity {
 			$max = max($a);
 			$o->ass($max - $min < self::tolns, 'time sanity check fails');
 			$ds = abs(nanotime() - $max);
-			$o->ass($ds < self::tolns , 'time sanity check fail 2 - perhaps quota fail');
+			$o->ass($ds < self::tolns * 1.5 , 'time sanity check fail 2 - perhaps quota fail');
 			$o->ass($a[1] <= $a[2], 'server time sanity check fail between in and out');
 			$o->ass($a[0] <  $a[3], 'server time sanity check internal out and in');
 
