@@ -280,16 +280,16 @@ class delayedDo {
 
 class kwStdWebIOCl {
     
-    static stdInit(clnm, url, endh) {
-        const tys = ['input', 'select', 'textarea'];
+    static stdInit(clnm, url, endh, ...exargs) {
+
+		const tys = ['input', 'select', 'textarea'];
         
         tys.forEach((ty) => {
            qsa(ty).forEach((e) => {
 			   if (e.dataset.kwinputsuppress) return;
-               new clnm(e, url, endh);
+               new clnm(e, url, endh, ...exargs);
            });
-       });
-
+       });   
     }    
     
     constructor(e, url, fin) {
@@ -329,8 +329,8 @@ class kwStdWebIOCl {
     clearTO() { clearTimeout(this.okstov);  }
     
     oninret(e, res, subck) {
-        if (res === 'subck' && subck === true) { this.dook(); return; }
-        if (this.isokevf && this.isokevf(res)) this.dook();
+        if (res === 'subck' && subck === true)  { this.dook(); return; }
+        if (this.isokevf && this.isokevf(res, e)) this.dook();
     }
     
     getColorE(e) { return e.type === 'checkbox' ? e.parentNode : e; }

@@ -2,7 +2,7 @@
 
 /* This is a collection of code that is general enough that I use it in a number of projects. */
 
-define('KW_DEFAULT_COOKIE_LIFETIME_S', 400000);
+define('KW_DEFAULT_COOKIE_LIFETIME_S', 345600);
 
 require_once('kwshortu.php');
 require_once('mongodb3.php');
@@ -172,14 +172,11 @@ function getDOMO($html) {
 	return $ddO;
 }
 
-/* in case you are trying to indicate whether an HTML page has changed.  This is useful if you're doing a single page application.  You want to 
- * communicate from your server to a client whether a database entry or underlying file has changed.  As of January, 2020, this is not well 
- * tested, but I leave it. Also, I don't remember why I gave a default ts or return if it's my machine.  */
-function kwTSHeaders($tsin = 1568685376, $etag = false) { // timestamp in; etag is an HTTP specified concept
+function kwTSHeaders(int $tsin = 0, string $etag = '') { // timestamp in; etag is an HTTP specified concept
     
-    if (isKwDev()) return; // defined below
-    
-    if (!$etag) $etag = $tsin;
+	if (!$tsin) $tsin = time();
+	
+    if (!$etag) $etag = '' . $tsin;
     
     $gmt = new DateTimeZone('Etc/GMT+0');
     $serverDTimeO = new DateTime("now", $gmt);
@@ -189,18 +186,12 @@ function kwTSHeaders($tsin = 1568685376, $etag = false) { // timestamp in; etag 
     header('Last-Modified: ' . $times);
     header('ETag: ' . '"' . $etag . '"');
 
-    if ( 1 &&
-    (isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])
-	&& $_SERVER['HTTP_IF_MODIFIED_SINCE'] === $times)
-	||
-	(isset($_SERVER['HTTP_IF_NONE_MATCH']) &&
-	
-	    trim($_SERVER['HTTP_IF_NONE_MATCH']) === $md5
-		)
-	) { 
-    http_response_code(304); // 304 equals "not modified since last you checked" as I remember.
-    exit(0);
-    }  
+    if (	kwifs($_SERVER, 'HTTP_IF_NONE_MATCH'	) === $etag
+		 ||	kwifs($_SERVER, 'HTTP_IF_MODIFIED_SINCE') === $times
+		) { 
+				http_response_code(304); // 304 equals "not modified since last you checked" as I remember.
+				exit(0);
+		}  
 }
 
 function sslOnly() { // make sure the page is SSL
@@ -212,14 +203,14 @@ function sslOnly() { // make sure the page is SSL
 
 /* WARNING: you have to use this before there is a chance of output, otherwise you may get the dreaded 
  * "cannot be changed after headers have already been sent" */
-function startSSLSession() {
+function startSSLSession(int $life = KW_DEFAULT_COOKIE_LIFETIME_S) {
 	try {
 		$vsc10 = vsidod();
 		return $vsc10;
 	} catch(Exception $ex) {}
     sslOnly();
-	kwscookie();
-	session_start();
+	kwscookie(null, null, $life);
+	session_start(['cookie_lifetime' => $life]);
     return vsidod();
 }
 
@@ -267,7 +258,9 @@ function kwscookie(string $kin = null, $v = null, $copt = null) {
 		foreach($ds as $kt => $vt) if (!isset($copt[$kt]))  $o[$kt] = $ds[$kt];
 	}
 	
-	if ($iss) session_set_cookie_params($o);
+	if ($iss) {
+		session_set_cookie_params($o);
+	}
 	else			   setcookie($kin, $v, $o);
 
 
