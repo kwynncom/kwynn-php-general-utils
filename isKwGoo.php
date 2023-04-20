@@ -11,6 +11,10 @@ class isKwGooCl {
 	private function __construct() {
 		$this->theores = false;
 		try {
+			if (PHP_SAPI === 'cli') {
+				$this->theores = self::isKwGooTrueRes;
+				return;
+			}
 			$this->loadMatchingEmail();
 			$this->tryMatch();
 		} catch(Exception $ex) { }
