@@ -7,7 +7,7 @@ require_once('emailDefaults.php');
 
 class kwynn_email {
     
-    const devActiveTS = '2022-10-19 20:51';
+    const devActiveTS = '2023-04-29 21:40';
    
     public static function send($subject, $body, $isHTML = false) {
 		$o = new self();

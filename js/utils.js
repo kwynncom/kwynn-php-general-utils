@@ -22,8 +22,9 @@ function cree(ty) { return document.createElement(ty); }
 function inht(oorid, s) {
     let e = oorid;
     if (typeof oorid === 'string') e = byid(oorid);
-    if (!e) return;
+    if (!e) return false;
     e.innerHTML = s;
+	return true;
 }
 
 function kwas(v, msg) {

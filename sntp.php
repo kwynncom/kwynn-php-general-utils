@@ -2,9 +2,8 @@
 
 class sntpSanity {
 	
-	const tln   = 4;
-	const ipi   = self::tln;
-	const tolns = M_BILLION;
+	const tols  = 1;
+	const tolgs = self::tols + 1; // gross tolerance in seconds
 	const ssVersion = '2023/01/20 19:26 - printing PHP hutime';
 	
 	public static function ck(string $t, bool $contiff = false) {
@@ -42,39 +41,46 @@ class sntpSanity {
 			
 			if (!$o->ass($t, 'blank string')) return $failv;
 			
-			$a  = explode("\n", trim($t));
-			$o->ass($a && is_array($a) && count($a) >= self::tln, 'wrong lines sntp ck - out: ' . "$t");  unset($t); 
-			$ip = getValidIPOrFalsey(kwifs($a, self::ipi)); 
-			$a = array_slice($a, 0, self::tln);
+			$a  = json_decode($t, true);
+			$o->ass($a && is_array($a), 'sntp result not array - out: ' . "$t");  unset($t); 
+			$ip = getValidIPOrFalsey(kwifs($a, 'ip')); kwas($ip, 'sntp invalid ip');
+			
+			kwas(is_numeric($a['offset']) && abs($a['offset']) <= self::tols, 'non-numeric sntp 2038');
 
-			$n = self::tln;
-			$o->ass(count($a) === $n, 'bad tline count sntp sanity 2', true);
-			for ($i=0; $i < $n; $i++) {
-				if (is_numeric($a[$i])) 
-					 $a[$i] = intval($a[$i]);
-				else kwas(false, 'non-numeric value sent to time array 4 Uns');
-			}
+			$nowus = microtime(true);
+			$polus = self::stt($a['time']);
+			$dus = abs($polus - $nowus);
 
-			$o->ass(count($a) >= 4, 'fail - for immediate tline sntp sanity purposes', true);
+			$o->ass($dus <= self::tols, 
+					'time sanity check fail 2 - perhaps quota fail; now ns PHP = ' . date('H:i:s', intval($polus)));
 
-			$min = min($a);
-			$max = max($a);
-			$o->ass($max - $min < self::tolns, 'time sanity check fails');
-			$nowns = nanotime();
-			$ds = abs($nowns - $max);
-			$o->ass($ds < self::tolns, 'time sanity check fail 2 - perhaps quota fail; now ns PHP = ' . date('H:i:s', roint($nowns / M_BILLION)));
-			$o->ass($a[1] <= $a[2], 'server time sanity check fail between in and out');
-			$o->ass($a[0] <  $a[3], 'server time sanity check internal out and in');
-
-			$ret['ip'  ] = $ip;
-			$ret['Uns4'] = $a;
+			$ret = $a;
 			$ret['sane'] = !$this->sanFail;
+			$ret['U'] = intval(floor($polus));
+			$ret['Uus'] = $polus;
 
 			return $ret;
 		} catch (Exception $ex) {	}
 		
 		return $failv;
 	} // func
+	
+	public static function stt(string $s) : int | float {
+		$nows = time();
+		$t10 = strtotime($s); kwas(is_numeric($t10) && abs($nows - $t10) <= self::tolgs, 'bad time tolerence gross - sntp');
+		$fsa = preg_match('/\.(\d+)/', $s, $m); kwas(isset($m[1]), 'no microseconds found in string');
+		$uso = floatval('0' . $m[0]);
+		$nowus = microtime(true);
+		$dus = abs($nowus - $t10);
+		if ($dus < 0.002) return $t10;
+		
+		$t20 = $t10 + $uso; 
+		$d20 = abs($t20 - $nowus); 
+		kwas($d20 <= self::tols, 'bad time tolerence us');
+
+		return $t20;
+		
+	}
 	
 	public static function SNTPOffset($T) {	return ((($T[1] - $T[0]) + ($T[2] - $T[3]))) >> 1;	}
 

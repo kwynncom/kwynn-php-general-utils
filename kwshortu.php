@@ -29,25 +29,33 @@ set_error_handler('kw_error_handler');
 function kwifs($a, ...$ks) { // if set return, else FALSE
 	
 	static $defk = 'kwiff'; // if not set / if false; if not exists return the value assoc with this key ; usually falsey
+	static $fdefr = FALSE;
 	
 	$i = 0;
 	if (is_object($a)) $b = (array)$a;
 	else $b = $a;
 	
-	$defr = FALSE;
+	$defOnly = false;
 	
 	while (isset      ($ks[$i])) {
 		
 		if (is_array($ks[$i]) && isset($ks[$i][$defk])) {
 							   $defr = $ks[$i][$defk];
+							   if ($defOnly) return $defr;
 							   $i++;
 							   continue;
 		}
 		
-		if (!isset( $b[$ks[$i]])) return $defr;
-		$b	=		$b[$ks[$i]];
+		if ($defOnly || !isset( $b[$ks[$i]])) {
+			$defOnly = true;
+		} else $b =	$b[$ks[$i]];
 		
 		$i++;
+	}
+	
+	if ($defOnly) {
+		if (isset($defr)) return $defr;
+		return $fdefr;
 	}
 	
 	return $b;

@@ -84,7 +84,7 @@ class dao_generic_3  {
     private $dbname;
     protected $client;
     
-    protected function __construct($dbname) {
+    public function __construct($dbname) {
 		$this->dbname = $dbname;
 		$this->client = new kw3moncli();
     }
