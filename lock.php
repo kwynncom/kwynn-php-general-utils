@@ -24,7 +24,7 @@ class sem_lock {
 		try { 
 			restore_error_handler();
 			$r = sem_release($this->svs);
-			set_error_handler('kw_error_handler');
+			kw_cond_set_error_handler();
 			return $r; 
 		} catch(Exception $ex) {} 
 		

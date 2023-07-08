@@ -1,5 +1,7 @@
 <?php
 
+if (class_exists('dao_generic_3')) {
+
 class inonebuf extends dao_generic_3 {
 
 const bufc = 1000;
@@ -37,5 +39,6 @@ public function ino($d = false) {
 
 	
 	return $this->t;
-}
-}
+} // func
+} // class
+} // class exists

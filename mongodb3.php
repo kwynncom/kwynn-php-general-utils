@@ -1,14 +1,6 @@
 <?php
 
-set_include_path(get_include_path() . PATH_SEPARATOR . '/opt/composer'); // Where I assume composer libraries are.
-
-$va = 'vendor/autoload.php'; // The next few lines attempt to let users without composer libraries in the above path use the rest of my library.
-$autolr = true;
-$ci = 'include_exists';
-if (function_exists($ci)) $autolr = $ci($va); unset($ci);
-
-if ($autolr) {
-require_once($va); unset($va, $__composer_autoload_files, $autolr);
+require_once(__DIR__ . '/composer.php');
 
 if (class_exists('MongoDB\Client')) {
 
@@ -135,6 +127,3 @@ class dao_generic_3  {
 	
 } // class
 } // if MongoDB stuff exists
-} // if autoload exists
-
-unset($autolr, $va);

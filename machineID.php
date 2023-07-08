@@ -87,8 +87,11 @@ class kwisAWSCl {
 	echo self::v . " = my probably temporary version number\n";
     }
 }
+// This is better defined for one of my clients.  So don't define it again if exists
+if (!function_exists('isaws')) {
+	function isAWS()   { return kwisAWSCl::is(); }
+}
 
-function isAWS()   { return kwisAWSCl::is(); }
 function isKwDev() { return !isAWS();        }
 
 kwisAWSCl::test();

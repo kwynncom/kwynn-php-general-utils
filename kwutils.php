@@ -103,24 +103,6 @@ function kwam(...$aa) {
 
 function kwua() { return 'Mozilla/5.0 (X11; Linux x86_64; rv:101.0) Gecko/20100101 Firefox/101.0'; }
 
-
-/* Tests whether it's safe to include a file--file_exists() does not account for the include path.  My function does.  
- * Returns true for safe / exists and false for unsafe / does not exist.
- * It is ironic to create a handler and then reset it, but that's the way this file worked out. */
-function include_exists($f) {
-    set_error_handler('kw_null_error_handler'); // because fopen failure emits a warning
-    $r = fopen($f, 'r', true);
-    set_error_handler('kw_error_handler');
-    if ($r) {
-	fclose($r);
-	require_once($f); // Kwynn 2020/12/29 12:28am
-	return true;
-    }
-    return false;
-}
-
-function require_once_ifex($f) { include_exists($f); } // Kwynn 2020/12/29 12:31am
-
 function kw_null_error_handler($errno, $errstr, $errfile, $errline) { 
     return;
 }
@@ -275,13 +257,6 @@ function kwjae($din, $isj = false) { // JSON encode, echo, and exit
     echo($j);
     exit(0);
 }
-
-function base62($len) { return base62::get($len); }
-
-/* base62() as derived from https://kwynn.com/t/7/11/blog.html
- * Entry dated: Feb 2, 2018 - base62
- * random base62 - Kwynn.com, 2018/02/02 3:11AM EST, UQID: VMbAlZQ13ojI
- * What I published on my web site is the CLI standalone command version */
 
 class stddev { // 2021/01/12 11:01pm - into kwutils
     public function __construct() {

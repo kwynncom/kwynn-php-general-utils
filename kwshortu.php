@@ -3,6 +3,8 @@
 require_once(__DIR__ . '/base62/base62.php'); // I put didCLICallMe() in there
 require_once(__DIR__ . '/js/kwjsrecv.php');
 
+function base62($len) { return base62::get($len); }
+
 function cliOrDie() {
     if (PHP_SAPI !== 'cli') die('cli only - kwutils edition');
 }
@@ -15,6 +17,15 @@ function kwas($data = false, $msg = 'no message sent to kwas()', $code = 12345) 
 	return $data;
 }
 
+
+function kw_cond_set_error_handler() {
+	if (!defined('DRUPAL_ROOT')) {
+		set_error_handler('kw_error_handler');	
+	}
+}
+
+kw_cond_set_error_handler();
+
 /* The major purpose of this (below) is to make warnings and notices an error.  I have found it's best to "die" on warnings and uncaught exceptions. */
 function kw_error_handler($errno, $errstr, $errfile, $errline) {
     echo "ERROR: ";
@@ -23,8 +34,6 @@ function kw_error_handler($errno, $errstr, $errfile, $errline) {
     echo ' LINE: ' . $errline . ' - ' . $errstr . ' ' . $errfile;
     exit(37); // an arbitrary number, other than it should be non-zero to indicate failure
 }
-
-set_error_handler('kw_error_handler');
 
 function kwifs($a, ...$ks) { // if set return, else FALSE
 	

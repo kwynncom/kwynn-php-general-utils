@@ -1,14 +1,6 @@
 <?php
 
-set_include_path(get_include_path() . PATH_SEPARATOR . '/opt/composer');
-
-$va = 'vendor/autoload.php';
-$autolr = true;
-$ci = 'include_exists';
-if (function_exists($ci)) $autolr = $ci($va); unset($ci);
-
-if ($autolr) {
-require_once($va); unset($va, $__composer_autoload_files, $autolr); // I unset $__composer... because (often) I am trying to keep a very clean set of active variables. 
+require_once(__DIR__ . '/composer.php');
 
 if (class_exists('MongoDB\Client')) {
 
@@ -111,6 +103,3 @@ class dao_generic  {
     }
 }
 } // if MongoDB stuff exists
-} // if autoload exists
-
-unset($autolr, $va);

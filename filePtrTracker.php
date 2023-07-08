@@ -2,6 +2,9 @@
 
 require_once('/opt/kwynn/kwutils.php');
 
+if (class_exists('dao_generic_3')) {
+
+
 class filePtrTracker extends dao_generic_3 {
 	
 	const dbname	= 'files';
@@ -64,3 +67,5 @@ function testFPT() {
 
 if (didCLICallMe(__FILE__)) testFPT();
 
+
+} // class exists
