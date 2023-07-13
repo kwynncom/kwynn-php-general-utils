@@ -1,6 +1,6 @@
 <?php
 
-class sntpSanity {
+class sntpSanity { // called from chm/nist/callSNTP.php
 	
 	const tols  = 1;
 	const tolgs = self::tols + 1; // gross tolerance in seconds

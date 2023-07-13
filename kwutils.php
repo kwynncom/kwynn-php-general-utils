@@ -15,6 +15,7 @@ require_once(__DIR__ . '/fork.php');
 require_once(__DIR__ . '/jscss.php');
 require_once(__DIR__ . '/sntp.php');
 require_once(__DIR__ . '/filePtrTracker.php');
+require_once(__DIR__ . '/ips.php');
 
    		         //  123456789 digits
 define('M_BILLION', 1000000000);
@@ -287,35 +288,6 @@ class stddev { // 2021/01/12 11:01pm - into kwutils
 	$stdd = sqrt($acc / $n);
 	return ['a' => $avg, 's' => $stdd, 'n' => $n , 'min' => $min, 'max' => $max];
     }
-}
-
-function getValidIPOrFalsey(bool | string $ip, bool $orDie = false) {
-    static $ipv6re    = '/^([0-9A-Fa-f:]+){3,39}$/';
-    static $ipv4re    = '/^((\d+){1,3}\.){3}(\d+){1,3}$/';
-	
-	try {
-		kwas($ip, 'ip is falsey'); kwas(is_string($ip), 'ip not string');
-		$sl = strlen($ip); kwas($sl >= 3 && $sl <= 39, 'need an IP arg - 2');
-
-
-		kwas(	 ($ip4m = preg_match($ipv4re, $ip))
-			  || ($ip6m = preg_match($ipv6re, $ip))		, 'bad IP preg'	);
-
-		if ($ip4m) {
-			kwas($sl <= 15, 'ipv4 too big');
-			$ip4 = ip2long($ip);
-			kwas($ip4 && $ip4 > 0, 'ipv4 failed'); 
-		}
-
-		kwas(inet_pton($ip), 'inet_pton failed'); 
-		
-		return $ip;
-		
-	} catch (Exception $ex) { 
-		if ($orDie) throw $ex;
-	}
-	
-	return '';
 }
 
 function kwnohup($cmdin) { // This does NOT seem to work if run within NetBeans.  
