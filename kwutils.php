@@ -206,10 +206,15 @@ function contSSLSession() : string {
 
 function vsidod() { 
     $sid = session_id();
-    kwas($sid && is_string($sid), 'start SSL Session Fail 1');
-    $prr = preg_match('/^[A-Za-z0-9]{20}/', $sid);
-    kwas($prr, 'start SSL Session Fail 2'); unset($prr);
+	$isv = isvsid($sid);
+    kwas($isv, 'start SSL Session Fail 2'); unset($prr);
     return $sid;
+}
+
+function isvsid($sid) : bool {
+    kwas($sid && is_string($sid), 'start SSL Session Fail 1');
+    $prr = preg_match('/^[A-Za-z0-9\-_]{20}/', $sid); // Drupal 7 uses _ and -, too
+	return $prr >= 1;
 }
 
 function kwscookie(string $kin = null, $v = null, $copt = null) {
