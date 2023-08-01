@@ -5,10 +5,14 @@ require_once('/opt/kwynn/kwutils.php');
 class sem_lock {
     
 	const minFileLen = 1;
-	const pbase = '/var/kwynn/lockfiles/lock_kw_';
+	const pdir  = '/var/kwynn/lockfiles';
+	const pbase = self::pdir . '/lock_kw_';
 	private readonly mixed $osre;
 		
     public function __construct(string $pathIN, string $projectID = 'a') {
+		
+		kwas(substr(sprintf('%o', fileperms(self::pdir)), -4) === '0770', 'bad file permissions lock dir kw - 0057');
+		
 		$p = $pathIN;
 		kwas($p && is_string($p) && strlen(trim($p)) > self::minFileLen, 'bad path for sem_lock' );
 		$p = str_replace('/', '_', $p);
@@ -16,7 +20,7 @@ class sem_lock {
 		$b = self::pbase;
 		$p = $b . $p;
 		
-		if (!file_exists($p)) kwas(kwtouch($p, '', 0660), 'mkfifo failed - sem_lock');
+		if (!file_exists($p)) kwas(kwtouch($p, '', 0666), 'mkfifo failed - sem_lock');
 		
 		$re = fopen($p, 'w'); kwas($re, 'file open failed - kw lock');
 		$this->osre = $re;

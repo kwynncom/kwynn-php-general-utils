@@ -11,7 +11,7 @@ class testKw_sem_lock extends dao_generic_3 {
 	public function __construct() {
 		$this->do10();
 		$this->dbinit();
-		// $this->do20();
+		$this->do20();
 		$this->do30();
 	}
 	
@@ -27,7 +27,10 @@ class testKw_sem_lock extends dao_generic_3 {
 	}
 	
 	private function do30() {
-		$pn = 10;
+		
+		if (!function_exists('pcntl_fork')) return;
+		
+		$pn = 12;
 		$jmax = 1000;
 		$ps = [];
 		$pid = false;
@@ -50,16 +53,18 @@ class testKw_sem_lock extends dao_generic_3 {
 	
 	private function insertNext() {
 		$this->olock->lock();
-		$a = $this->dcoll->findOne([], ['sort' => ['_id' => -1]]);
+		$a = $this->dcoll->findOne([], ['sort' => ['n' => -1]]);
 		if (!$a) $i = 0;
-		else $i = $a['_id'];
-		$this->dcoll->insertOne(['_id' => $i + 1, 'pid' => getmypid()], ['kwnoup' => true]);
+		else $i = $a['n'];
+		$n = $i + 1;
+		$this->dcoll->insertOne(['_id' => $n . '-' . getmypid(), 'n' => $n, 'pid' => getmypid(), 'sapi' => PHP_SAPI], ['kwnoup' => true]);
 		$this->olock->unlock();		
 	}
 	
 	private function dbinit() {
 		parent::__construct(self::dbname);
 		$this->creTabs('dat');
+		$this->dcoll->createIndex(['n' => -1], ['unique' => true]);
 	}
 	
 }
