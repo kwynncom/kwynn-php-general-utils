@@ -5,35 +5,39 @@ require_once('/opt/kwynn/kwutils.php');
 class sem_lock {
     
 	const minFileLen = 1;
+	const pbase = '/var/kwynn/lockfiles/lock_kw_';
+	private readonly mixed $osre;
+		
+    public function __construct(string $pathIN, string $projectID = 'a') {
+		$p = $pathIN;
+		kwas($p && is_string($p) && strlen(trim($p)) > self::minFileLen, 'bad path for sem_lock' );
+		$p = str_replace('/', '_', $p);
+		$p .= ($projectID ? '_' . $projectID : '');
+		$b = self::pbase;
+		$p = $b . $p;
+		
+		if (!file_exists($p)) kwas(kwtouch($p, '', 0660), 'mkfifo failed - sem_lock');
+		
+		$re = fopen($p, 'w'); kwas($re, 'file open failed - kw lock');
+		$this->osre = $re;
+	}
+		
+	public function __destruct() {
+		if (!fstat($this->osre)) return;
+		$clr = fclose($this->osre);
+		return;
+	}
 	
-    private $svs;
-    private $key;
-    
-    public function __construct($path, $projectID = 'a') {
-		$p = $path;
-		kwas($p && is_string($p) && strlen(trim($p)) > self::minFileLen, 'bad path for sem_lock' ); unset($p);
-		$key = ftok($path, $projectID); kwas($key !== -1, 'ftok failed - sem_lock');
-		$svs = sem_get($key);  kwas($svs, 'bad sem_get - sem_lock');
-		$this->key = $key; unset($key);
-		$this->svs = $svs; unset($svs); 
+    public function   lock(bool $nonBlocking = false) : bool {
+		$fl = LOCK_EX | ($nonBlocking ? LOCK_NB : 0);
+		$r = flock($this->osre, $fl, $wouldBlock);
+		if ($nonBlocking) return $wouldBlock === 1;
+		kwas($r, 'lock failed - kw lock');
+		return $r;
 	}
-	public function __destruct() { if (isset($this->svs)) {
-		restore_error_handler();
-		sem_remove($this->svs);
-		kw_cond_set_error_handler();
+	
+    public function unlock() : bool	| null { 
+		if (!fstat($this->osre)) return null;
+		return flock($this->osre, LOCK_UN);
 	}
-		
-	}
-    public function   lock(bool $nb = false)	 { kwas(sem_acquire($this->svs, $nb), 'sem_acq failed - sem_lock'); }
-    public function unlock()	 { 
-		if (!isset($this->svs) || !$this->svs) return;
-		try { 
-			restore_error_handler();
-			$r = sem_release($this->svs);
-			kw_cond_set_error_handler();
-			return $r; 
-		} catch(Exception $ex) {} 
-		
-	}
-    public function getKey() { return $this->key; }
 }

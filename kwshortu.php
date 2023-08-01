@@ -55,14 +55,12 @@ function kwifs($a, ...$ks) { // if set return, else FALSE
 							   continue;
 		}
 		
-		if (!isset($b[$ks])) $defOnly = true; 
-		else {
-			if (!is_array($b[$ks])) 
-					$t10 = (array)$b[$ks];
-			else	$t10 = $b[$ks];
-			if ($defOnly || !isset( $b[$ks[$i]])) {
-				$defOnly = true;
-			} else $b =	$b[$ks[$i]];
+		if ($defOnly || !isset( $b[$ks[$i]])) {
+			$defOnly = true;
+		} else {
+			if (is_object($b)) $b = (array)$b;
+			if (is_object($b[$ks[$i]])) $b[$ks[$i]] = (array)$b[$ks[$i]];
+			$b =	$b[$ks[$i]];
 		}
 		
 		$i++;

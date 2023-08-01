@@ -77,6 +77,8 @@ function tzName() { return Intl.DateTimeFormat().resolvedOptions().timeZone; /* 
 
 function getOKColor() { return 'rgb(153, 255, 153)'; }
 
+var kwIGNORE0140 = true;
+
 class kwjss {
     
     static responseTextParse(t) {

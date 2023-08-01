@@ -308,8 +308,11 @@ function kwnohup($cmdin) { // This does NOT seem to work if run within NetBeans.
 	return 0;
 }
 
-function kwtouch(string $f,  string $t = '', int $perm = 0600, int $flags = 0) {
-	file_put_contents($f, '', FILE_APPEND);
+function kwtouch(string $f,  string $t = '', int $perm = 0600, int $flags = 0) : bool {
+	kwas(file_put_contents($f, '', FILE_APPEND) === 0, 'kwtouch fail 1-2325');
 	kwas(chmod($f, $perm), 'kwtouch cannot change perm - kwutils');
-	if ($t) file_put_contents($f, $t, $flags);
+	if ($t) {
+		kwas(file_put_contents($f, $t, $flags) === strlen($t), 'kwtouch fail 2-2325');
+	}
+	return true;
 }
