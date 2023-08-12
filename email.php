@@ -7,7 +7,7 @@ require_once('emailDefaults.php');
 
 class kwynn_email {
     
-    const devActiveTS = '2023-04-29 21:40';
+    const devActiveTS = '2023-08-12 00:50';
    
     public static function send($subject, $body, $isHTML = false) {
 		$o = new self();
@@ -27,7 +27,10 @@ class kwynn_email {
     }
  
 	private function getMO() {
-		if (($o = kwifs($this, 'omo')) && $o->Password) return $o; 
+		if (($a = kwifs($this, 'omo'))) {
+			if (is_array($a)) $a = (object)$a;
+			if ($a->Password) return $a;
+		}
 		return kwynn_email_default::get();
 	}
 	
