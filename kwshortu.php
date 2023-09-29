@@ -19,7 +19,7 @@ function kwas($data = false, $msg = 'no message sent to kwas()', $code = 12345) 
 
 
 function kw_cond_set_error_handler() {
-	if (!defined('DRUPAL_ROOT')) {
+	if (!defined('KWYNN_DO_NOT_INSTALL_MY_ERROR_HANDLER_V2022') || !KWYNN_DO_NOT_INSTALL_MY_ERROR_HANDLER_V2022) {
 		set_error_handler('kw_error_handler');	
 	}
 }
