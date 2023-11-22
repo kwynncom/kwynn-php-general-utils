@@ -116,6 +116,7 @@ if (file_exists($minc)) require_once($minc); unset($minc); // unset so as to not
  * breakpoint to.  A breakpoint has to have something there.  So "Kwynn's null" is recursively kwynn() */
 function kwynn() {}
 
+function kwnull() {}
 
 /* make sure any timestamps you're using make sense: make sure you haven't done something weird and such: make sure you don't have zero 
 values or haven't rolled over bits; make sure your time isn't way in the future or past. Obviously both min and max are somewhat arbitrary, but 
