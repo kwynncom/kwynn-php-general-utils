@@ -308,6 +308,8 @@ class kwStdWebIOCl {
         
         let keystrokeDelay = 307;
         let constantTypingDelay = 2000;
+		
+		if (!this.thee) return; // Kwynn 2023/12/06
         
         if (this.thee.tagName === 'SELECT') keystrokeDelay = constantTypingDelay = 0;
         

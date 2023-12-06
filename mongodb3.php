@@ -69,6 +69,7 @@ class kw3mdbcoll extends MongoDB\Collection {
 
 }
 
+#[\AllowDynamicProperties] // PHP 8.2
 class dao_generic_3  {
 	
 	const defOidsFmt = 'md-Hi-Y-s'; // usage below assumes seconds at the end *if* using this default
