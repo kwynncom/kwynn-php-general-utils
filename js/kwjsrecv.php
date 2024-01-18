@@ -1,6 +1,6 @@
 <?php
 
-function kwjssrp($k = false) {
+function kwjssrp($k = false, $ifns = null) {
 	try {
 		
 		if      (isset($_REQUEST[$k])) 
@@ -12,7 +12,7 @@ function kwjssrp($k = false) {
 		$a = json_decode($j, 1); kwas($a, 'null form object');
 		unset($a['XDEBUG_SESSION_START']);
 		
-		if ($k)  return kwifs($a, $k);
+		if ($k)  return kwifs($a, $k, ['kwiff' => $ifns]);
 		return $a;
 	} catch(Exception $ex) {}
 	
@@ -20,4 +20,4 @@ function kwjssrp($k = false) {
 }
 
 
-function isrv($k) { return kwjssrp($k); }
+function isrv($k, $ifns = null) { return kwjssrp($k, $ifns); }

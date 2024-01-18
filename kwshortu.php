@@ -48,11 +48,12 @@ function kwifs($a, ...$ks) { // if set return, else FALSE
 	
 	while (isset      ($ks[$i])) {
 		
-		if (is_array($ks[$i]) && isset($ks[$i][$defk])) {
-							   $defr = $ks[$i][$defk];
-							   if ($defOnly) return $defr;
-							   $i++;
-							   continue;
+		if (is_array($ks[$i]) && 
+				( isset($ks[$i][$defk]) || key($ks[$i]) === $defk )
+			) {	$defr = $ks[$i][$defk];
+				if ($defOnly) return $defr;
+				 $i++;
+				continue;
 		}
 		
 		if ($defOnly || !isset( $b[$ks[$i]])) {
