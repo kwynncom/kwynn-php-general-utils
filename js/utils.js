@@ -1,3 +1,5 @@
+// null change to force refresh
+
 if (typeof module === 'undefined') {  var module = {}; module.exports = {}; }
 
 function islam() { return process.env.AWS_LAMBDA_FUNCTION_NAME; /* Is AWS Lambda? */ }

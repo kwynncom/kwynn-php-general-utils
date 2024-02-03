@@ -190,6 +190,13 @@ function sslOnly() { // make sure the page is SSL
 /* WARNING: you have to use this before there is a chance of output, otherwise you may get the dreaded 
  * "cannot be changed after headers have already been sent" */
 function startSSLSession(int $life = KW_DEFAULT_COOKIE_LIFETIME_S) {
+	
+	if (PHP_SAPI === 'cli') {
+		return;
+	} else {
+		kwnull();
+	}
+	
 	try {
 		$vsc10 = vsidod();
 		return $vsc10;
@@ -219,6 +226,13 @@ function isvsid($sid) : bool {
 }
 
 function kwscookie(string $kin = null, $v = null, $copt = null) {
+	
+	if (PHP_SAPI === 'cli') {
+		return;
+	} else {
+		kwnull();
+	}
+	
 	$iss = !$kin;
 	if (!$iss) $now = time();
 	$o = [];
