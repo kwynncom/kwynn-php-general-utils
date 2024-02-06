@@ -43,18 +43,19 @@ class isKwGooCl {
 		} catch(Exception $ex) { }	
 	}
 	
-	public function isKwGooRes() : bool { 
-		$raw = kwifs($this, 'theores');
-		return $raw === isKwGooCl::isKwGooTrueRes;
+	private function isKwGooRes() : string { 
+		$raw = kwifs($this, 'theores', ['kwiff' => '']);
+		return $raw;
 	}
 	
-	public static function isKwGoo() {
+	public static function isKwGoo() : bool {
 		$o = new self();
-		return $o->isKwGooRes();
+		$raw = $o->isKwGooRes();
+		return $raw === self::isKwGooTrueRes;
 
 	} // func
 } // class
 
-function isKwGoo() { return isKwGooCl::isKwGoo() === isKwGooCl::isKwGooTrueRes; }
+function isKwGoo() { return isKwGooCl::isKwGoo(); }
 
 function kwGooOrDie() { kwas(isKwGoo(), 'not auth - iskgoo 0334'); }
