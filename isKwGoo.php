@@ -5,11 +5,13 @@ require_once('/var/kwynn/gooauth/qemail/' . /* beware double // */ 'usageLimit/u
 
 class isKwGooCl {
 
+	public readonly string $theores; // public mostly because of kwifs usage
+	public readonly string $kwemailHash; 
+	
 	const emfs = ['/var/kwynn/gooauth/kwem2007h1.txt'];
 	const isKwGooTrueRes = 'YouAreKwGoo_2022_start!!!';
 
 	private function __construct() {
-		$this->theores = false;
 		try {
 			if (PHP_SAPI === 'cli') {
 				$this->theores = self::isKwGooTrueRes;
@@ -35,13 +37,16 @@ class isKwGooCl {
 	
 	private function tryMatch() {
 		try {
-			if (daoUsage::hasEmailSid($this->kwemailHash)) {
+			if (daoUsage::hasEmailSid(kwifs($this, 'kwemailHash', ['kwiff' => '']))) {
 				$this->theores = self::isKwGooTrueRes;
 			}
 		} catch(Exception $ex) { }	
 	}
 	
-	public function isKwGooRes() { return $this->theores; }
+	public function isKwGooRes() : bool { 
+		$raw = kwifs($this, 'theores');
+		return $raw === isKwGooCl::isKwGooTrueRes;
+	}
 	
 	public static function isKwGoo() {
 		$o = new self();

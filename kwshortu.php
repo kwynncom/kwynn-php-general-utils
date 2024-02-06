@@ -35,14 +35,31 @@ function kw_error_handler($errno, $errstr, $errfile, $errline) {
     exit(37); // an arbitrary number, other than it should be non-zero to indicate failure
 }
 
+function kwifs_otoa(object $oin) : array { // does NOT work yet
+	
+	$o = new ReflectionClass($oin);
+	$rps   = $o->getProperties();
+	
+	
+	$a = [];
+	foreach ($rps as $ro) {
+		$a[$ro->getName()] = $ro->isInitialized($oin) ? $ro->getValue($oin) : null;
+	}
+	return $a;
+	
+}
+
+// $defOnly checks for the default array.  I need to do this differently, like checking the last element, and the removing that element as below
+// also, if I am at the last element other than the default, I should not turn it into an array.  Just return it.
+
 function kwifs($a, ...$ks) { // if set return, else FALSE
 	
 	static $defk = 'kwiff'; // if not set / if false; if not exists return the value assoc with this key ; usually falsey
 	static $fdefr = FALSE;
 	
 	$i = 0;
-	if (is_object($a)) $b = (array)$a;
-	else $b = $a;
+	if (is_object($a)) $b = kwifs_otoa($a);
+	else $b = $a; unset($a);
 	
 	$defOnly = false;
 	
