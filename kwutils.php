@@ -6,6 +6,7 @@ define('KW_DEFAULT_COOKIE_LIFETIME_S', 345600);
 
 require_once('kwshortu.php');
 require_once('mongodb3.php');
+require_once('mongodb4.php');
 require_once(__DIR__ . '/lock.php');
 require_once('machineID.php');
 require_once(__DIR__ . '/base62/base62.php'); // both base62() and didCLICallMe()
@@ -16,12 +17,29 @@ require_once(__DIR__ . '/jscss.php');
 require_once(__DIR__ . '/sntp.php');
 require_once(__DIR__ . '/filePtrTracker.php');
 require_once(__DIR__ . '/ips.php');
-
    		         //  123456789 digits
 define('M_BILLION', 1000000000);
 				 //  123456
 define('M_MILLION', 1000000);
 define('DAY_S', 86400);
+
+function kwSetTimezone() {
+	static $iamset = false;
+	if ($iamset) return;
+	$iamset = true;
+	
+	$f = '/etc/timezone';
+	
+	if (!is_readable($f)) return;
+	$t = file_get_contents('/etc/timezone');
+	if (!$t || !is_string($t)) return;
+	$t = trim($t);
+	if (!$t) return;
+	date_default_timezone_set($t);
+	
+}
+
+kwSetTimezone();
 
 function dr() : string {
 	static $default = '/opt/www/git20/';
