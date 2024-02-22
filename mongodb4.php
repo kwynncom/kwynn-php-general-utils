@@ -10,6 +10,10 @@ class dao_generic_4  {
     
     private $dbname;
     protected $client;
+
+
+    public static function    get_oids(bool $rand = false, int $tsin = null, string $fmtin = null, $ntonly = false) {
+	return dao_generic_3::get_oids(     $rand,	       $tsin	   ,        $fmtin,	   $ntonly);    }
     
     public function __construct(string $dbname) {
 		$this->dbname = $dbname;
@@ -21,35 +25,8 @@ class dao_generic_4  {
 	
     }
 	
-	public static function get_oids(bool $rand = false, int $tsin = null, string $fmtin = null, $ntonly = false) {
-		$o   = new MongoDB\BSON\ObjectId();
-		$s   = $o->__toString();
-		
-		if ($ntonly) return substr($s, 8);
-		
-		if ($tsin) $ts = $tsin;  
-		else       $ts  = $o->getTimestamp(); unset($tsin, $o);
-		
-		if ($fmtin) $fmt = $fmtin;
-		else        $fmt = self::defOidsFmt;
-		
-		$tss = date($fmt, $ts); unset($ts);
-		$fs  = $tss . ($fmtin ? '-' : 's-') .  substr($s  ,  8);
-		if ($rand) 
-		$fs .= '-' . base62(15); unset($tss, $s, $rand);
-		return $fs;
-	}
-
-	public static function oidsvd($sin, $ckrand = false) {
-		kwas(is_string($sin), 'bad id - 1 - 234');
-		
-		$res = ['/^[\w-]{35}$/',
-				'/^[\w-]{51}$/'	];
-		$rr = preg_match($res[1], $sin, $ms);
-		if ($rr) return $ms[0];
-		if ($ckrand) kwas(0, 'not oids with rand');
-		kwas(preg_match($res[0], $sin, $ms), 'not valid oids - either type');
-		return $ms[0];
+	public static function    oidsvd($sin, $ckrand = false) {
+	    return dao_generic_3::oidsvd($sin, $ckrand	      );
 	}
 	
 } // class
