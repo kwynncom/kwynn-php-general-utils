@@ -1,7 +1,7 @@
 <?php
 
 function kwifsT($a, ...$ks) {
-    kwifsTCl::orig($a, $ks);
+    return kwifsTCl::orig($a, $ks);
 
 }
 
@@ -29,12 +29,12 @@ class kwifsTCl {
 	
     }
 
-    public function orig($a, ...$ks) {
+    public static function orig($a, $ks) {
 	$o = new self();
-	$o->origI($a, $ks);
+	return $o->origI($a, $ks);
     }	
 
-    public static function origI(mixed $entIN, array $ks) {
+    public function origI(mixed $entIN, array $ks) {
 
 	$this->setDefault($ks);
 	$n = count($ks);
@@ -44,6 +44,7 @@ class kwifsTCl {
 	}
 
 	if (!isset($tv)) return $this->defaultResult;
+	return $tv;
     }
 
     private function checkP(mixed $ent, mixed $key) : mixed {
@@ -52,10 +53,10 @@ class kwifsTCl {
 	else if ($ty === 'object') $oraw = $ent;
 	else return $this->defaultResult;
 
-	$o = new ReflectionClass($oin);
+	$o = new ReflectionClass($oraw);
 	$p = $o->getProperty($key);
-	if (!$p->isInitialized()) return $this->defaultResult;
-	return $p->getValue();
+	if (!$p->isInitialized($oraw)) return $this->defaultResult;
+	return $p->getValue($oraw);
 	
 	
 	

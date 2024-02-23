@@ -2,7 +2,7 @@
 
 require_once(__DIR__ . '/base62/base62.php'); // I put didCLICallMe() in there
 require_once(__DIR__ . '/js/kwjsrecv.php');
-require_once(__DIR__ . 'kwifs.php');
+require_once(__DIR__ . '/kwifs.php');
 
 
 function base62($len) { return base62::get($len); }
