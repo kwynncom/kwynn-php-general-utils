@@ -53,7 +53,7 @@ class kwifsTCl {
 	else if ($ty === 'object') $oraw = $ent;
 	else return $this->defaultResult;
 
-	$o = new ReflectionClass($oraw);
+	$o = new ReflectionObject($oraw);
 	$p = $o->getProperty($key);
 	if (!$p->isInitialized($oraw)) return $this->defaultResult;
 	return $p->getValue($oraw);
