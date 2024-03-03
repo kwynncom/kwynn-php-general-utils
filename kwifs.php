@@ -18,11 +18,11 @@ class kwifsTCl {
 	$e = $a[$l - 1];
 	if (!is_array($e))	  return $this->sd20(self::ddResult, false, $a);
 	$k = key($e);
-	if (key($e) !== 'kwiffs') return $this->sd20(self::ddResult, false, $a);
+	if (key($e) !== 'kwiff') return $this->sd20(self::ddResult, false, $a);
 	$this->sd20($e[$k], true, $a);
     }
 
-    private function sd20(mixed $v, bool $wasSet, array $a)  {
+    private function sd20(mixed $v, bool $wasSet, array &$a)  {
 	$this->defaultResult = $v;
 	if (!$wasSet) return;
 	unset($a[count($a) - 1]);
@@ -54,6 +54,7 @@ class kwifsTCl {
 	else return $this->defaultResult;
 
 	$o = new ReflectionObject($oraw);
+	if (!$o->hasProperty($key)) return $this->defaultResult;
 	$p = $o->getProperty($key);
 	if (!$p->isInitialized($oraw)) return $this->defaultResult;
 	return $p->getValue($oraw);
