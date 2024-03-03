@@ -38,9 +38,9 @@ class kwifsTCl {
 
 	$this->setDefault($ks);
 	$n = count($ks);
-	$t = $entIN; unset($entIN);
+	$tv = $entIN; unset($entIN);
 	for ($i=0; $i < $n; $i++) {
-	    $tv = $this->checkP($t, $ks[$i]);
+		if (isset($tv)) $tv = $this->checkP($tv, $ks[$i]);
 	}
 
 	if (!isset($tv)) return $this->defaultResult;
