@@ -2,9 +2,28 @@
 
 require_once('/opt/kwynn/kwutils.php');
 
-function gooOrDev($orDie = false) {
+function ispkwd() : bool {
+    static $pre = '/var/kwynn/';
+
+    static $mine = [
+	'i_am_Kwynn_local_dev_2021_11',
+	'i_am_Kwynn_local_dev_2021_11_cont_2022_03',
+	'i_am_Kwynn_local_dev_2024_01'
+	
+    ];
+
+    if (isAWS()) return false;
+
+    foreach($mine as $c) {
+	if (file_exists($pre . $c)) return TRUE;
+    } unset($c);
+    
+    return false;
+}
+
+function gooOrDev($orDie = false) : bool {
 	if (isKwGoo()) return TRUE;		
-	if (file_exists('/var/kwynn/i_am_Kwynn_local_dev_2021_11')) return TRUE;
+	if (ispkwd()) return TRUE;
 	if ($orDie) kwas(FALSE, 'not auth - gooOrDev 0052');
 	return FALSE;
 }
@@ -96,7 +115,3 @@ function isKwDev() { return !isAWS();        }
 
 kwisAWSCl::test();
 
-function ispkwd() {
-    if (isAWS()) return false;
-    return file_exists('/var/kwynn/i_am_Kwynn_local_dev_2021_11_cont_2022_03');
-}

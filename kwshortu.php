@@ -51,10 +51,13 @@ function kwifs_otoa(object $oin) : array { // does NOT work yet
 	
 }
 
-// $defOnly checks for the default array.  I need to do this differently, like checking the last element, and the removing that element as below
-// also, if I am at the last element other than the default, I should not turn it into an array.  Just return it.
 
-function kwifs($a, ...$ks) { // if set return, else FALSE
+function kwifs($a, ...$ks) {
+    return kwifsTCl::orig($a, $ks);
+
+}
+
+function kwifsOLD2023($a, ...$ks) {
 	
 	static $defk = 'kwiff'; // if not set / if false; if not exists return the value assoc with this key ; usually falsey
 	static $fdefr = FALSE;
