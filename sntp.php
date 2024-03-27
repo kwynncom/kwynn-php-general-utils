@@ -5,6 +5,10 @@ class sntpSanity { // called from chm/nist/callSNTP.php
 	const tols  = 1;
 	const tolgs = self::tols + 1; // gross tolerance in seconds
 	const ssVersion = '2023/01/20 19:26 - printing PHP hutime';
+
+	private readonly bool $contif;
+	private $oret;
+	private $sanFail;
 	
 	public static function ck(string $t, bool $contiff = false) {
 		$o = new self($t, $contiff);
