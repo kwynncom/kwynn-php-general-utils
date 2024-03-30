@@ -4,6 +4,9 @@ require_once('kwutils.php');
 
 class kwynn_creds extends dao_generic {
     const db = 'creds';
+
+    private readonly object $ccoll;
+
     function __construct() {
 	parent::__construct(self::db);
 	$this->ccoll    = $this->client->selectCollection(self::db, self::db);

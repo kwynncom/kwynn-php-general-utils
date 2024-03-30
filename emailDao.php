@@ -4,6 +4,8 @@ require_once(__DIR__ . '/crackObject.php');
 
 class dao_email_out_audit extends dao_generic {
     const db = 'emails_auto_out';
+
+    private readonly object $ecoll;
     
     public function __construct() {
 	    parent::__construct(self::db);
