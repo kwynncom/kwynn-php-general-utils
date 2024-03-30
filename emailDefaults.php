@@ -5,6 +5,8 @@ require_once(__DIR__ . '/email.php');
 class kwynn_email_default extends kwynn_email {
 	
 	const def = '/var/kwynn/kwEmail_1_2007.txt';
+
+	protected $omo;
 	
 	public function common() {	
 

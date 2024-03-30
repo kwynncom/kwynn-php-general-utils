@@ -9,7 +9,7 @@ class kwynn_email {
     
     const devActiveTS = '2023-08-12 00:50';
 
-    private $omo;
+    protected $omo;
     private $auditDao;
    
     public static function send($subject, $body, $isHTML = false) {
