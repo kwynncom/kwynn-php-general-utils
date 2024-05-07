@@ -1,3 +1,6 @@
+2024/03/31 - It seems I let the kwboot.service die a long time ago--probably over a year, maybe more.
+    I mention this because I'm going to work on AWS IMDSv2 (Instance Metadata Service), but I wont' fix it for this.
+*********
 2020/12/26 11:15pm - possibly getting rid of C stuff.  I think it's time to combine mid and bootd and run it at boot.
 
 ************

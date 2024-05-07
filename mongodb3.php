@@ -72,7 +72,10 @@ class kw3mdbcoll extends MongoDB\Collection {
 #[\AllowDynamicProperties] // PHP 8.2
 class dao_generic_3  {
 	
-	const defOidsFmt = 'md-Hi-Y-s'; // usage below assumes seconds at the end *if* using this default
+	
+	const defOidsFmt = 'md-Hi-Y-s'; // the default format for my customized human-readable date IDs get_oids()  
+			// usage below assumes seconds at the end *if* using this default
+			// May 7, 2024 16:34 would be "0507-1634-2024-52"
     
     private $dbname;
     protected $client;
@@ -95,7 +98,33 @@ class dao_generic_3  {
 		}	
     }
 	
-	public static function get_oids(bool $rand = false, int $tsin = null, string $fmtin = null, $ntonly = false) {
+    /* Kwynn 2024/05/07 16:37 EDT - writing a bunch of comments per a tech blog entry.  This code will almost certainly be posted before the entry.
+     * The following is my customized human-readable data _id generator get_oids() as in object IDs.  
+     * I wrote this 2 - 3 (or more?) years ago.  I'm not sure it all works anymore, but some of it gets used many times a day.  The lawyer project uses this function.
+     * 
+     * Whether I remember it all perfectly or not, I'll try my best to explain the intent.  
+     * 
+     * I'm going to add a return value of "string" right now.  I can't imagine that biting me, but we'll see.
+     * 
+     * None of the paramters are mandatory (as you can see because they all have defaults).
+     * 
+     * Given no external input arguments, an example of a return value is "0330-0418-2024-16s-22094de9fb019722"
+     * It starts with a date formatted by default per defOidsFmt above (March 30, 2024, 4:18am, 16 seconds)
+     * 
+     * I'm using the default BSON OID as you can see from the first line.  The default has a the date as the hex value of the UNIX Epoch integer.
+     * 
+     * Then I use the default sequence number and random number just like BSON does.
+     * 
+     * The rand argument, if true, will add more random numbers, in case the _id should be particularly hard to guess.
+     * 
+     * $tsin covers the case where the user needs to enter a UNIX timestamp rather than use "now"
+     * 
+     * $fmtin is the PHP date() format that defaults to self::defOidsFmt
+     * 
+     * $ntonly looks like it returns the hex value UNIX time, but I don't remember when I use that.
+     */
+
+	public static function get_oids(bool $rand = false, int $tsin = null, string $fmtin = null, $ntonly = false) : string {
 		$o   = new MongoDB\BSON\ObjectId();
 		$s   = $o->__toString();
 		
@@ -114,8 +143,9 @@ class dao_generic_3  {
 		return $fs;
 	}
 
-	public static function oidsvd($sin, $ckrand = false) {
-		kwas(is_string($sin), 'bad id - 1 - 234');
+	// The following confirms that the input is in my default _id format.  It either returns a valid ID or throws and exception.
+	public static function oidsvd($sin, $ckrand = false) : string { 
+		kwas(is_string($sin), 'bad id - 1 - 234'); // Kwynn's assert - either the first param is true or throw exception.  
 		
 		$res = ['/^[\w-]{35}$/',
 				'/^[\w-]{51}$/'	];
