@@ -14,14 +14,34 @@ class dbqcl {
 		
 		
 	}
+
+	private static function getCmd() : string {
+	    foreach(['mongosh', 'mongo'] as $c) {
+		if (shell_exec('which ' . $c)) return $c;
+	    }
+
+	    return 'mongo'; // not sure the older is the best default
+	}
 	
 	public static function q($db, $q = false, $exf = false, $cmdPrefix = '', $rawc = false, $csuf = '', $ecc = false, $doit = true) {
-		
-		if ((strpos($q, 'printjson' ) === false) && !$rawc) $q = 'printjson(' . $q . ')';
-		
+
+		$mscmd = self::getCmd();
+		$issh = $mscmd === 'mongosh';
+		$dbcmd = $issh ? '' : $db;
+		if ($issh && is_string($q)) {
+		    $q = preg_replace('/^db\./', 'db.getSiblingDB(' . "'$db'" . ').', $q);
+		}
+
 		$tok = '.toArray()';
+		
 		if (strpos($q, $tok) === false && strpos($q, ').count(') === false && !$rawc
-				&& strpos($q, 'findOne') === false) $q = self::addToA($q, $tok);
+				&& strpos($q, 'findOne') === false && $issh) $q .= $tok;
+			
+		if ((strpos($q, 'printjson' ) === false) && !$rawc && $issh) $q = 'print(EJSON.stringify(' . $q . '))';
+		
+
+		if (strpos($q, $tok) === false && strpos($q, ').count(') === false && !$rawc
+				&& strpos($q, 'findOne') === false) $q = self::addToA($q, $tok); 
 
 		if ($exf) {
 			$p = $exf;
@@ -34,11 +54,13 @@ class dbqcl {
 		
 		if ($cmdPrefix) $cmdPrefix = $cmdPrefix . ' ';
 
-		$cmd = $cmdPrefix . "mongo $db --quiet $p";
+
+		$cmd = $cmdPrefix . " $mscmd $dbcmd --quiet $p";
 		if ($csuf) $cmd .= ' ' . $csuf;
 		if ($ecc) echo($cmd . "\n");
 		if (!$doit) return;
-		$t   = shell_exec($cmd);
+		$traw   = shell_exec($cmd . ' 2> /dev/null ');
+		$t = ltrim(preg_replace('/^Warning[^\n]+/', '', $traw));
 		if (!$rawc) {
 			$t   = self::processMongoJSON($t);
 			$a = json_decode($t, true);
