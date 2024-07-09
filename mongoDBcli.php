@@ -80,7 +80,7 @@ class dbqcl {
 		if ($csuf) $cmd .= ' ' . $csuf;
 		if ($ecc) echo($cmd . "\n");
 		if (!$doit) return;
-		$t   = shell_exec($cmd);
+		$t   = shell_exec($cmd); // removing trim() for now
 
 		if (!$rawc) {
 			$t   = self::processMongoJSON($t);
