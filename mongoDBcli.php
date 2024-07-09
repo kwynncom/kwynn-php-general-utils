@@ -23,7 +23,28 @@ class dbqcl {
 	    return 'mongo'; // not sure the older is the best default
 	}
 	
+	private static function mongoLogDir() {
+	    $uid = posix_getuid(); kwas(is_integer($uid), 'posix_getuid failed - mongosh log dir');
+	    $dir = kwifs(posix_getpwuid($uid), 'dir');
+	    kwas($dir && is_string($dir), 'bad user dir from /etc/passwd mongosh log dir'); 
+	    $f = $dir . '/.mongodb'; // the default DOCUMENT_ROOT is /var/www/html, NOT /var/www, so /var/www is ok for read permission
+	    if (!file_exists($f)) {
+		kwas(mkdir($f, 0700), 'cannot create mongoDB log dir.  change permissions of ' . $dir . ' as needed');
+	    }
+
+	    $f20 = $f . '/mongosh';
+	    if (!file_exists($f20)) {
+		kwas(mkdir  ($f20, 0700), 'cannot create ' . $f20 . ' for mongosh log');
+	    }
+
+	    kwas(touch($f20 . '/testonly_kw_mongosh_log_touch'), 'bad permissions for mongosh log directory');
+
+	    return;
+	}
+
 	public static function q($db, $q = false, $exf = false, $cmdPrefix = '', $rawc = false, $csuf = '', $ecc = false, $doit = true) {
+
+		self::mongoLogDir();
 
 		$mscmd = self::getCmd();
 		$issh = $mscmd === 'mongosh';
@@ -59,8 +80,8 @@ class dbqcl {
 		if ($csuf) $cmd .= ' ' . $csuf;
 		if ($ecc) echo($cmd . "\n");
 		if (!$doit) return;
-		$traw   = shell_exec($cmd . ' 2> /dev/null ');
-		$t = ltrim(preg_replace('/^Warning[^\n]+/', '', $traw));
+		$t   = shell_exec($cmd);
+
 		if (!$rawc) {
 			$t   = self::processMongoJSON($t);
 			$a = json_decode($t, true);
