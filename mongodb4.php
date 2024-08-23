@@ -15,9 +15,9 @@ class dao_generic_4  {
     public static function    get_oids(bool $rand = false, int $tsin = null, string $fmtin = null, $ntonly = false) {
 	return dao_generic_3::get_oids(     $rand,	       $tsin	   ,        $fmtin,	   $ntonly);    }
     
-    public function __construct(string $dbname) {
+    public function __construct(string $dbname, string $host = '127.0.0.1') {
 		$this->dbname = $dbname;
-		$this->client = new kw3moncli();
+		$this->client = new kw3moncli($host);
     }
 	
 	public function kwsel(string $cname) {

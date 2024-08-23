@@ -349,3 +349,13 @@ function kwtouch(string $f,  string $t = '', int $perm = 0600, int $flags = 0) :
 	}
 	return true;
 }
+
+function kwtrufl(array $ain, string $fin = '') : array {
+	$ret = [];
+	foreach($ain as $k => $v) {
+		if ($fin) $ret[$v[$fin]] = true;
+		else $ret[$v] = true;
+		
+	}
+	return $ret;
+}

@@ -7,9 +7,10 @@ if (class_exists('MongoDB\Client')) {
 class kw3moncli extends MongoDB\Client {
 
     
-    public function __construct() {
+    public function __construct(string $host = '127.0.0.1') {
 		$cs  = '';
-		$cs .= 'mongodb://127.0.0.1';
+		$cs .= 'mongodb://';
+		$cs .= $host;
 		$cs .= '/';
 		parent::__construct($cs, [], ['typeMap' => ['array' => 'array','document' => 'array', 'root' => 'array']]);
     }
@@ -24,8 +25,7 @@ class kw3mdbcoll extends MongoDB\Collection {
 	public function upsertMany($q, $set) {
 		return $this->upsert($q, $set, 2);
 	}
-	
-	
+
     public function upsert($q, $set, $oom = 1, $upc = true) {
 		if ($upc) self::addCreUp($set, false);
 		
