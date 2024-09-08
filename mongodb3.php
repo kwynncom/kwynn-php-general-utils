@@ -11,7 +11,7 @@ class kw3moncli extends MongoDB\Client {
     private function cleanMoURI(string $s) : string {
 	$l = strlen($s);
 	$ss = substr($s, $l - 2);
-	if ($ss === '//') $s = substring($s, 0, $l - 1);
+	if ($ss === '//') $s = substr($s, 0, $l - 1);
 	return $s;
     }
 
