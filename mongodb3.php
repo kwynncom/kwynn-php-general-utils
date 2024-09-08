@@ -8,6 +8,13 @@ class kw3moncli extends MongoDB\Client {
 
     const mondburi = 'mongodb://';
     
+    private function cleanMoURI(string $s) : string {
+	$l = strlen($s);
+	$ss = substr($s, $l - 2);
+	if ($ss === '//') $s = substring($s, 0, $l - 1);
+	return $s;
+    }
+
     public function __construct(string $host = '127.0.0.1') {
 		$cs  = '';
 		if (strpos($host, self::mondburi) === false)  {
@@ -15,7 +22,8 @@ class kw3moncli extends MongoDB\Client {
 		}
 		$cs .= $host;
 		$cs .= '/';
-		parent::__construct($cs, [], ['typeMap' => ['array' => 'array','document' => 'array', 'root' => 'array']]);
+		$fin = $this->cleanMoURI($cs);
+		parent::__construct($fin, [], ['typeMap' => ['array' => 'array','document' => 'array', 'root' => 'array']]);
     }
 
     public function selectCollection     ($db, $coll, array $optionsINGORED_see_below = []) {
