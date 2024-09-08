@@ -6,10 +6,13 @@ if (class_exists('MongoDB\Client')) {
 
 class kw3moncli extends MongoDB\Client {
 
+    const mondburi = 'mongodb://';
     
     public function __construct(string $host = '127.0.0.1') {
 		$cs  = '';
-		$cs .= 'mongodb://';
+		if (strpos($host, self::mondburi) === false)  {
+		    $cs .= self::mondburi;
+		}
 		$cs .= $host;
 		$cs .= '/';
 		parent::__construct($cs, [], ['typeMap' => ['array' => 'array','document' => 'array', 'root' => 'array']]);
