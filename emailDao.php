@@ -6,6 +6,12 @@ class dao_email_out_audit extends dao_generic {
     const db = 'emails_auto_out';
 
     private readonly object $ecoll;
+    private string $exuqid;
+
+    public function setExtraId(string $id) {
+	$this->exuqid = trim($id);
+    }
+
     
     public function __construct() {
 	    parent::__construct(self::db);
@@ -29,8 +35,21 @@ class dao_email_out_audit extends dao_generic {
 		$this->ecoll->upsert(['_id' => $_id], $dat);
     }
 	
+	private function getExId() : string {
+	    if (!isset($this->exuqid) || !$this->exuqid) return '';
+	    return $this->exuqid;
+	    
+	}
+
+	private function setExId(array &$a) {
+	    $id = $this->getExId();
+	    if (!$id) return;
+	    $a['idexuq'] = $id;
+	}
+
 	private function popDat($ain) {
-		$od = [];	
+		$od = [];
+		$this->setExId($od);
 		$od['sendResult'] = $ain['sendResult'];
 		$od['Ubefore'] = $ain['Ubsend'];
 		$od['sendTime'] = $ain['Uasend'] - $ain['Ubsend'];

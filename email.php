@@ -7,10 +7,12 @@ require_once('emailDefaults.php');
 
 class kwynn_email {
     
-    const devActiveTS = '2023-08-12 00:50';
+    const devActiveTS = '2024-09-09 09:00';
 
-    protected $omo;
+    protected object $omo;
     private $auditDao;
+
+    const defaultPort = 587;
    
     public static function send($subject, $body, $isHTML = false) {
 		$o = new self();
@@ -23,6 +25,10 @@ class kwynn_email {
 		$this->auditDao = new dao_email_out_audit();
     }
     
+    public function setExtraId(string $id) {
+	$this->auditDao->setExtraId($id);
+    }
+
     private function shouldSend() {
 		if (!ispkwd()) return true;
 		if (time() < strtotime(self::devActiveTS)) return true;

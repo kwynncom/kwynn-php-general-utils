@@ -5,7 +5,7 @@ require_once(__DIR__ . '/js/kwjsrecv.php');
 require_once(__DIR__ . '/kwifs.php');
 
 
-function base62($len) { return base62::get($len); }
+function base62(int $len = 14) { return base62::get($len); }
 
 function cliOrDie() {
     if (PHP_SAPI !== 'cli') die('cli only - kwutils edition');

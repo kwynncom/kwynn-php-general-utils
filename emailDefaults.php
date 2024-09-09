@@ -6,7 +6,7 @@ class kwynn_email_default extends kwynn_email {
 	
 	const def = '/var/kwynn/kwEmail_1_2007.txt';
 
-	protected $omo;
+	// protected $omo;
 	
 	public function common() {	
 
