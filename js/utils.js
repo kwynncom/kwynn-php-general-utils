@@ -1,4 +1,16 @@
-// null change to force refresh
+/* function roundTo(val, digits) { // Kwynn 2024/09/29 04:19 - from law timecard older code
+    if (!digits) digits = 0;
+    
+    var pow = Math.pow(10, digits);
+    var mul = val * pow;
+    var rnd = Math.round(mul);
+    var ret = rnd / pow;
+    
+    if (Math.abs(ret) < 0.0003) return 0;
+       
+    return ret;
+} */
+
 
 if (typeof module === 'undefined') {  var module = {}; module.exports = {}; }
 

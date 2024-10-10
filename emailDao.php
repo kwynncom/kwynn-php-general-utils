@@ -55,7 +55,7 @@ class dao_email_out_audit extends dao_generic {
 		$od['sendTime'] = $ain['Uasend'] - $ain['Ubsend'];
 		$ist = $od['isTest'] = $ain['isTest'];
 		$mo = crackObject::crack($ain['mail']);
-		$od['to'] = implode(' ', array_keys($mo['all_recipients']));
+		$od['to'] = implode(', ', array_keys($mo['all_recipients']));
 		if (!$ist) {
 			$sm = $mo['smtp'];
 			$od['smtpErr'] = trim(implode(' ', $sm['error']));

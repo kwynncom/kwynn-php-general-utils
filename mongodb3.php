@@ -87,6 +87,9 @@ class dao_generic_3  {
 	const defOidsFmt = 'md-Hi-Y-s'; // the default format for my customized human-readable date IDs get_oids()  
 			// usage below assumes seconds at the end *if* using this default
 			// May 7, 2024 16:34 would be "0507-1634-2024-52"
+	
+	const randMinN = 15;
+	const randN   = 40;
     
     private $dbname;
     protected $client;
@@ -150,7 +153,7 @@ class dao_generic_3  {
 		$tss = date($fmt, $ts); unset($ts);
 		$fs  = $tss . ($fmtin ? '-' : 's-') .  substr($s  ,  8);
 		if ($rand) 
-		$fs .= '-' . base62(15); unset($tss, $s, $rand);
+		$fs .= '-' . base62(self::randN); unset($tss, $s, $rand);
 		return $fs;
 	}
 
@@ -159,12 +162,19 @@ class dao_generic_3  {
 		kwas(is_string($sin), 'bad id - 1 - 234'); // Kwynn's assert - either the first param is true or throw exception.  
 		
 		$res = ['/^[\w-]{35}$/',
-				'/^[\w-]{51}$/'	];
+				self::getRe20()	];
 		$rr = preg_match($res[1], $sin, $ms);
 		if ($rr) return $ms[0];
 		if ($ckrand) kwas(0, 'not oids with rand');
 		kwas(preg_match($res[0], $sin, $ms), 'not valid oids - either type');
 		return $ms[0];
+	}
+
+	private static function getRe20() : string {
+	    $s  = '';
+	    $n10 = 35 + 1 + self::randMinN;
+	    $s .= '/^[\w-]{' . $n10 . ',' . ($n10 + self::randN - self::randMinN ) . '}$/';
+	    return $s;
 	}
 	
 } // class
