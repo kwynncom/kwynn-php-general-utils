@@ -120,6 +120,14 @@ function kwam(...$aa) {
 	return $ra;
 }
 
+function kwamAssoc(...$aa) { 
+	$ra = [];
+	foreach($aa as $i => $v) {
+	    $ra = $ra + $v;
+	}
+	return $ra;
+}
+
 function kwua() { return 'Mozilla/5.0 (X11; Linux x86_64; rv:101.0) Gecko/20100101 Firefox/101.0'; }
 
 function kw_null_error_handler($errno, $errstr, $errfile, $errline) { 

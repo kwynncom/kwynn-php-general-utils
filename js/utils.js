@@ -178,7 +178,11 @@ class kwjss {
     }
 } // class
 
-function isset(v) { return typeof v !== 'undefined'; }
+function isset(v) { 
+    const type = typeof v;
+     if (type === 'undefined' || v === null) return false;
+     return true;
+ }
 
 
 function kwifs(a, ...ks) { // if defined return, else FALSE
