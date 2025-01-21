@@ -23,6 +23,14 @@ define('M_BILLION', 1000000000);
 define('M_MILLION', 1000000);
 define('DAY_S', 86400);
 
+function flipTrue(array $ain) : array {
+    if (!$ain) return [];
+    $ret = [];
+    foreach($ain as $v)	$ret[$v] = true;
+    return $ret;
+
+}
+
 function kwSetTimezone() {
 	static $iamset = false;
 	if ($iamset) return;
