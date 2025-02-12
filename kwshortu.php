@@ -104,9 +104,6 @@ function didAnyCallMe($fin) {
 	return FALSE;
 }
 
-// function isrv($k) { } // moving to js/kwjsrecv.php
-
-
 function didCLICallMe($callingFile) { // $call with __FILE__
 	return base62::didCLICallMe($callingFile);
 }

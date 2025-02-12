@@ -7,7 +7,7 @@ require_once('emailDefaults.php');
 
 class kwynn_email {
     
-    const devActiveTS = '2024-09-20 23:20';
+    const devActiveTS = '2025-01-24 10:20';
 
     protected object $omo;
     private $auditDao;
