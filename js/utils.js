@@ -153,11 +153,14 @@ class kwjss {
             return theResolve;
         }
         
-        kwjss.sobf20(url, sob, prt, fdin, (event) => { return kwjss.ole10(event.target, cb, prt);});
+        kwjss.sobf20(url, sob, prt, fdin, 
+	    (event) => { 
+		return kwjss.ole10(event.target, cb, prt);
+	    });
     }
     
     static sobf20(url, sob, prt, fdin, olcbf) {
-        if (1) { // !*!*!*!*!*!****************************!!!!!*!*!*
+        if (0) { // Kwynn - back out 2025/03/12 !*!*!*!*!*!****************************!!!!!*!*!*
             if (url.search(/\?/) >= 0) url += '&';
             else                     url += '?';
             
