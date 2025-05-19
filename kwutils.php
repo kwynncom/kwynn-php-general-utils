@@ -3,6 +3,7 @@
 /* This is a collection of code that is general enough that I use it in a number of projects. */
 
 define('KW_DEFAULT_COOKIE_LIFETIME_S', 345600);
+define('KW0S', '');
 
 require_once('kwshortu.php');
 require_once('mongodb3.php');
@@ -22,6 +23,11 @@ define('M_BILLION', 1000000000);
 				 //  123456
 define('M_MILLION', 1000000);
 define('DAY_S', 86400);
+
+function cliec(string $s) {
+    if (PHP_SAPI !== 'cli') return;
+    echo($s);
+}
 
 function flipTrue(array $ain) : array {
     if (!$ain) return [];
@@ -131,7 +137,7 @@ function kwam(...$aa) {
 function kwamAssoc(...$aa) { 
 	$ra = [];
 	foreach($aa as $i => $v) {
-	    $ra = $ra + $v;
+	    if ($v) $ra = $ra + $v;
 	}
 	return $ra;
 }

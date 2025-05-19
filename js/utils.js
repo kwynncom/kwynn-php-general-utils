@@ -1,17 +1,3 @@
-/* function roundTo(val, digits) { // Kwynn 2024/09/29 04:19 - from law timecard older code
-    if (!digits) digits = 0;
-    
-    var pow = Math.pow(10, digits);
-    var mul = val * pow;
-    var rnd = Math.round(mul);
-    var ret = rnd / pow;
-    
-    if (Math.abs(ret) < 0.0003) return 0;
-       
-    return ret;
-} */
-
-
 if (typeof module === 'undefined') {  var module = {}; module.exports = {}; }
 
 function islam() { return process.env.AWS_LAMBDA_FUNCTION_NAME; /* Is AWS Lambda? */ }
@@ -31,7 +17,10 @@ function qsa(q)  { return document.querySelectorAll(q); }
 function qs(q) { return document.querySelector(q);}
 function cl(msg) { console.log(msg); }
 module.exports.cl = cl;
-function byid(id) { return document.getElementById(id); }
+function byid(id) { 
+    const  e = document.getElementById(id); 
+    return e;
+}
 function cree(ty) { return document.createElement(ty); }
 function inht(oorid, s) {
     let e = oorid;
