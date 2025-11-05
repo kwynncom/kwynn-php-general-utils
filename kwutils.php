@@ -37,6 +37,14 @@ function flipTrue(array $ain) : array {
 
 }
 
+function get1000UserName() : string { 
+    $cmd = 'getent passwd 1000 | cut -d: -f1'; // lovely tidbit from Grok 3.0 ca. 2025/06/11
+    $user = trim(shell_exec($cmd)); // 
+    kwas($user && is_string($user), 'did not get 1000 user');
+    return $user;
+}
+
+
 function kwSetTimezone() {
 	static $iamset = false;
 	if ($iamset) return;

@@ -100,7 +100,11 @@ function kwifsOLD2023($a, ...$ks) {
 function didAnyCallMe($fin) {
 	if ( didCLICallMe($fin)) return TRUE;
 	if ( iscli()) return FALSE;
-	if (basename($fin) === basename($_SERVER['PHP_SELF'])) return TRUE;
+	$bn = basename($fin);
+	if ($bn === basename($_SERVER['PHP_SELF'])) return TRUE;
+	// if (!isset(          $_SERVER['SCRIPT_FILENAME'])) return FALSE;
+	// if ($bn === basename($_SERVER['SCRIPT_FILENAME'])) return TRUE;
+	
 	return FALSE;
 }
 
