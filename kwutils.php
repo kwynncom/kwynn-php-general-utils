@@ -24,6 +24,37 @@ define('M_BILLION', 1000000000);
 define('M_MILLION', 1000000);
 define('DAY_S', 86400);
 
+
+function kwvidord(string|int $din) : int {
+    kwas($din, 'id must be truthy ( err # 224829 )');
+    if (is_string($din)) $din = trim($din);
+    kwas($din, 'id must be truthy 2 ( err # 224931 )');
+    kwas(is_numeric($din), 'id must be numeric (err # 225032 )');
+    $ir = intval($din); unset($din);
+    kwas($ir && is_integer($ir) && $ir >= 1, 'bad id 3-ish (err # 225134 )');
+    return $ir;
+}
+
+
+function sendEventSourceData(string $data = '') {
+
+    $data = trim($data);
+
+    $t = '';
+
+    // hedging on sudoer and iscli() and whether can branch
+    if (true || !iscli()) $t .= "data: " . str_replace("\n", "\ndata: ", trim($data)) . "\n\n";
+    else $t = $data . "\n";
+       
+    echo($t);
+
+    if (!iscli()) { // this I have to do because ob_flush() will cause an error in CLI mode
+	ob_flush();
+    }
+
+    flush();
+}
+
 function cliec(string $s) {
     if (PHP_SAPI !== 'cli') return;
     echo($s);
