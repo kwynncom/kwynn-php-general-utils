@@ -1,25 +1,35 @@
 <?php
 
-function kwjssrp($k = false, $ifns = null) {
-try {
+function kwjssrp	($k = false, $ifns = null) {
+    $v10 = kwjssrp2025  ($k,	     $ifns);
+    if ($v10 !== $ifns) return $v10; unset($v10);
 
-    if      (isset($_REQUEST[$k])) 
-	    return     $_REQUEST[$k];
+    $rawBody = file_get_contents('php://input');
+    $a = json_decode($rawBody, true);
+    return $a[$k] ?? $ifns;
+}
 
-    kwas(isset($_REQUEST['POSTob']), 'no form object 20 - not set');
+// 2026/01 - I'm pretty sure some of my code assumes false for the if not set.  
+function kwjssrp2025($k = false, $ifns = FALSE) {
+    try {
 
-    kwas(($j = $_REQUEST['POSTob']), 'no form object - not truthy');
-    $a = json_decode($j, 1); kwas($a, 'null form object');
-    unset($a['XDEBUG_SESSION_START']);
+	if      (isset($_REQUEST[$k])) 
+		return     $_REQUEST[$k];
 
-    $t15 = kwifs($a, 'dataset', $k);
-    if ($t15) return $t15;
+	kwas(isset($_REQUEST['POSTob']), 'no form object 20 - not set');
 
-    if ($k)  return kwifs($a, $k, ['kwiff' => $ifns]);
-    return $a;
-} catch(Exception $ex) {}
+	kwas(($j = $_REQUEST['POSTob']), 'no form object - not truthy');
+	$a = json_decode($j, 1); kwas($a, 'null form object');
+	unset($a['XDEBUG_SESSION_START']);
 
-    return FALSE;
+	$t15 = kwifs($a, 'dataset', $k);
+	if ($t15) return $t15;
+
+	if ($k)  return kwifs($a, $k, ['kwiff' => $ifns]);
+	return $a;
+    } catch(Exception $ex) {}
+
+    return $ifns;
 }
 
 
