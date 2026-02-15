@@ -36,9 +36,13 @@ class kwGetHTTPValsCl {
     }
 
     public static function kwjssrp($k, $ifns, $allow = 'all') {
+
+	$raw = self::fromRawPOST($k, $ifns);
+	if ($raw) return $raw;
+
 	$v10 = self::kwjssrp2025	  ($k, $ifns, $allow);
 	if ($v10 !== $ifns) return $v10; unset($v10);
-	return self::fromRawPOST($k, $ifns);
+
 
     }
   
