@@ -24,6 +24,35 @@ define('M_BILLION', 1000000000);
 define('M_MILLION', 1000000);
 define('DAY_S', 86400);
 
+function dolintfl(array $r, string $k) : float | int | null {
+    $v10 = $r[$k] ?? null; unset($r, $k);
+    if ($v10 === null) return null;
+
+    if (is_string($v10)) {
+	foreach([',', '$'] as $tok) {
+	    $v10 = str_replace($tok, '', $v10);
+	} unset($tok);
+    }
+
+    if (!is_numeric($v10)) return null;
+    $f = floatval($v10); unset($v10);
+    if ($f < 0.001) return null;
+    $i = roint($f);
+    if (doleq($i, $f)) return $i;
+    return $f;
+}
+
+function doleq(mixed $a = null, mixed $b = null) : bool {
+    $din = [$a, $b];
+
+    foreach($din as $v) { if (!is_numeric($v)) { return false; }    }
+
+    $d = abs($a - $b);
+    if ($d < 0.001) { return true; }
+     
+    return false; 
+}
+
 
 function kwvidord(string|int $din) : int {
     kwas($din, 'id must be truthy ( err # 224829 )');
