@@ -51,9 +51,12 @@ class kwGetHTTPValsCl {
 
 
 	    $t10 = self::getFromSuperGlobals($k, $allow);
-	    if (isset($t10)) return $t10; unset($t10);
+	    if (!isset($t10['POSTob'])) {
+		return $t10; 
+	    } else {
+		$j = $t10['POSTob'];
+	    }
 
-	    $j = self::getFromSuperGlobals('POSTob', $allow);
 	    kwas($j, 'no form object 20 (err # 121625 ) - not truthy');
 
 	    $a = json_decode($j, 1); kwas($a, 'null form object');
