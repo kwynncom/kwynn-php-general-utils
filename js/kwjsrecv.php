@@ -42,7 +42,7 @@ class kwGetHTTPValsCl {
 
 	$v10 = self::kwjssrp2025	  ($k, $ifns, $allow);
 	if ($v10 !== $ifns) return $v10; unset($v10);
-
+	return $ifns; // Kwynn 2026/04/03
 
     }
   
@@ -52,7 +52,11 @@ class kwGetHTTPValsCl {
 
 	    $t10 = self::getFromSuperGlobals($k, $allow);
 	    if (!isset($t10['POSTob'])) {
-		return $t10; 
+		if ($t10) {
+		    return $t10;
+		}
+		else { 
+		    return $ifns;  /* Kwynn 2026/04/03 */ }
 	    } else {
 		$j = $t10['POSTob'];
 	    }
@@ -80,6 +84,14 @@ class kwGetHTTPValsCl {
 	    case 'POST': $a = $_POST   ; break;
 	    case 'GET' : $a = $_GET    ; break;
 	    default: kwas(false, 'un-implemented param to isrv() or related (err # 121645 )'); break;
+	}
+
+	if (isset  ($a[$k])) {
+	     return $a[$k]; // note that POSTob and raw can be set Kwynn 2026/04/03
+	}
+
+	if (isset($a['POSTob'])) { 
+	    return $a; // Kwynn 2026/04/03
 	}
 
 	if ($k) { return $a[$k] ?? null; }
