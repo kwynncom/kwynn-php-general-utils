@@ -47,12 +47,28 @@ public static function getAllIPv4(string $t) : array {
 	return $ret;
 }
 
+public static function expandIPv6(string $ip): string
+{
+    // Remove zone ID if present (e.g., %eth0)
+    $clean = explode('%', $ip, 2)[0];
+
+    $packed = inet_pton($clean);
+    if ($packed === false || strlen($packed) !== 16) {
+        return $ip; // Not a valid IPv6 address → return as-is
+    }
+
+    // Convert to 32-character hex string and split into 4-char groups
+    $hex = bin2hex($packed);
+    return implode(':', str_split($hex, 4));
+}
+
 // used by ntpc/php/s.php aka sntpw
-public static function ipOrBlankStr(bool | string $ip, bool $orDie = false) : string {
+public static function ipOrBlankStr(bool | string $ipIN, bool $orDie = false) : string {
 
 	
 	try {
-		kwas($ip, 'ip is falsey'); kwas(is_string($ip), 'ip not string');
+		kwas($ipIN, 'ip is falsey'); kwas(is_string($ipIN), 'ip not string');
+		$ip = self::expandIPv6($ipIN); unset($ipIN);
 		$sl = strlen($ip); kwas($sl >= 3 && $sl <= 39, 'need an IP arg - 2');
 
 

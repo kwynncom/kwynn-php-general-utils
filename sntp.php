@@ -42,6 +42,11 @@ class sntpSanity { // called from chm/nist/callSNTP.php
 		static $failv = [];
 
 		try {
+
+			if (ispkwd() && (time() < strtotime('2019-01-10 02:00'))) {
+			    throw new Exception('Kwex004347TEST');
+			}
+
 			
 			$o = $this;
 			
