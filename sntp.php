@@ -9,17 +9,19 @@ class sntpSanity { // called from chm/nist/callSNTP.php
 	private readonly bool $contif;
 	private $oret;
 	private $sanFail;
+	private readonly bool $doth;
 	
-	public static function ck(string $t, bool $contiff = false) {
-		$o = new self($t, $contiff);
+	public static function ck(string $t, bool $contiff = false, bool $doth = false) {
+		$o = new self($t, $contiff, $doth);
 		return $o->getRes();
 		
 	}
 	
-	private function __construct(string $t, bool $contiff) {
+	private function __construct(string $t, bool $contiff, bool $doth) {
 		$this->contif  = $contiff;
 		$this->oret = false;
 		$this->sanFail = false;
+		$this->doth = $doth;
 		$this->oret = $this->ttoa($t);
 	}
 	
@@ -64,7 +66,9 @@ class sntpSanity { // called from chm/nist/callSNTP.php
 			$ret['Uus'] = $polus;
 
 			return $ret;
-		} catch (Exception $ex) {	}
+		} catch (Throwable $ex) {
+		    if ($this->doth) throw $ex;
+		}
 		
 		return $failv;
 	} // func
